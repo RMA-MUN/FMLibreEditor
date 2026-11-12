@@ -560,6 +560,7 @@ export const es: Strings = {
     date_of_birth: "Fecha de nacimiento",
     asking_price: "Precio de venta",
     nation: "Nacionalidad",
+    city_of_birth: "Ciudad de nacimiento",
     "reputation.home": "Reputación local",
     "reputation.current": "Reputación actual",
     "reputation.world": "Reputación mundial",
@@ -1283,6 +1284,7 @@ export const es: Strings = {
 
   edit: {
     unknownNation: "País desconocido",
+    unknownCity: "Ciudad desconocida",
     edit: "Editar",
     editTitle: "Cambiar los valores de este perfil en el juego",
     startFailed: (reason) => `No se ha podido empezar a editar: ${reason}`,
@@ -2118,6 +2120,7 @@ export const es: Strings = {
       similar: "Jugadores parecidos",
       depth: "Fondo de plantilla",
       departures: "Jugadores a dejar salir",
+      youth: "Promoción de la cantera",
     },
     status: {
       missing: "Falta",
@@ -2463,9 +2466,7 @@ export const es: Strings = {
       fee: "Traspaso est.",
       abilities: "HA / HP",
       value: "Valor",
-      verdict: "Veredicto",
       role: "Rol",
-      versus: (name) => `Marcas: ${name}, tu n.º 1`,
       strengths: "Puntos fuertes",
       weaknesses: "Puntos débiles",
       profile: "Carácter",
@@ -2485,6 +2486,67 @@ export const es: Strings = {
         loyal: "Leal",
         hotHeaded: "Impulsivo",
       },
+    },
+    /** "Promoción de la cantera": the players the game made at a club's youth intakes, by the day they joined it, and their edits. */
+    youth: {
+      intro: "Los jugadores que el juego creó en las promociones de la cantera del club y que siguen en él, por el día en que llegaron.",
+      otherClub: "Ver otro club",
+      searchLabel: "Club que ver",
+      mine: "Volver a mi club",
+      intakesLabel: "Promociones de la cantera",
+      /** A day nothing says. */
+      noDay: "Día desconocido",
+      /** `best` is a name and the potential in brackets. */
+      summary: (count, average, best) =>
+        `${count === 1 ? "1 jugador" : `${format(count)} jugadores`} · potencial medio ${average} · el mejor: ${best}`,
+      lent: (count) => (count === 1 ? "1 cedido" : `${format(count)} cedidos`),
+      how: {
+        label: "¿Cómo se hace esta lista?",
+        note: "El juego marca a cada jugador que crea. La promoción de la cantera de un club son los jugadores que creó, que llegaron al club con 17 años o menos y no se formaron en ningún otro club: los que tiene ahora, incluidos los cedidos. Un jugador comprado a la cantera de otro club queda fuera, y también uno que el club ha dejado marchar. Un candidato juvenil que otro club dejó marchar y que empezó aquí entra en la promoción de su día. Los que llegaron un mismo día forman una promoción.",
+      },
+      unmarked:
+        "El editor no sabe cómo marca esta versión del juego a los jugadores que crea: también aparecen los jóvenes del propio club que vienen de la base de datos del juego.",
+      empty: (club) => `${club} no tiene ahora jugadores de promociones de la cantera.`,
+      emptyHint: "Los jugadores de una promoción aparecen aquí mientras estén en el club. Mira otro club para ver su cantera.",
+      columns: {
+        player: "Jugador",
+        position: "Pos.",
+        born: "Nacimiento",
+        nation: "Nacionalidad",
+        city: "Ciudad de nacimiento",
+        ca: "HA",
+        pa: "HP",
+        actions: "Editar",
+      },
+      age: (age) => `${format(age)} años`,
+      joinedAt: (age) => `llegó con ${format(age)}`,
+      onLoan: (club) => `Cedido en ${club}`,
+      youthContract: "Contrato juvenil",
+      edit: (name) => `Editar a ${name}`,
+      editor: {
+        label: (name) => `Editando a ${name}`,
+        reading: "Leyendo sus valores…",
+        dateOfBirth: "Fecha de nacimiento",
+        nation: "Nacionalidad",
+        city: "Ciudad de nacimiento",
+        /** The city select of a player without a city: the game keeps none for him, and the editor sets none. */
+        noCity: "Ninguna en el juego",
+        /** Above the cities of the nation picked: they are the ones people of the save were born in. */
+        cityHint: "Ciudades donde nacieron personas de esta partida",
+        ca: "Habilidad actual",
+        pa: "Habilidad potencial",
+        save: "Guardar",
+        saving: "Guardando…",
+        cancel: "Cancelar",
+        profile: "Perfil completo",
+        profileTitle: "Posiciones, atributos y el resto, en el perfil del jugador",
+        nothing: "Nada que guardar: no se cambió ningún valor.",
+        saved: (count) => (count === 1 ? "1 cambio guardado." : `${format(count)} cambios guardados.`),
+        failed: (field, reason) => `${field}: ${reason}`,
+        invalid: (field) => `${field}: no es un valor que pueda tomar.`,
+      },
+      loading: "Leyendo las promociones de la cantera…",
+      failed: (reason) => `No se pudieron leer las promociones de la cantera: ${reason}`,
     },
     roles: {
       bgk: "Portero con pie",

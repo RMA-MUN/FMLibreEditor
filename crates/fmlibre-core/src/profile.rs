@@ -22,6 +22,9 @@ pub struct Layout {
     pub club_info: ClubInfoLayout,
     pub club_finance: ClubFinanceLayout,
     pub nation: NationLayout,
+    /// A city, such as a player's city of birth; only in the layouts it has been checked in.
+    #[serde(default)]
+    pub city: Option<CityLayout>,
     pub injury: InjuryLayout,
     pub ban: BanLayout,
     pub relation: RelationLayout,
@@ -464,6 +467,13 @@ pub struct PlayerLayout {
     /// layout has not placed them yet.
     #[serde(default)]
     pub gender: Option<u64>,
+    /// `u8` of flags in the identity block, one of which ([`crate::MADE_BY_GAME`]) is set for a player the game made,
+    /// as at a youth intake; unset where the layout has not placed them.
+    #[serde(default)]
+    pub made_by_game: Option<u64>,
+    /// Pointer to the city he was born in (see [`CityLayout`]); unset where the layout has not placed it.
+    #[serde(default)]
+    pub city_of_birth: Option<u64>,
     pub height: u64,
     /// `i32` pounds: his transfer value, which the game shows in the player's currency as a range starting at it
     /// while his club's scouts do not know him well; 300,000,000 when he is not for sale. Unset where the layout has
@@ -538,8 +548,9 @@ impl PlayerLayout {
             self.positions + crate::POSITIONS.len() as u64,
             self.personality + crate::PERSONALITY.len() as u64,
         ];
-        let single_bytes = self.attributes.values().chain(&self.gender).map(|offset| offset + 1);
-        let value = self.transfer_value.map(|offset| offset + 4);
+        let single_bytes =
+            self.attributes.values().chain(&self.gender).chain(&self.made_by_game).map(|offset| offset + 1);
+        let value = self.transfer_value.map(|offset| offset + 4).into_iter().chain(self.city_of_birth.map(|o| o + 8));
         fields.into_iter().chain(single_bytes).chain(value).max().unwrap_or(0)
     }
 
@@ -845,6 +856,15 @@ impl ClubFinanceLayout {
 pub struct NationLayout {
     pub uid: u64,
     pub name: u64,
+}
+
+/// A city (`db::CITY`): its UID and name where a nation keeps them, and the nation it is in.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CityLayout {
+    pub uid: u64,
+    pub name: u64,
+    pub nation: u64,
 }
 
 /// What the game's allocator does with the blocks it hands out.

@@ -1,6 +1,6 @@
 // The Scouting tab: an assistant scout. It advises on signings for a position and roles, keeps lists of the market's
-// opportunities, finds players like a given one, shows how deep the squad is line by line, and lists the players it
-// would let go. Any player it finds can be compared with the club's best player at his position, or written up in a
+// opportunities, finds players like a given one, shows how deep the squad is line by line, lists the players it
+// would let go, and the players of the club's youth intakes, who can be edited there. Any player it finds can be compared with the club's best player at his position, or written up in a
 // scout report. The overview of the club is read when the tab is first shown and again when the data changed; the
 // lists are asked for as their briefs change.
 
@@ -30,11 +30,12 @@ import {
 } from "./ScoutRecommendations";
 import { ScoutReport } from "./ScoutReport";
 import { DEFAULT_SIMILAR_BRIEF, ScoutSimilar, type SimilarBrief } from "./ScoutSimilar";
+import { ScoutYouth } from "./ScoutYouth";
 import type { FmDate, PlayerSummary, ScoutingOverview } from "./types";
 
-type ScoutTab = "recommend" | "opportunities" | "similar" | "depth" | "departures";
+type ScoutTab = "recommend" | "opportunities" | "similar" | "depth" | "departures" | "youth";
 
-const TABS: ScoutTab[] = ["recommend", "opportunities", "similar", "depth", "departures"];
+const TABS: ScoutTab[] = ["recommend", "opportunities", "similar", "depth", "departures", "youth"];
 
 /** What was saved before the language was switched; a start from scratch for what is missing or wrong. */
 interface Saved {
@@ -306,6 +307,7 @@ export function ScoutingBrowser({
               }}
             />
           )}
+          <ScoutYouth version={version} hidden={tab !== "youth"} onOpen={setShown} />
           {tab === "departures" && (
             <ScoutDepartures
               departures={report.departures}

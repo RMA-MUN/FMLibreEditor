@@ -471,6 +471,7 @@ export const en = {
     date_of_birth: "Date of birth",
     asking_price: "Asking price",
     nation: "Nationality",
+    city_of_birth: "City of birth",
     "reputation.home": "Home reputation",
     "reputation.current": "Current reputation",
     "reputation.world": "World reputation",
@@ -1321,6 +1322,7 @@ export const en = {
   edit: {
     /** A nation field's value whose name the app has not read: one no one in the lists belongs to. */
     unknownNation: "Unknown nation",
+    unknownCity: "Unknown city",
     /** The button in the header of a profile that can be edited. */
     edit: "Edit",
     editTitle: "Change this profile's values in the game",
@@ -2337,6 +2339,7 @@ export const en = {
       similar: "Similar players",
       depth: "Squad depth",
       departures: "Players to let go",
+      youth: "Youth intake",
     },
     /** The depth statuses: the dots on the pitch and the badges of the cards. */
     status: {
@@ -2705,10 +2708,7 @@ export const en = {
       fee: "Est. fee",
       abilities: "CA / PA",
       value: "Value",
-      verdict: "Verdict",
       role: "Role",
-      /** Above the bars of the attributes: the ticks on them are the club's best player at the position. */
-      versus: (name: string) => `Ticks: ${name}, your no. 1`,
       strengths: "Strengths",
       weaknesses: "Weaknesses",
       profile: "Character",
@@ -2728,6 +2728,67 @@ export const en = {
         loyal: "Loyal",
         hotHeaded: "Hot-headed",
       },
+    },
+    /** "Youth intake": the players the game made at a club's youth intakes, by the day they joined it, and their edits. */
+    youth: {
+      intro: "The players the game made at the club's youth intakes who are still there, by the day they joined it.",
+      otherClub: "Look at another club",
+      searchLabel: "Club to look at",
+      mine: "Back to my club",
+      intakesLabel: "Youth intakes",
+      /** A day nothing says. */
+      noDay: "Day not known",
+      /** `best` is a name and the potential in brackets. */
+      summary: (count: number, average: string, best: string) =>
+        `${count === 1 ? "1 player" : `${format(count)} players`} · average potential ${average} · best: ${best}`,
+      lent: (count: number) => (count === 1 ? "1 out on loan" : `${format(count)} out on loan`),
+      how: {
+        label: "How is this list made?",
+        note: "The game marks every player it makes. A club's youth intake are the players it made who joined the club at 17 or younger and were trained at no other club: those it has now, the ones out on loan included. A player bought from another club's intake is left out, and so is one the club has let go. A youth candidate another club let go, who started out here, joins the intake of his day. Those who joined on one day make one intake.",
+      },
+      unmarked:
+        "The editor does not know how this version of the game marks the players it makes: the club's own young players from the game's database are listed too.",
+      empty: (club: string) => `${club} has no youth intake players at the moment.`,
+      emptyHint: "An intake's players show here for as long as they are at the club. Look at another club to see its youth intake.",
+      columns: {
+        player: "Player",
+        position: "Pos",
+        born: "Born",
+        nation: "Nationality",
+        city: "City of birth",
+        ca: "CA",
+        pa: "PA",
+        actions: "Edit",
+      },
+      age: (age: number) => `age ${format(age)}`,
+      joinedAt: (age: number) => `joined at ${format(age)}`,
+      onLoan: (club: string) => `On loan at ${club}`,
+      youthContract: "Youth contract",
+      edit: (name: string) => `Edit ${name}`,
+      editor: {
+        label: (name: string) => `Editing ${name}`,
+        reading: "Reading his values…",
+        dateOfBirth: "Date of birth",
+        nation: "Nationality",
+        city: "City of birth",
+        /** The city select of a player without a city: the game keeps none for him, and the editor sets none. */
+        noCity: "None in the game",
+        /** Above the cities of the nation picked: they are the ones people of the save were born in. */
+        cityHint: "Cities people of this save were born in",
+        ca: "Current ability",
+        pa: "Potential ability",
+        save: "Save",
+        saving: "Saving…",
+        cancel: "Cancel",
+        profile: "Full profile",
+        profileTitle: "Positions, attributes and the rest, in the player's profile",
+        nothing: "Nothing to save: no value was changed.",
+        saved: (count: number) => (count === 1 ? "1 change saved." : `${format(count)} changes saved.`),
+        failed: (field: string, reason: string) => `${field}: ${reason}`,
+        invalid: (field: string) => `${field}: not a value it can take.`,
+      },
+      loading: "Reading the youth intakes…",
+      failed: (reason: string) => `Could not read the youth intakes: ${reason}`,
     },
     roles: {
       bgk: "Ball-Playing Goalkeeper",

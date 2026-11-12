@@ -5691,6 +5691,234 @@ button.danger:hover:not(:disabled) {
   font-size: 13.5px;
 }
 
+/* Youth intake: the club, its intakes by day, their players, and the inputs of the one being edited. */
+.scout-youth[hidden] {
+  display: none;
+}
+
+.scout-panel > .scout-youth {
+  padding-bottom: 18px;
+}
+
+.scout-youth-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+}
+
+.scout-youth-club {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.scout-youth-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.scout-youth .link-button,
+.scout-youth .link-button:hover:not(:disabled) {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent-text);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.scout-youth-search {
+  max-width: 460px;
+  margin-bottom: 12px;
+}
+
+.scout-youth-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin-bottom: 12px;
+}
+
+.scout-youth-intro .scout-intro {
+  margin: 0;
+}
+
+.scout-youth-intro .scout-how {
+  margin-right: 0;
+}
+
+.scout-youth .scout-note {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+.scout-youth-empty {
+  padding: 28px 16px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.scout-youth-empty p {
+  margin: 0;
+}
+
+.scout-youth-empty p + p {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.scout-youth-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.scout-youth-day,
+.scout-youth-day:hover:not(:disabled) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 3px 5px 3px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.scout-youth-day:hover:not(:disabled, [aria-pressed="true"]) {
+  background: var(--hover);
+}
+
+.scout-youth-day[aria-pressed="true"],
+.scout-youth-day[aria-pressed="true"]:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.scout-youth-day-count {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--raised);
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.scout-youth-day[aria-pressed="true"] .scout-youth-day-count {
+  background: color-mix(in srgb, var(--on-accent) 20%, transparent);
+  color: var(--on-accent);
+}
+
+.scout-youth-summary,
+.scout-youth-status {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.scout-youth-status {
+  color: var(--ok);
+}
+
+.scout-youth-grid td {
+  vertical-align: middle;
+}
+
+.scout-youth-grid .sub {
+  display: block;
+}
+
+.scout-youth-positions {
+  white-space: nowrap;
+}
+
+.scout-youth-grid .scout-youth-pa {
+  font-weight: 650;
+}
+
+.scout-youth-edit svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.scout-youth-grid tbody tr.scout-youth-open td {
+  border-bottom-color: transparent;
+  background: var(--accent-faint);
+}
+
+.scout-youth-grid tbody tr.scout-youth-open .scout-youth-edit {
+  opacity: 1;
+}
+
+.scout-youth-grid tbody tr.scout-youth-editor-row td,
+.scout-youth-grid tbody tr.scout-youth-editor-row:hover td {
+  padding: 0 8px 12px;
+  background: var(--accent-faint);
+}
+
+.scout-youth-editor {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.scout-youth-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+}
+
+.scout-youth-fields .scout-field {
+  margin-bottom: 0;
+}
+
+.scout-youth-date {
+  width: 150px;
+}
+
+.scout-youth-nation,
+.scout-youth-city {
+  width: 200px;
+}
+
+.scout-youth-number {
+  width: 92px;
+}
+
+.scout-youth-buttons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-left: auto;
+}
+
+.scout-youth-notes {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--danger);
+  font-size: 13px;
+}
+
 /* The actions at the end of a row of found players: quiet until the row is pointed at or one has focus. */
 .scout-grid th.scout-col-actions,
 .scout-grid td.scout-col-actions {

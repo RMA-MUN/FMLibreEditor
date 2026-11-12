@@ -620,6 +620,7 @@ export const de: Strings = {
     date_of_birth: "Geburtsdatum",
     asking_price: "Ablöseforderung",
     nation: "Nationalität",
+    city_of_birth: "Geburtsort",
     "reputation.home": "Nationale Reputation",
     "reputation.current": "Derzeitige Reputation",
     "reputation.world": "Weltreputation",
@@ -1359,6 +1360,7 @@ export const de: Strings = {
 
   edit: {
     unknownNation: "Unbekanntes Land",
+    unknownCity: "Unbekannte Stadt",
     edit: "Bearbeiten",
     editTitle: "Ändert die Werte dieses Profils im Spiel",
     startFailed: (reason) => `Das Bearbeiten konnte nicht gestartet werden: ${reason}`,
@@ -2185,6 +2187,7 @@ export const de: Strings = {
       similar: "Ähnliche Spieler",
       depth: "Kadertiefe",
       departures: "Abgabekandidaten",
+      youth: "Jugendaufnahme",
     },
     status: {
       missing: "Fehlt",
@@ -2557,9 +2560,7 @@ export const de: Strings = {
       fee: "Gesch. Ablöse",
       abilities: "CA / PA",
       value: "Wert",
-      verdict: "Urteil",
       role: "Rolle",
-      versus: (name) => `Markierungen: ${name}, Ihre Nr. 1`,
       strengths: "Stärken",
       weaknesses: "Schwächen",
       profile: "Charakter",
@@ -2579,6 +2580,67 @@ export const de: Strings = {
         loyal: "Loyal",
         hotHeaded: "Hitzköpfig",
       },
+    },
+    /** „Jugendaufnahme“: die Spieler, die das Spiel bei der Jugendaufnahme eines Vereins erzeugt hat, nach dem Tag ihres Eintritts, und ihre Änderungen. */
+    youth: {
+      intro: "Die Spieler, die das Spiel bei den Jugendaufnahmen des Vereins erzeugt hat und die noch dort sind, nach dem Tag ihres Eintritts.",
+      otherClub: "Anderen Verein ansehen",
+      searchLabel: "Verein zum Ansehen",
+      mine: "Zurück zu meinem Verein",
+      intakesLabel: "Jugendaufnahmen",
+      /** A day nothing says. */
+      noDay: "Tag unbekannt",
+      /** `best` is a name and the potential in brackets. */
+      summary: (count, average, best) =>
+        `${count === 1 ? "1 Spieler" : `${format(count)} Spieler`} · durchschnittliches Potenzial ${average} · bester: ${best}`,
+      lent: (count) => (count === 1 ? "1 verliehen" : `${format(count)} verliehen`),
+      how: {
+        label: "Wie entsteht diese Liste?",
+        note: "Das Spiel markiert jeden Spieler, den es erzeugt. Zur Jugendaufnahme eines Vereins zählen die Spieler, die es erzeugt hat, die mit 17 oder jünger zum Verein kamen und bei keinem anderen Verein ausgebildet wurden: die, die er jetzt hat, verliehene eingeschlossen. Ein Spieler, der aus der Jugendaufnahme eines anderen Vereins gekauft wurde, fehlt, ebenso einer, den der Verein abgegeben hat. Ein Nachwuchsspieler, den ein anderer Verein abgegeben hat und der hier angefangen hat, gehört zur Jugendaufnahme seines Tages. Wer an einem Tag eingetreten ist, bildet eine Jugendaufnahme.",
+      },
+      unmarked:
+        "Der Editor weiß nicht, wie diese Version des Spiels die von ihm erzeugten Spieler markiert: Die jungen Spieler des Vereins aus der Datenbank des Spiels werden deshalb ebenfalls aufgelistet.",
+      empty: (club) => `${club} hat derzeit keine Spieler aus der Jugendaufnahme.`,
+      emptyHint: "Die Spieler einer Jugendaufnahme erscheinen hier, solange sie beim Verein sind. Sehen Sie sich einen anderen Verein an, um dessen Jugendaufnahme zu sehen.",
+      columns: {
+        player: "Spieler",
+        position: "Pos.",
+        born: "Geboren",
+        nation: "Nationalität",
+        city: "Geburtsort",
+        ca: "CA",
+        pa: "PA",
+        actions: "Bearbeiten",
+      },
+      age: (age) => `Alter ${format(age)}`,
+      joinedAt: (age) => `mit ${format(age)} eingetreten`,
+      onLoan: (club) => `Verliehen an ${club}`,
+      youthContract: "Nachwuchsvertrag",
+      edit: (name) => `${name} bearbeiten`,
+      editor: {
+        label: (name) => `${name} wird bearbeitet`,
+        reading: "Seine Werte werden gelesen…",
+        dateOfBirth: "Geburtsdatum",
+        nation: "Nationalität",
+        city: "Geburtsort",
+        /** The city select of a player without a city: the game keeps none for him, and the editor sets none. */
+        noCity: "Keiner im Spiel",
+        /** Above the cities of the nation picked: they are the ones people of the save were born in. */
+        cityHint: "Orte, in denen Personen dieses Spielstands geboren wurden",
+        ca: "Derzeitige Fähigkeit",
+        pa: "Potenzielle Fähigkeit",
+        save: "Speichern",
+        saving: "Wird gespeichert…",
+        cancel: "Abbrechen",
+        profile: "Vollständiges Profil",
+        profileTitle: "Positionen, Attribute und der Rest, im Profil des Spielers",
+        nothing: "Nichts zu speichern: Es wurde kein Wert geändert.",
+        saved: (count) => (count === 1 ? "1 Änderung gespeichert." : `${format(count)} Änderungen gespeichert.`),
+        failed: (field, reason) => `${field}: ${reason}`,
+        invalid: (field) => `${field}: kein zulässiger Wert.`,
+      },
+      loading: "Jugendaufnahmen werden gelesen…",
+      failed: (reason) => `Die Jugendaufnahmen konnten nicht gelesen werden: ${reason}`,
     },
     roles: {
       bgk: "Ballspielender Torwart",

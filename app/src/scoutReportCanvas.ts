@@ -1,23 +1,24 @@
 // The scout report as a picture: one card about a player the scout found, drawn on a canvas so that what the dialog
 // shows is what is saved and copied. It takes the colours of the app's theme as they are when it is drawn, and the
-// app's typeface.
+// app's typeface. The card is made to be shared, so it says nothing about the user's own squad or money: no verdict
+// against the club's player at the position, no ticks of his on the bars, no notes about the budget.
 
 import { formatDate, formatMoney, formatPercent } from "./format";
 import { intlLocale } from "./i18n";
 import { ATTRIBUTE_LABELS, type AttributeKey, positionLabel, scoutingText } from "./labels";
 import { pictureUrl } from "./pictures";
-import { chanceOf, familiarity, reasonText, roleName, type ScoutPick, verdictOf, whyText } from "./ScoutParts";
-import type { Fitting, FmDate, PlayerDetails, Role } from "./types";
+import { chanceOf, familiarity, reasonText, roleName, type ScoutPick, whyText } from "./ScoutParts";
+import type { FmDate, PlayerDetails, Role } from "./types";
 
 const text = scoutingText.report;
+
+/** The scout's reasons that are about the user's own money, left off a card made to be shared. */
+const OWN_MONEY_REASONS = new Set(["overBudget", "stretch", "wageHigh"]);
 
 /** What a report is drawn from. */
 export interface ReportData {
   pick: ScoutPick;
   details: PlayerDetails;
-  /** The club's best player at the position, and his profile, to measure the player against. */
-  starter: Fitting | null;
-  starterDetails: PlayerDetails | null;
   /** The roles he was measured for. */
   inPossession: Role | undefined;
   outOfPossession: Role | undefined;
@@ -127,7 +128,7 @@ function traits(details: PlayerDetails): string[] {
 
 /** Draws the report on a new canvas and gives it back cut to its height. */
 export async function drawReport(data: ReportData): Promise<HTMLCanvasElement> {
-  const { pick, details, starter, starterDetails } = data;
+  const { pick, details } = data;
   const s = pick.suggestion;
   const colours = palette();
   await Promise.all([
@@ -298,27 +299,9 @@ export async function drawReport(data: ReportData): Promise<HTMLCanvasElement> {
       write(fit(tile.sub, tileWidth - 24), tx + 12, y + 66, colours.muted);
     }
   });
-  y += tileHeight + 22;
+  y += tileHeight + 40;
 
-  // The verdict: against the club's best player at the position, and how likely he is to come.
-  const verdict = verdictOf(s.fit, starter);
-  const verdictText = [
-    verdict ? scoutingText.verdicts[verdict] : scoutingText.verdicts.none,
-    starter ? `(${starter.player.name}, ${starter.fit})` : null,
-  ]
-    .filter(Boolean)
-    .join(" ");
-  const verdictColour =
-    verdict === "better" ? colours.tiers[3] : verdict === "close" ? colours.tiers[2] : verdict ? colours.tiers[0] : colours.muted;
-  g.fillStyle = verdictColour;
-  g.fillRect(PAD, y - 14, 4, 20);
-  label(text.verdict, PAD + 14, y - 2);
-  font(700, 15);
-  const verdictX = PAD + 14 + 90;
-  write(fit(verdictText, right - verdictX), verdictX, y, colours.text);
-  y += 34;
-
-  // The role and the attributes it leans on, each against the club's best player there.
+  // The role and the attributes it leans on.
   const roles = [data.inPossession, data.outOfPossession].filter((role): role is Role => role !== undefined);
   const keyAttributes = [...new Set(roles.flatMap((role) => role.keyAttributes))];
   const otherAttributes = [...new Set(roles.flatMap((role) => role.otherAttributes))].filter(
@@ -329,20 +312,15 @@ export async function drawReport(data: ReportData): Promise<HTMLCanvasElement> {
   label(text.role, PAD, y + 4);
   font(700, 14);
   const roleLine = roles.map((role) => roleName(role.key)).join(" · ") || scoutingText.none;
-  write(fit(roleLine, right - PAD - 160), PAD + 80, y + 5, colours.text);
-  if (starter) {
-    font(500, 12);
-    write(fit(text.versus(starter.player.name), 220), right, y + 5, colours.muted, "right");
-  }
+  write(fit(roleLine, right - PAD - 80), PAD + 80, y + 5, colours.text);
   y += 26;
 
   const shownAttributes = keyAttributes.slice(0, 10);
   const labelWidth = 170;
   const barX = PAD + labelWidth;
-  const barWidth = WIDTH - 2 * PAD - labelWidth - 90;
+  const barWidth = WIDTH - 2 * PAD - labelWidth - 40;
   for (const key of shownAttributes) {
     const value = details.attributes[key]?.value;
-    const own = starterDetails?.attributes[key]?.value;
     font(500, 13.5);
     write(fit(ATTRIBUTE_LABELS[key as AttributeKey] ?? key, labelWidth - 12), PAD, y + 10, colours.text);
     rounded(barX, y, barWidth, 12, 3);
@@ -353,19 +331,8 @@ export async function drawReport(data: ReportData): Promise<HTMLCanvasElement> {
       g.fillStyle = tierColour(colours, value);
       g.fill();
     }
-    if (own !== undefined) {
-      // The club's player: a tick on the bar where his value is.
-      const tick = barX + (barWidth * own) / 20;
-      g.fillStyle = colours.text;
-      g.fillRect(tick - 1, y - 3, 2, 18);
-    }
     font(800, 14);
-    write(value === undefined ? scoutingText.none : String(value), barX + barWidth + 12, y + 11, colours.text);
-    if (value !== undefined && own !== undefined && value !== own) {
-      font(700, 12);
-      const delta = value - own;
-      write(delta > 0 ? `+${delta}` : String(delta), right, y + 11, delta > 0 ? colours.tiers[3] : colours.tiers[0], "right");
-    }
+    write(value === undefined ? scoutingText.none : String(value), right, y + 11, colours.text, "right");
     y += 22;
   }
   y += 14;
@@ -428,7 +395,7 @@ export async function drawReport(data: ReportData): Promise<HTMLCanvasElement> {
   if (pick.similarity !== undefined && pick.similarity !== null) {
     notes.push({ value: text.similarity(pick.similarity), colour: colours.link });
   }
-  for (const reason of s.reasons) {
+  for (const reason of s.reasons.filter((r) => !OWN_MONEY_REASONS.has(r.code))) {
     notes.push({
       value: reasonText(reason),
       colour: reason.points > 0 ? colours.tiers[3] : reason.points < 0 ? colours.tiers[0] : colours.muted,

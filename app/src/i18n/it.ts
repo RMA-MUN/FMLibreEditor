@@ -603,6 +603,7 @@ export const it: Strings = {
     date_of_birth: "Data di nascita",
     asking_price: "Prezzo richiesto",
     nation: "Nazionalità",
+    city_of_birth: "Città di nascita",
     "reputation.home": "Reputazione casalinga",
     "reputation.current": "Reputazione attuale",
     "reputation.world": "Reputazione mondiale",
@@ -1321,6 +1322,7 @@ export const it: Strings = {
 
   edit: {
     unknownNation: "Nazione sconosciuta",
+    unknownCity: "Città sconosciuta",
     edit: "Modifica",
     editTitle: "Cambia i valori di questo profilo nel gioco",
     startFailed: (reason) => `Non è stato possibile iniziare la modifica: ${reason}`,
@@ -2125,6 +2127,7 @@ export const it: Strings = {
       similar: "Giocatori simili",
       depth: "Profondità della rosa",
       departures: "Giocatori da cedere",
+      youth: "Nuovi giovani",
     },
     status: {
       missing: "Scoperto",
@@ -2490,9 +2493,7 @@ export const it: Strings = {
       fee: "Costo stim.",
       abilities: "AA / AP",
       value: "Valore",
-      verdict: "Verdetto",
       role: "Ruolo",
-      versus: (name) => `Indicatori: ${name}, il tuo n. 1`,
       strengths: "Punti di forza",
       weaknesses: "Punti deboli",
       profile: "Carattere",
@@ -2512,6 +2513,67 @@ export const it: Strings = {
         loyal: "Leale",
         hotHeaded: "Irascibile",
       },
+    },
+    /** "Nuovi giovani": i giocatori che il gioco ha creato nei nuovi giovani di una società, per giorno di arrivo, e le loro modifiche. */
+    youth: {
+      intro: "I giocatori che il gioco ha creato nei nuovi giovani della società e che sono ancora lì, per giorno di arrivo.",
+      otherClub: "Guarda un'altra società",
+      searchLabel: "Società da guardare",
+      mine: "Torna alla mia società",
+      intakesLabel: "Nuovi giovani",
+      /** A day nothing says. */
+      noDay: "Giorno sconosciuto",
+      /** `best` is a name and the potential in brackets. */
+      summary: (count, average, best) =>
+        `${count === 1 ? "1 giocatore" : `${format(count)} giocatori`} · potenziale medio ${average} · migliore: ${best}`,
+      lent: (count) => (count === 1 ? "1 in prestito" : `${format(count)} in prestito`),
+      how: {
+        label: "Come viene creato questo elenco?",
+        note: "Il gioco segna ogni giocatore che crea. I nuovi giovani di una società sono i giocatori che ha creato, arrivati in società a 17 anni o meno e non cresciuti in nessun'altra società: quelli che ha adesso, compresi quelli in prestito. Un giocatore comprato dai nuovi giovani di un'altra società è escluso, come uno che la società ha lasciato andare. Un giovane lasciato andare da un'altra società, che aveva iniziato qui, rientra nei nuovi giovani del suo giorno. Chi è arrivato nello stesso giorno forma un gruppo di nuovi giovani.",
+      },
+      unmarked:
+        "L'editor non sa come questa versione del gioco segna i giocatori che crea: vengono elencati anche i giovani della società presi dal database del gioco.",
+      empty: (club) => `${club} al momento non ha giocatori dei nuovi giovani.`,
+      emptyHint: "I giocatori dei nuovi giovani compaiono qui finché sono in società. Guarda un'altra società per vedere i suoi nuovi giovani.",
+      columns: {
+        player: "Giocatore",
+        position: "Ruolo",
+        born: "Nato il",
+        nation: "Nazionalità",
+        city: "Città di nascita",
+        ca: "AA",
+        pa: "AP",
+        actions: "Modifica",
+      },
+      age: (age) => `${format(age)} anni`,
+      joinedAt: (age) => `arrivato a ${format(age)} anni`,
+      onLoan: (club) => `In prestito presso ${club}`,
+      youthContract: "Contratto giovanile",
+      edit: (name) => `Modifica ${name}`,
+      editor: {
+        label: (name) => `Modifica di ${name}`,
+        reading: "Lettura dei suoi valori…",
+        dateOfBirth: "Data di nascita",
+        nation: "Nazionalità",
+        city: "Città di nascita",
+        /** The city select of a player without a city: the game keeps none for him, and the editor sets none. */
+        noCity: "Nessuna nel gioco",
+        /** Above the cities of the nation picked: they are the ones people of the save were born in. */
+        cityHint: "Città in cui sono nate persone di questo salvataggio",
+        ca: "Abilità attuale",
+        pa: "Abilità potenziale",
+        save: "Salva",
+        saving: "Salvataggio…",
+        cancel: "Annulla",
+        profile: "Profilo completo",
+        profileTitle: "Ruoli, attributi e il resto, nel profilo del giocatore",
+        nothing: "Niente da salvare: nessun valore è stato modificato.",
+        saved: (count) => (count === 1 ? "1 modifica salvata." : `${format(count)} modifiche salvate.`),
+        failed: (field, reason) => `${field}: ${reason}`,
+        invalid: (field) => `${field}: non è un valore valido.`,
+      },
+      loading: "Lettura dei nuovi giovani…",
+      failed: (reason) => `Impossibile leggere i nuovi giovani: ${reason}`,
     },
     roles: {
       bgk: "Portiere di costruzione",

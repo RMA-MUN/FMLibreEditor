@@ -25,7 +25,7 @@ interface ScoutReportProps extends ReportAsk {
 /** Where the picture stands: being drawn, drawn (with its address to show), or failed. */
 type Drawn = { state: "drawing" } | { state: "done"; canvas: HTMLCanvasElement; url: string } | { state: "failed"; error: string };
 
-export function ScoutReport({ pick, starter, roles, gameDate, onSimilar, onClose }: ScoutReportProps) {
+export function ScoutReport({ pick, roles, gameDate, onSimilar, onClose }: ScoutReportProps) {
   const titleId = useId();
   const dialog = useRef<HTMLDivElement>(null);
   useModal(dialog, true, onClose);
@@ -45,15 +45,10 @@ export function ScoutReport({ pick, starter, roles, gameDate, onSimilar, onClose
     const role = (phase: Role["phase"], key: string | null) =>
       roles.find((r) => r.phase === phase && r.key === key);
     (async () => {
-      const [details, starterDetails] = await Promise.all([
-        playerDetails(player.uid),
-        starter ? playerDetails(starter.player.uid).catch(() => null) : Promise.resolve(null),
-      ]);
+      const details = await playerDetails(player.uid);
       const canvas = await drawReport({
         pick,
         details,
-        starter,
-        starterDetails,
         inPossession: role("inPossession", pick.suggestion.inPossessionRole),
         outOfPossession: role("outOfPossession", pick.suggestion.outOfPossessionRole),
         gameDate,
@@ -68,7 +63,7 @@ export function ScoutReport({ pick, starter, roles, gameDate, onSimilar, onClose
     return () => {
       live = false;
     };
-  }, [pick, starter, roles, gameDate, player.uid]);
+  }, [pick, roles, gameDate, player.uid]);
 
   // The picture's address is let go with the dialog.
   useEffect(() => () => (drawn.state === "done" ? URL.revokeObjectURL(drawn.url) : undefined), [drawn]);

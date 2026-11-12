@@ -1,9 +1,19 @@
 // The Scouting tab's own commands beyond the advice (see `editing.ts` for those): the lists of opportunities, players
-// like a given one, and saving a scout report. All of them only read the game.
+// like a given one, saving a scout report, and the club's youth intakes with the cities a city of birth can be set to.
+// All of them only read the game.
 
 import { invoke } from "@tauri-apps/api/core";
 import { call, inTauri } from "./api";
-import type { ExportReport, Opportunities, OpportunityRequest, PlayerDetails, Similar, SimilarRequest } from "./types";
+import type {
+  City,
+  ExportReport,
+  Opportunities,
+  OpportunityRequest,
+  PlayerDetails,
+  Similar,
+  SimilarRequest,
+  YouthIntakes,
+} from "./types";
 
 /** The players of one list of opportunities, and how many every list holds. */
 export const scoutingOpportunities = (request: OpportunityRequest) =>
@@ -31,3 +41,9 @@ export async function saveScoutReport(uid: number, bytes: Uint8Array, format: Re
     headers: { "x-fmlibre-player": String(uid), "x-fmlibre-format": format },
   });
 }
+
+/** The youth intakes of the club `club`, or of the user's club when none is given, the newest first. */
+export const youthIntakes = (club: number | null) => call<YouthIntakes>("youth_intakes", { club });
+
+/** The cities the players of the save were born in, by name: what a city of birth can be set to. */
+export const birthCities = () => call<City[]>("birth_cities");

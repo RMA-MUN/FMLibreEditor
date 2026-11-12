@@ -189,10 +189,9 @@ export interface CompareAsk {
   pool: ScoutPick[];
 }
 
-/** What opens a scout report: the player, and the club's best player at his position to measure him against. */
+/** What opens a scout report: the player as the scout found him. */
 export interface ReportAsk {
   pick: ScoutPick;
-  starter: Fitting | null;
 }
 
 /** What the three actions of a row of found players do; one left out is not offered. */

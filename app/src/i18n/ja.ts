@@ -559,6 +559,7 @@ export const ja: Strings = {
     date_of_birth: "生年月日",
     asking_price: "希望移籍金",
     nation: "国籍",
+    city_of_birth: "出生地",
     "reputation.home": "国内評価",
     "reputation.current": "現在の評価",
     "reputation.world": "世界的評価",
@@ -1242,6 +1243,7 @@ export const ja: Strings = {
 
   edit: {
     unknownNation: "不明な国",
+    unknownCity: "不明な都市",
     edit: "編集",
     editTitle: "このプロフィールの値をゲーム内で変更します",
     startFailed: (reason: string) => `編集を開始できませんでした：${reason}`,
@@ -1994,6 +1996,7 @@ export const ja: Strings = {
       similar: "似た選手",
       depth: "選手層",
       departures: "放出候補",
+      youth: "ユース入団",
     },
     status: {
       missing: "不在",
@@ -2350,9 +2353,7 @@ export const ja: Strings = {
       fee: "推定移籍金",
       abilities: "CA / PA",
       value: "市場価値",
-      verdict: "評価",
       role: "役割",
-      versus: (name: string) => `目盛り：${name}（あなたの1番手）`,
       strengths: "長所",
       weaknesses: "短所",
       profile: "性格",
@@ -2372,6 +2373,67 @@ export const ja: Strings = {
         loyal: "忠実",
         hotHeaded: "短気",
       },
+    },
+    /** "Youth intake": the players the game made at a club's youth intakes, by the day they joined it, and their edits. */
+    youth: {
+      intro: "ゲームがクラブのユース入団で生み出した、現在も在籍している選手を、入団した日ごとに表示します。",
+      otherClub: "他のクラブを見る",
+      searchLabel: "見るクラブ",
+      mine: "自分のクラブに戻る",
+      intakesLabel: "ユース入団",
+      /** A day nothing says. */
+      noDay: "日付不明",
+      /** `best` is a name and the potential in brackets. */
+      summary: (count: number, average: string, best: string) =>
+        `選手${format(count)}人 · 平均潜在能力 ${average} · 最高：${best}`,
+      lent: (count: number) => `ローン中${format(count)}人`,
+      how: {
+        label: "このリストはどのように作られますか？",
+        note: "ゲームは自分が生み出した選手すべてに印を付けています。クラブのユース入団選手とは、ゲームが生み出し、17歳以下でクラブに加入し、他のクラブでは育成されていない選手のうち、現在クラブにいる選手（ローン中を含む）です。他クラブのユース入団選手を獲得した場合や、クラブが放出した選手は含まれません。他のクラブが放出したユース候補で、もともとここで育った選手は、その日の入団に加わります。同じ日に加入した選手が1つの入団になります。",
+      },
+      unmarked:
+        "このバージョンのゲームが生み出した選手にどのように印を付けているか、エディターは把握していません。そのため、ゲームのデータベースにあるクラブ自身の若手選手も表示されます。",
+      empty: (club: string) => `${club}には現在ユース入団選手がいません。`,
+      emptyHint: "入団した選手は、クラブに在籍している間ここに表示されます。他のクラブを見ると、そのユース入団を確認できます。",
+      columns: {
+        player: "選手",
+        position: "Pos",
+        born: "生年月日",
+        nation: "国籍",
+        city: "出身地",
+        ca: "CA",
+        pa: "PA",
+        actions: "編集",
+      },
+      age: (age: number) => `${format(age)}歳`,
+      joinedAt: (age: number) => `${format(age)}歳で加入`,
+      onLoan: (club: string) => `${club}にローン中`,
+      youthContract: "ユース契約",
+      edit: (name: string) => `${name}を編集`,
+      editor: {
+        label: (name: string) => `${name}を編集中`,
+        reading: "値を読み込み中…",
+        dateOfBirth: "生年月日",
+        nation: "国籍",
+        city: "出身地",
+        /** The city select of a player without a city: the game keeps none for him, and the editor sets none. */
+        noCity: "ゲームに登録なし",
+        /** Above the cities of the nation picked: they are the ones people of the save were born in. */
+        cityHint: "このセーブの人物が生まれた都市",
+        ca: "現在能力",
+        pa: "潜在能力",
+        save: "保存",
+        saving: "保存中…",
+        cancel: "キャンセル",
+        profile: "完全なプロフィール",
+        profileTitle: "選手のプロフィールで、ポジション・能力値などを確認できます",
+        nothing: "保存するものがありません：値は変更されていません。",
+        saved: (count: number) => `${format(count)}件の変更を保存しました。`,
+        failed: (field: string, reason: string) => `${field}：${reason}`,
+        invalid: (field: string) => `${field}：設定できない値です。`,
+      },
+      loading: "ユース入団を読み込み中…",
+      failed: (reason: string) => `ユース入団を読み込めませんでした：${reason}`,
     },
     roles: {
       bgk: "ビルドアップ型GK",

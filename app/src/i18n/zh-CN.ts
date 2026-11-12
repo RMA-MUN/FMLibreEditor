@@ -574,6 +574,7 @@ export const zhCN: Strings = {
     date_of_birth: "出生日期",
     asking_price: "要价",
     nation: "国籍",
+    city_of_birth: "出生地",
     "reputation.home": "本国声望",
     "reputation.current": "当前声望",
     "reputation.world": "世界声望",
@@ -1399,6 +1400,7 @@ export const zhCN: Strings = {
   edit: {
     /** A nation field's value whose name the app has not read: one no one in the lists belongs to. */
     unknownNation: "未知国家或地区",
+    unknownCity: "未知城市",
     /** The button in the header of a profile that can be edited. */
     edit: "编辑",
     editTitle: "修改此档案在游戏中的数值",
@@ -2372,6 +2374,7 @@ export const zhCN: Strings = {
       similar: "相似球员",
       depth: "阵容深度",
       departures: "建议放走",
+      youth: "青训新人",
     },
     /** The depth statuses: the dots on the pitch and the badges of the cards. */
     status: {
@@ -2736,9 +2739,7 @@ export const zhCN: Strings = {
       fee: "预估转会费",
       abilities: "CA / PA",
       value: "身价",
-      verdict: "结论",
       role: "职责",
-      versus: (name: string) => `刻度线：${name}，你的头号人选`,
       strengths: "优点",
       weaknesses: "缺点",
       profile: "性格",
@@ -2758,6 +2759,67 @@ export const zhCN: Strings = {
         loyal: "忠诚",
         hotHeaded: "脾气火爆",
       },
+    },
+    /** "Youth intake": the players the game made at a club's youth intakes, by the day they joined it, and their edits. */
+    youth: {
+      intro: "游戏在俱乐部青训招收的新人中，目前仍在俱乐部的球员，按他们加入的日期分组。",
+      otherClub: "查看其他俱乐部",
+      searchLabel: "要查看的俱乐部",
+      mine: "返回我的俱乐部",
+      intakesLabel: "青训新人",
+      /** A day nothing says. */
+      noDay: "日期未知",
+      /** `best` is a name and the potential in brackets. */
+      summary: (count: number, average: string, best: string) =>
+        `${format(count)} 名球员 · 平均潜力 ${average} · 最佳：${best}`,
+      lent: (count: number) => `${format(count)} 人外租`,
+      how: {
+        label: "这份名单是怎么生成的？",
+        note: "游戏会标记它生成的每一名球员。俱乐部的青训新人，是指游戏生成、17 岁及以下加入俱乐部、且没有在其他俱乐部训练过的球员：包括目前仍在队中的球员，外租中的也算。从其他俱乐部青训新人中买来的球员不计入，俱乐部已经放走的球员也不计入。被其他俱乐部放走、但最初出自本俱乐部的青训候选球员，会归入他当年加入的那一批。同一天加入的球员算作一批新人。",
+      },
+      unmarked:
+        "编辑器不清楚这个版本的游戏如何标记它生成的球员，因此游戏数据库中属于该俱乐部的年轻球员也会一并列出。",
+      empty: (club: string) => `${club}目前没有青训新人。`,
+      emptyHint: "新人在俱乐部期间会显示在这里。查看其他俱乐部，即可看到它的青训新人。",
+      columns: {
+        player: "球员",
+        position: "位置",
+        born: "出生日期",
+        nation: "国籍",
+        city: "出生地",
+        ca: "CA",
+        pa: "PA",
+        actions: "编辑",
+      },
+      age: (age: number) => `${format(age)} 岁`,
+      joinedAt: (age: number) => `${format(age)} 岁加入`,
+      onLoan: (club: string) => `租借至${club}`,
+      youthContract: "青训合同",
+      edit: (name: string) => `编辑${name}`,
+      editor: {
+        label: (name: string) => `正在编辑${name}`,
+        reading: "正在读取数值…",
+        dateOfBirth: "出生日期",
+        nation: "国籍",
+        city: "出生地",
+        /** The city select of a player without a city: the game keeps none for him, and the editor sets none. */
+        noCity: "游戏中没有",
+        /** Above the cities of the nation picked: they are the ones people of the save were born in. */
+        cityHint: "本存档中的人物出生的城市",
+        ca: "当前能力",
+        pa: "潜力",
+        save: "保存",
+        saving: "正在保存…",
+        cancel: "取消",
+        profile: "完整档案",
+        profileTitle: "在球员档案中查看位置、属性等信息",
+        nothing: "没有需要保存的内容：没有修改任何数值。",
+        saved: (count: number) => `已保存 ${format(count)} 项修改。`,
+        failed: (field: string, reason: string) => `${field}：${reason}`,
+        invalid: (field: string) => `${field}：不是可用的数值。`,
+      },
+      loading: "正在读取青训新人…",
+      failed: (reason: string) => `无法读取青训新人：${reason}`,
     },
     roles: {
       bgk: "出球型门将",

@@ -251,7 +251,7 @@ export function ScoutSimilar({ overview, version, brief, onBrief, onOpen, onComp
                       pool: items.map((other) => pickOf(other, current.position)),
                     }),
                   onSimilar: () => choose(item.player),
-                  onReport: () => onReport({ pick: pickOf(item, current.position), starter: current.starter }),
+                  onReport: () => onReport({ pick: pickOf(item, current.position) }),
                 })}
               />
             ))}

@@ -533,6 +533,7 @@ export const id: Strings = {
     date_of_birth: "Tanggal lahir",
     asking_price: "Harga yang diminta",
     nation: "Kewarganegaraan",
+    city_of_birth: "Kota kelahiran",
     "reputation.home": "Reputasi kandang",
     "reputation.current": "Reputasi saat ini",
     "reputation.world": "Reputasi dunia",
@@ -1216,6 +1217,7 @@ export const id: Strings = {
 
   edit: {
     unknownNation: "Negara tak dikenal",
+    unknownCity: "Kota tak dikenal",
     edit: "Edit",
     editTitle: "Ubah nilai profil ini di game",
     startFailed: (reason: string) => `Tidak bisa mulai mengedit: ${reason}`,
@@ -1966,6 +1968,7 @@ export const id: Strings = {
       similar: "Pemain serupa",
       depth: "Kedalaman skuad",
       departures: "Pemain yang dilepas",
+      youth: "Lulusan akademi",
     },
     status: {
       missing: "Kosong",
@@ -2309,9 +2312,7 @@ export const id: Strings = {
       fee: "Perk. biaya",
       abilities: "CA / PA",
       value: "Nilai",
-      verdict: "Penilaian",
       role: "Peran",
-      versus: (name) => `Tanda: ${name}, pilihan utamamu`,
       strengths: "Kekuatan",
       weaknesses: "Kelemahan",
       profile: "Karakter",
@@ -2331,6 +2332,66 @@ export const id: Strings = {
         loyal: "Setia",
         hotHeaded: "Mudah emosi",
       },
+    },
+    /** "Lulusan akademi": the players the game made at a club's youth intakes, by the day they joined it, and their edits. */
+    youth: {
+      intro: "Pemain yang dibuat game di penerimaan pemain muda klub dan masih ada di sana, menurut hari mereka bergabung.",
+      otherClub: "Lihat klub lain",
+      searchLabel: "Klub yang dilihat",
+      mine: "Kembali ke klubku",
+      intakesLabel: "Angkatan akademi",
+      /** A day nothing says. */
+      noDay: "Hari tidak diketahui",
+      /** `best` is a name and the potential in brackets. */
+      summary: (count, average, best) => `${format(count)} pemain · potensi rata-rata ${average} · terbaik: ${best}`,
+      lent: (count) => `${format(count)} dipinjamkan`,
+      how: {
+        label: "Bagaimana daftar ini dibuat?",
+        note: "Game menandai setiap pemain yang dibuatnya. Lulusan akademi sebuah klub adalah pemain buatan game yang bergabung dengan klub itu pada usia 17 tahun atau lebih muda dan tidak dilatih di klub lain: yang sekarang ada di klub, termasuk yang sedang dipinjamkan. Pemain yang dibeli dari akademi klub lain tidak dihitung, begitu pula pemain yang sudah dilepas klub. Calon pemain muda yang dilepas klub lain tetapi memulai di sini masuk ke angkatan harinya. Pemain yang bergabung pada hari yang sama membentuk satu angkatan.",
+      },
+      unmarked:
+        "Editor tidak tahu bagaimana versi game ini menandai pemain buatannya: pemain muda milik klub dari database game juga ikut didaftarkan.",
+      empty: (club) => `${club} saat ini tidak punya pemain lulusan akademi.`,
+      emptyHint: "Pemain sebuah angkatan tampil di sini selama masih di klub. Lihat klub lain untuk melihat akademinya.",
+      columns: {
+        player: "Pemain",
+        position: "Pos",
+        born: "Lahir",
+        nation: "Kewarganegaraan",
+        city: "Kota lahir",
+        ca: "CA",
+        pa: "PA",
+        actions: "Edit",
+      },
+      age: (age) => `Usia ${format(age)}`,
+      joinedAt: (age) => `bergabung usia ${format(age)}`,
+      onLoan: (club) => `Dipinjamkan ke ${club}`,
+      youthContract: "Kontrak pemain muda",
+      edit: (name) => `Edit ${name}`,
+      editor: {
+        label: (name) => `Mengedit ${name}`,
+        reading: "Membaca nilainya…",
+        dateOfBirth: "Tanggal lahir",
+        nation: "Kewarganegaraan",
+        city: "Kota lahir",
+        /** The city select of a player without a city: the game keeps none for him, and the editor sets none. */
+        noCity: "Tidak ada di game",
+        /** Above the cities of the nation picked: they are the ones people of the save were born in. */
+        cityHint: "Kota tempat orang di save ini dilahirkan",
+        ca: "Kemampuan saat ini",
+        pa: "Kemampuan potensial",
+        save: "Simpan",
+        saving: "Menyimpan…",
+        cancel: "Batal",
+        profile: "Profil lengkap",
+        profileTitle: "Posisi, atribut, dan lainnya, di profil pemain",
+        nothing: "Tidak ada yang disimpan: tidak ada nilai yang diubah.",
+        saved: (count) => `${format(count)} perubahan disimpan.`,
+        failed: (field, reason) => `${field}: ${reason}`,
+        invalid: (field) => `${field}: bukan nilai yang bisa diterima.`,
+      },
+      loading: "Membaca angkatan akademi…",
+      failed: (reason) => `Angkatan akademi tidak bisa dibaca: ${reason}`,
     },
     // English on purpose, not left untranslated: Indonesian football writing keeps the role names in English, and
     // FM's own Indonesian names read oddly (it gives both holding backs as "Bek Sayap Penahan"). Please keep them.

@@ -305,7 +305,7 @@ export function ScoutOpportunities({
                   pool: items.filter((other) => other.position === o.position).map(pickOfOpportunity),
                 }),
               onSimilar: () => onSimilar(o.player),
-              onReport: () => onReport({ pick: pickOfOpportunity(o), starter: starterAt(o.position) }),
+              onReport: () => onReport({ pick: pickOfOpportunity(o) }),
             })}
           />
         ))}

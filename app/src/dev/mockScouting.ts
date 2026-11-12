@@ -3,6 +3,7 @@
 // worked out from the fixture players, so the tab can be tried without the game.
 
 import type {
+  City,
   ClubSummary,
   Departure,
   DepartureReason,
@@ -27,6 +28,7 @@ import type {
   Starter,
   Suggestion,
   Why,
+  YouthIntakes,
 } from "../types";
 
 /** [key, phase, line] of every role the core knows, in its order. */
@@ -486,5 +488,49 @@ export function scoutingSimilar(f: ScoutingFixtures, request: SimilarRequest): S
     starter,
     examined: f.players.length,
     candidates: candidates.length,
+  };
+}
+
+/**
+ * The youth intakes of the club `clubUid` (the human manager's when null): its players of 17 or younger, as if the
+ * game had made them at the intakes of 11 March 2026 (those 16 or younger then) and 2025.
+ */
+export function youthIntakes(
+  f: ScoutingFixtures,
+  clubUid: number | null,
+  cityOf: (player: PlayerSummary) => City | null,
+): YouthIntakes {
+  const club = clubUid === null ? humanClub(f) : f.clubs.find((c) => c.uid === clubUid)!;
+  const young = f.players
+    .filter((p) => p.clubUid === club.uid && p.age !== null && p.age <= 17 && p.dateOfBirth !== null)
+    .sort((a, b) => b.potentialAbility - a.potentialAbility || b.currentAbility - a.currentAbility);
+  const day = (year: number) => ({ year, month: 3, day: 11 });
+  /** How old a player was on 11 March of `year`. */
+  const ageIn = (p: PlayerSummary, year: number) => {
+    const born = p.dateOfBirth!;
+    return year - born.year - (born.month > 3 || (born.month === 3 && born.day > 11) ? 1 : 0);
+  };
+  const intake = (players: PlayerSummary[], year: number) => ({
+    joined: day(year),
+    players: players.map((player, i) => ({
+      player,
+      city: cityOf(player),
+      joined: day(year),
+      joinedAge: ageIn(player, year),
+      contractType: (player.age ?? 0) <= 16 ? 3 : 1,
+      team: { index: 2, kind: 12, ageLimit: 18 },
+      onLoanAt: year === 2025 && i === 1 ? "Old Mill United" : null,
+      onLoanAtUid: year === 2025 && i === 1 ? 535 : null,
+    })),
+  });
+  const newer = young.filter((p) => ageIn(p, 2026) <= 16);
+  const older = young.filter((p) => ageIn(p, 2026) > 16);
+  return {
+    clubUid: club.uid,
+    club: club.name,
+    marked: true,
+    intakes: [newer.length > 0 ? intake(newer, 2026) : null, older.length > 0 ? intake(older, 2025) : null].filter(
+      (i) => i !== null,
+    ),
   };
 }

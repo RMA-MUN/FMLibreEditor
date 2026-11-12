@@ -643,6 +643,7 @@ export const fr: Strings = {
     date_of_birth: "Date de naissance",
     asking_price: "Prix demandé",
     nation: "Nationalité",
+    city_of_birth: "Ville de naissance",
     "reputation.home": "Réputation à domicile",
     "reputation.current": "Réputation actuelle",
     "reputation.world": "Réputation mondiale",
@@ -1379,6 +1380,7 @@ export const fr: Strings = {
 
   edit: {
     unknownNation: "Pays inconnu",
+    unknownCity: "Ville inconnue",
     edit: "Modifier",
     editTitle: "Modifier les valeurs de ce profil dans le jeu",
     startFailed: (reason) => `Impossible de commencer la modification\u00a0: ${reason}`,
@@ -2203,6 +2205,7 @@ export const fr: Strings = {
       similar: "Joueurs similaires",
       depth: "Profondeur de l'effectif",
       departures: "Départs conseillés",
+      youth: "Arrivée des jeunes",
     },
     status: {
       missing: "Manquant",
@@ -2580,9 +2583,7 @@ export const fr: Strings = {
       fee: "Montant est.",
       abilities: "CA / PA",
       value: "Valeur",
-      verdict: "Verdict",
       role: "Rôle",
-      versus: (name) => `Repères\u00a0: ${name}, votre n° 1`,
       strengths: "Points forts",
       weaknesses: "Points faibles",
       profile: "Caractère",
@@ -2602,6 +2603,67 @@ export const fr: Strings = {
         loyal: "Loyal",
         hotHeaded: "Sanguin",
       },
+    },
+    /** « Arrivée des jeunes » : les joueurs que le jeu a créés lors des arrivées de jeunes d'un club, par jour d'arrivée, et leurs modifications. */
+    youth: {
+      intro: "Les joueurs que le jeu a créés lors des arrivées de jeunes du club et qui y sont encore, par jour d'arrivée.",
+      otherClub: "Voir un autre club",
+      searchLabel: "Club à voir",
+      mine: "Retour à mon club",
+      intakesLabel: "Arrivées de jeunes",
+      /** A day nothing says. */
+      noDay: "Jour inconnu",
+      /** `best` is a name and the potential in brackets. */
+      summary: (count, average, best) =>
+        `${playerCount(count)} · potentiel moyen ${average} · meilleur : ${best}`,
+      lent: (count) => `${counted(count, "prêté", "prêtés")}`,
+      how: {
+        label: "Comment cette liste est-elle établie ?",
+        note: "Le jeu marque chaque joueur qu'il crée. Les jeunes arrivés dans un club sont les joueurs qu'il a créés, qui ont rejoint le club à 17 ans ou moins et n'ont été formés dans aucun autre club : ceux qu'il a actuellement, prêtés compris. Un joueur acheté à l'arrivée de jeunes d'un autre club est exclu, tout comme celui que le club a laissé partir. Un jeune libéré par un autre club, qui a débuté ici, rejoint l'arrivée de son jour. Ceux arrivés le même jour forment une arrivée.",
+      },
+      unmarked:
+        "L'éditeur ne sait pas comment cette version du jeu marque les joueurs qu'il crée : les jeunes du club issus de la base de données du jeu sont donc listés aussi.",
+      empty: (club) => `${club} n'a actuellement aucun joueur issu d'une arrivée de jeunes.`,
+      emptyHint: "Les joueurs d'une arrivée de jeunes s'affichent ici tant qu'ils sont au club. Voyez un autre club pour découvrir ses arrivées de jeunes.",
+      columns: {
+        player: "Joueur",
+        position: "Poste",
+        born: "Né le",
+        nation: "Nationalité",
+        city: "Ville de naissance",
+        ca: "CA",
+        pa: "PA",
+        actions: "Modifier",
+      },
+      age: (age) => `${format(age)} ans`,
+      joinedAt: (age) => `arrivé à ${format(age)} ans`,
+      onLoan: (club) => `Prêté à ${club}`,
+      youthContract: "Contrat jeune",
+      edit: (name) => `Modifier ${name}`,
+      editor: {
+        label: (name) => `Modification de ${name}`,
+        reading: "Lecture de ses valeurs…",
+        dateOfBirth: "Date de naissance",
+        nation: "Nationalité",
+        city: "Ville de naissance",
+        /** The city select of a player without a city: the game keeps none for him, and the editor sets none. */
+        noCity: "Aucune dans le jeu",
+        /** Above the cities of the nation picked: they are the ones people of the save were born in. */
+        cityHint: "Villes où sont nées des personnes de cette sauvegarde",
+        ca: "Niveau actuel",
+        pa: "Niveau potentiel",
+        save: "Enregistrer",
+        saving: "Enregistrement…",
+        cancel: "Annuler",
+        profile: "Profil complet",
+        profileTitle: "Postes, attributs et le reste, dans le profil du joueur",
+        nothing: "Rien à enregistrer : aucune valeur n'a été modifiée.",
+        saved: (count) => `${counted(count, "modification enregistrée", "modifications enregistrées")}.`,
+        failed: (field, reason) => `${field} : ${reason}`,
+        invalid: (field) => `${field} : valeur non valide.`,
+      },
+      loading: "Lecture des arrivées de jeunes…",
+      failed: (reason) => `Impossible de lire les arrivées de jeunes : ${reason}`,
     },
     // The game's names, matched through the editor's keys, which are the game's abbreviations (its French ones beside
     // them: GAP, DCP, ALI, LOI, LOM, LOA, AMJ, AtD...). Its AP is the Advanced Playmaker, its OAM and OCF the Central

@@ -1345,3 +1345,54 @@ export interface Similar {
   examined: number;
   candidates: number;
 }
+
+/** A city, as a player's city of birth points at it (`birth_cities`). */
+export interface City {
+  /** Where the game keeps it: the value of the city of birth field. */
+  address: number;
+  uid: number | null;
+  name: string;
+  /** The nation it is in. */
+  nationUid: number | null;
+}
+
+/** The team of the club that lists a player (named by `teamLabel`). */
+export interface IntakeTeam {
+  index: number;
+  kind: number;
+  ageLimit: number | null;
+}
+
+/** A player of a club's youth intake. */
+export interface IntakePlayer {
+  player: PlayerSummary;
+  city: City | null;
+  /** The day he joined the club: his intake's day. */
+  joined: FmDate | null;
+  /** How old he was then. */
+  joinedAge: number | null;
+  /** The kind of his contract (3: a youth contract); null where the game version does not place it. */
+  contractType: number | null;
+  team: IntakeTeam | null;
+  /** The club he is on loan at. */
+  onLoanAt: string | null;
+  onLoanAtUid: number | null;
+}
+
+/** The players of a club who joined it on one day: one of its youth intakes, best potential first. */
+export interface Intake {
+  joined: FmDate | null;
+  players: IntakePlayer[];
+}
+
+/** What `youth_intakes` returns: a club's youth intakes, the newest first. */
+export interface YouthIntakes {
+  clubUid: number;
+  club: string;
+  /**
+   * Whether the editor knows the game's mark of the players it made in this game version; when not, the club's players
+   * who joined it young and were trained nowhere else are listed, the database's own among them.
+   */
+  marked: boolean;
+  intakes: Intake[];
+}

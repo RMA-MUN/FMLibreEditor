@@ -1,7 +1,7 @@
 // The Scouting tab's extras: the lists of opportunities (the cards count what the core counts, every player of a list
 // is on it for its reason), players like one (from "Find a replacement"), the comparison with the club's best player
-// at the position, the scout report saved as a picture in the exports folder, and the squad on a pitch. Writes nothing
-// to the game.
+// at the position, the scout report saved as a picture in the exports folder, the squad on a pitch, and the youth
+// intakes of the club and of another one. Writes nothing to the game.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { sleep, VIS } from "../lib/app.mjs";
@@ -35,8 +35,8 @@ export async function run({ app, report, connection }) {
   await app.waitFor(`!!document.querySelector(".scout-subtabs")`, "the Scouting tab", 30000);
   const tabs = await app.js(`[...document.querySelectorAll(".scout-subtabs [role=tab]")].map((t) => t.dataset.tab)`);
   report.check(
-    "the tab has its five sections",
-    JSON.stringify(tabs) === JSON.stringify(["recommend", "opportunities", "similar", "depth", "departures"]),
+    "the tab has its six sections",
+    JSON.stringify(tabs) === JSON.stringify(["recommend", "opportunities", "similar", "depth", "departures", "youth"]),
     tabs.join(", "),
   );
 
@@ -191,6 +191,120 @@ export async function run({ app, report, connection }) {
   await app.click(`document.querySelector('.scout-depth-head [data-view="table"]')`, "Table");
   report.check("the table is a click away", await app.js(`!!document.querySelector(".scout-depth-table")`));
 
+  await youthIntakes(app, report);
+
   const log = await app.must("change_log");
   report.check("nothing was written", log.length === 0, `${log.length} changes`);
+}
+
+/** An intake's day as a number, 0 for none. */
+const dayKey = (d) => (d ? d.year * 10000 + d.month * 100 + d.day : 0);
+
+/** What is wrong with a club's youth intakes as `youth_intakes` gives them: the order, and players who should not be there. */
+function intakeFaults(found) {
+  const days = found.intakes.map((i) => dayKey(i.joined));
+  const newestFirst = days.every((d, i) => i === 0 || days[i - 1] > d);
+  const players = found.intakes.flatMap((i) => i.players.map((p) => ({ ...p, day: dayKey(i.joined) })));
+  const wrong = players.filter(
+    (p) =>
+      p.joinedAge === null ||
+      p.joinedAge > 17 ||
+      dayKey(p.joined) !== p.day ||
+      (p.player.clubUid !== found.clubUid && p.onLoanAtUid === null),
+  );
+  return { newestFirst, players, wrong };
+}
+
+async function youthIntakes(app, report) {
+  const mine = await app.must("youth_intakes", { club: null });
+  const own = intakeFaults(mine);
+  const ownCounts = mine.intakes.map((i) => i.players.length).join(" + ") || "none";
+  report.check(
+    "the club's youth intakes hold its own players who joined it at 17 or younger, the newest first",
+    own.newestFirst && own.wrong.length === 0,
+    `${mine.club}: ${ownCounts}${own.wrong.length ? `; wrong: ${own.wrong.map((p) => p.player.name).join(", ")}` : ""}`,
+  );
+  report.check("the game's mark of the players it made is known", mine.marked === true);
+
+  // Another club: the one with the most players of 16 or younger, which no human manages.
+  const human = await humanClubs(app);
+  const young = (await app.must("search_players", { query: "", limit: 1000, filter: { maxAge: 16, women: false } })).rows;
+  const byClub = new Map();
+  for (const p of young.filter((p) => p.clubUid != null && !human.includes(p.clubUid))) {
+    byClub.set(p.clubUid, (byClub.get(p.clubUid) ?? 0) + 1);
+  }
+  const [otherUid] = [...byClub.entries()].sort((a, b) => b[1] - a[1])[0] ?? [];
+  if (otherUid === undefined) {
+    report.skip("another club's youth intakes", "no club has players of 16 or younger");
+    return;
+  }
+  const other = await app.must("youth_intakes", { club: otherUid });
+  const theirs = intakeFaults(other);
+  report.check(
+    "another club's youth intakes read alike",
+    other.intakes.length > 0 && theirs.newestFirst && theirs.wrong.length === 0,
+    `${other.club}: ${other.intakes.map((i) => i.players.length).join(" + ")} players`,
+  );
+  const cities = await app.must("birth_cities");
+  const known = new Set(cities.map((c) => c.address));
+  const missing = theirs.players.filter((p) => p.city !== null && !known.has(p.city.address));
+  report.check(
+    "the cities a city of birth can be set to hold the intake's",
+    cities.length > 0 && missing.length === 0 && theirs.players.some((p) => p.city !== null),
+    `${cities.length} cities, ${missing.length} missing`,
+  );
+
+  // The section: the club's newest intake (or that it has none), then the other club's, picked from the club search.
+  const rows = `[...document.querySelectorAll(".scout-youth-grid tbody tr:not(.scout-youth-editor-row)")]`;
+  await app.click(SUBTAB("youth"), "Youth intake");
+  await app.waitFor(`!!document.querySelector(".scout-youth-grid, .scout-youth-empty")`, "the youth intakes", 30000);
+  if (mine.intakes.length === 0) {
+    report.check("the section says the club has no intake players", await app.js(`!!document.querySelector(".scout-youth-empty")`));
+  } else {
+    const shown = await app.js(`${rows}.length`);
+    report.check("the section lists the club's newest intake", shown === mine.intakes[0].players.length, `${shown} rows`);
+  }
+  await app.click(
+    `[...document.querySelectorAll(".scout-youth-tools button")].find((b) => b.textContent === "Look at another club")`,
+    "Look at another club",
+  );
+  await app.waitFor(`document.querySelector(".scout-youth-search input")`, "the club search");
+  await app.setInput(`document.querySelector(".scout-youth-search input")`, other.club);
+  const result = `[...document.querySelectorAll(".scout-youth-search li")].find((li) => li.textContent.includes(${JSON.stringify(other.club)}))`;
+  await app.waitFor(result, "the club in the search");
+  await app.click(result, other.club);
+  await app.waitFor(
+    `document.querySelector(".scout-youth-club")?.textContent === ${JSON.stringify(other.club)} && ${rows}.length > 0`,
+    "the other club's intake",
+    30000,
+  );
+  const listed = await app.js(`${rows}.length`);
+  report.check(
+    "another club picked in the search shows its newest intake",
+    listed === other.intakes[0].players.length,
+    `${listed} rows, ${other.intakes[0].players.length} expected`,
+  );
+  await app.shot("scouting-youth");
+
+  // The inputs of the first of them, read from the game; nothing is saved.
+  await app.click(`${rows}[0].querySelector(".scout-youth-edit")`, "Edit");
+  const editor = `document.querySelector(".scout-youth-editor")`;
+  await app.waitFor(`${editor}?.querySelector("button[type=submit]")`, "his inputs");
+  const inputs = await app.js(`({
+    date: ${editor}.querySelector("input[type=date]").value,
+    numbers: [...${editor}.querySelectorAll("input[type=number]")].map((i) => i.value),
+    cities: ${editor}.querySelectorAll(".scout-youth-city option").length,
+  })`);
+  const first = other.intakes[0].players[0].player;
+  report.check(
+    "Edit shows his values from the game",
+    /^\d{4}-\d{2}-\d{2}$/.test(inputs.date) &&
+      Number(inputs.numbers[0]) === first.currentAbility &&
+      Number(inputs.numbers[1]) === first.potentialAbility &&
+      inputs.cities > 0,
+    JSON.stringify(inputs),
+  );
+  await app.shot("scouting-youth-edit");
+  await app.click(`[...${editor}.querySelectorAll("button")].find((b) => b.textContent === "Cancel")`, "Cancel");
+  await app.click(`document.querySelector(".scout-youth-tools .link-button")`, "Back to my club");
 }

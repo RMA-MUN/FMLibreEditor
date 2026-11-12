@@ -531,7 +531,7 @@ export function ScoutRecommendations({
                             pool: result.suggestions.map(pickOf),
                           }),
                         onSimilar: () => onSimilar(suggestion.player),
-                        onReport: () => onReport({ pick: pickOf(suggestion), starter }),
+                        onReport: () => onReport({ pick: pickOf(suggestion) }),
                       }}
                     />
                   );

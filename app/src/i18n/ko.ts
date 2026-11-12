@@ -589,6 +589,7 @@ export const ko: Strings = {
     date_of_birth: "생년월일",
     asking_price: "이적 요구 금액",
     nation: "국적",
+    city_of_birth: "출생지",
     "reputation.home": "국내 명성",
     "reputation.current": "현재 명성",
     "reputation.world": "세계 명성",
@@ -1275,6 +1276,7 @@ export const ko: Strings = {
 
   edit: {
     unknownNation: "알 수 없는 국가",
+    unknownCity: "알 수 없는 도시",
     edit: "편집",
     editTitle: "게임에서 이 프로필의 값을 변경합니다",
     startFailed: (reason) => `편집을 시작할 수 없습니다: ${reason}`,
@@ -2038,6 +2040,7 @@ export const ko: Strings = {
       similar: "비슷한 선수",
       depth: "선수층",
       departures: "내보낼 선수",
+      youth: "유소년 입단",
     },
     status: {
       missing: "없음",
@@ -2394,9 +2397,7 @@ export const ko: Strings = {
       fee: "예상 이적료",
       abilities: "CA / PA",
       value: "몸값",
-      verdict: "평가",
       role: "역할",
-      versus: (name) => `눈금: ${name}(내 1번 선수)`,
       strengths: "강점",
       weaknesses: "약점",
       profile: "성격",
@@ -2416,6 +2417,66 @@ export const ko: Strings = {
         loyal: "충성스러움",
         hotHeaded: "다혈질",
       },
+    },
+    /** "Youth intake": the players the game made at a club's youth intakes, by the day they joined it, and their edits. */
+    youth: {
+      intro: "게임이 구단의 유소년 입단에서 만들어 냈고 지금도 구단에 있는 선수들을, 입단한 날짜별로 보여 줍니다.",
+      otherClub: "다른 구단 보기",
+      searchLabel: "볼 구단",
+      mine: "내 구단으로 돌아가기",
+      intakesLabel: "유소년 입단",
+      /** A day nothing says. */
+      noDay: "날짜 알 수 없음",
+      /** `best` is a name and the potential in brackets. */
+      summary: (count, average, best) => `선수 ${format(count)}명 · 평균 잠재력 ${average} · 최고: ${best}`,
+      lent: (count) => `임대 ${format(count)}명`,
+      how: {
+        label: "이 목록은 어떻게 만들어지나요?",
+        note: "게임은 자신이 만든 모든 선수에 표시를 해 둡니다. 구단의 유소년 입단 선수란 게임이 만들었고, 17세 이하로 구단에 들어왔으며, 다른 어떤 구단에서도 훈련받지 않은 선수 중 지금 구단에 있는 선수(임대 중인 선수 포함)입니다. 다른 구단의 유소년 입단 선수를 영입했거나 구단이 내보낸 선수는 제외됩니다. 다른 구단이 내보낸 유소년 후보 중 원래 이곳에서 시작한 선수는 그 날짜의 입단에 포함됩니다. 같은 날 들어온 선수들이 하나의 입단이 됩니다.",
+      },
+      unmarked:
+        "이 버전의 게임이 자신이 만든 선수를 어떻게 표시하는지 에디터가 알지 못합니다. 그래서 게임 데이터베이스에 있는 구단 소속 어린 선수도 함께 표시됩니다.",
+      empty: (club) => `${club}에는 현재 유소년 입단 선수가 없습니다.`,
+      emptyHint: "입단한 선수는 구단에 있는 동안 여기에 표시됩니다. 다른 구단을 보면 그 구단의 유소년 입단을 확인할 수 있습니다.",
+      columns: {
+        player: "선수",
+        position: "포지션",
+        born: "생년월일",
+        nation: "국적",
+        city: "출생지",
+        ca: "CA",
+        pa: "PA",
+        actions: "편집",
+      },
+      age: (age) => `${format(age)}세`,
+      joinedAt: (age) => `${format(age)}세에 입단`,
+      onLoan: (club) => `${club}에 임대 중`,
+      youthContract: "유소년 계약",
+      edit: (name) => `${name} 편집`,
+      editor: {
+        label: (name) => `${name} 편집 중`,
+        reading: "값을 읽는 중…",
+        dateOfBirth: "생년월일",
+        nation: "국적",
+        city: "출생지",
+        /** The city select of a player without a city: the game keeps none for him, and the editor sets none. */
+        noCity: "게임에 없음",
+        /** Above the cities of the nation picked: they are the ones people of the save were born in. */
+        cityHint: "이 세이브의 인물들이 태어난 도시",
+        ca: "현재 능력",
+        pa: "잠재 능력",
+        save: "저장",
+        saving: "저장하는 중…",
+        cancel: "취소",
+        profile: "전체 프로필",
+        profileTitle: "선수 프로필에서 포지션, 능력치 등을 확인할 수 있습니다",
+        nothing: "저장할 내용이 없습니다: 변경된 값이 없습니다.",
+        saved: (count) => `${format(count)}개의 변경 사항을 저장했습니다.`,
+        failed: (field, reason) => `${field}: ${reason}`,
+        invalid: (field) => `${field}: 사용할 수 없는 값입니다.`,
+      },
+      loading: "유소년 입단을 읽는 중…",
+      failed: (reason) => `유소년 입단을 읽지 못했습니다: ${reason}`,
     },
     // The game's names, matched through the editor's keys, which are the game's abbreviations: its AP is the Advanced
     // Playmaker, its IFB and IWB the Inside Full-Back and Wing-Back, its OAM and OCF the Central Outlet roles.

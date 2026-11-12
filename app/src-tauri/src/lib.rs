@@ -3512,6 +3512,28 @@ fn scouting_similar(
     Ok(connection.session.similar(reference, &request, &buyer, players, clubs, humans)?)
 }
 
+/// The youth intakes of the club `club`, or of the human manager's club when none is given: the players the game made
+/// who began their careers there, by the day they joined it, the newest first. Only reads memory.
+#[tauri::command]
+fn youth_intakes(state: State<'_, AppState>, club: Option<u32>) -> Result<fmlibre_core::YouthIntakes, Failure> {
+    let guard = state.0.lock()?;
+    let connection = guard.as_ref().ok_or_else(not_connected)?;
+    let club = match club {
+        Some(uid) => connection.clubs.get(uid).ok_or_else(|| not_found(Entity::Club, uid))?,
+        None => scouting_club(connection)?,
+    };
+    Ok(connection.session.youth_intakes(club, &connection.players)?)
+}
+
+/// The cities the players of the save were born in, each once, by name: what a player's city of birth can be set to.
+/// Only reads memory.
+#[tauri::command]
+fn birth_cities(state: State<'_, AppState>) -> Result<Vec<fmlibre_core::City>, Failure> {
+    let guard = state.0.lock()?;
+    let connection = guard.as_ref().ok_or_else(not_connected)?;
+    Ok(connection.session.birth_cities(connection.players.iter()))
+}
+
 /// The headers of `save_scout_report`: the UID of the player the report is about, and what the body is, "png" or
 /// "pdf".
 const REPORT_PLAYER_HEADER: &str = "x-fmlibre-player";
@@ -4051,6 +4073,8 @@ pub fn run() {
             scouting_opportunities,
             scouting_similar,
             save_scout_report,
+            youth_intakes,
+            birth_cities,
             set_captain,
             team_action,
             max_attributes,
