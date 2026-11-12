@@ -586,6 +586,7 @@ export const ja: Strings = {
     club: "クラブ",
     injuries: "負傷",
     cohesion: "連携",
+    tactics: "戦術理解度",
     bans: "出場停止",
     retirement: "引退",
     clause: "契約条項",
@@ -1213,6 +1214,7 @@ export const ja: Strings = {
     staff: "スタッフ",
     clubs: "クラブ",
     cohesion: "クラブとの連携",
+    tactics: "戦術理解度",
   },
 
   update: {
@@ -1834,6 +1836,13 @@ export const ja: Strings = {
     cohesionNone:
       "エディターはこのチームの連携を読み取れません：このバージョンのゲームで未確認か、どの選手にもクラブとの連携の記録がありません",
     cohesionWithout: (count: number) => `${format(count)}人はまだクラブとの連携の記録がありません`,
+    maxTactics: "戦術を最大化",
+    maxTacticsTitle:
+      "このチームの全選手が、チームの使う戦術を「戦術の有効性」画面の8つの分野すべてで最高まで理解するようにします。数週間その戦術でトレーニングしたのと同じです。能力値は変わりません。トレーニングが古くなるにつれ、約6週間後から再び下がります。別の戦術に変えたら、もう一度押してください。ゲームが進むと画面に反映されます：ゲームで「続行」を押してください",
+    tacticsNone:
+      "このチームが戦術をどれだけ理解しているか読み取れません：このバージョンのゲームではまだ確認されていないか、チームがあなたの選んだ戦術を使っていません",
+    tacticsUntrained: (count: number) =>
+      `${format(count)}人はトレーニングしていない（負傷など）ため、トレーニング履歴はそのままです`,
     refreshAll: "全員を回復",
     refreshAllTitle: "このチームの全選手のコンディションと試合勘を100%にし、完全に休養させます（疲労蓄積 -500）",
     maxAll: "能力値を最大化",
@@ -1900,6 +1909,7 @@ export const ja: Strings = {
       jadedness: "疲労",
       morale: "士気",
       cohesion: "連携",
+      tactics: "戦術",
       actions: "キャプテン",
     },
     sortBy: (by: string) => `${by}で並べ替え`,
@@ -1914,6 +1924,7 @@ export const ja: Strings = {
       jadedness: "疲労蓄積",
       morale: "士気",
       cohesion: "連携",
+      tactics: "戦術理解度",
     },
 
     // The tags after a name, with what each means as hover text
@@ -2236,6 +2247,61 @@ export const ja: Strings = {
       unwanted: () => "チーム内の立場：構想外",
       listed: () => "すでに移籍リスト入り",
     } as Record<string, (value: string) => string>,
+  },
+
+  /** The command palette and the names of the keys in the keyboard shortcuts (see en.ts). */
+  palette: {
+    button: "検索",
+    title: "検索またはコマンドを実行",
+    placeholder: "選手、スタッフ、クラブ、コマンドを検索",
+    placeholderCommands: "コマンドを検索",
+    commands: "コマンド",
+    goTo: (list: string) => `${list}へ移動`,
+    searchList: "このリストを検索",
+    editProfile: "このプロフィールを編集",
+    doneEditing: "このプロフィールの編集を終了",
+    applyChanges: "このプロフィールの変更を適用",
+    showAll: (count: number, list: string) => `${list}で${format(count)}件すべてを表示`,
+    searching: "検索中…",
+    empty: (query: string) => `「${query}」に一致するものはありません。`,
+    notConnected: "選手、スタッフ、クラブを検索するには、ゲームに接続してください。",
+    failed: (reason: string) => `検索に失敗しました：${reason}`,
+    hintMove: "移動",
+    hintOpen: "開く",
+    hintClose: "閉じる",
+    keys: { ctrl: "Ctrl", shift: "Shift", enter: "Enter", escape: "Esc" },
+  },
+
+  /** "My club", the page the app opens on (see en.ts). */
+  home: {
+    nav: "マイクラブ",
+    loading: "クラブを検索中…",
+    failed: (reason: string) => `クラブを検索できませんでした：${reason}`,
+    manager: (name: string) => `監督：${name}`,
+    following: "フォロー中のクラブ",
+    clubsLabel: "あなたのクラブ",
+    openProfile: "クラブのプロフィール",
+    openProfileTitle: "このクラブを「クラブ」タブで開く：施設、財務、スタジアムなど",
+    noClubTitle: "このセーブデータでは指揮しているクラブがありません",
+    noClubText:
+      "代わりに、ここでフォローするクラブを選んでください：スカッド、注意が必要な選手、チーム全体への操作を表示します。",
+    chooseAnother: "別のクラブを選ぶ",
+    searchLabel: "フォローするクラブ",
+    squad: "スカッド",
+    cards: {
+      label: "注意が必要な選手",
+      lowMorale: "士気が低い",
+      tired: "疲労",
+      contracts: "契約満了が近い",
+      injuredHint: "負傷している選手",
+      bannedHint: "出場停止中の選手",
+      lowMoraleHint: (below: string) => `士気が${below}未満の選手`,
+      tiredHint: (below: string) => `コンディションが${below}未満の選手`,
+      unrestHint: "チームメイトの一部が不満を持っている選手",
+      contractsHint: (months: number) => `契約が${months}か月以内に満了する選手`,
+      none: "なし",
+      more: (count: number) => `ほか${format(count)}人`,
+    },
   },
 
   errors,

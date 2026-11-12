@@ -4,7 +4,7 @@
 // once from the line under the buttons. A player's name opens his profile over the squad, which stays as it was behind
 // it.
 
-import { useContext, useEffect, useMemo, useRef, useState, type Ref } from "react";
+import { useContext, useEffect, useMemo, useRef, useState, type ReactNode, type Ref } from "react";
 import { Ability } from "./Ability";
 import { CaptainMenu } from "./CaptainMenu";
 import { changeLog, clubSquads, freezeTeam, setCaptain, teamAction, undoBatch, undoChange } from "./editing";
@@ -112,6 +112,8 @@ function sortValue(player: SquadPlayer, by: SquadSort): string | number | null {
       return player.morale;
     case "cohesion":
       return player.cohesion;
+    case "tactics":
+      return player.tactics;
   }
 }
 
@@ -179,11 +181,18 @@ interface SquadTabProps {
   clubUid: number;
   /** Changes when the game data is read again, so the squad is too. */
   version: number;
-  panel: PanelIds;
+  /** The tab it is the panel of, in a club's profile. Without one it is a part of a page, named by `label`. */
+  panel?: PanelIds;
+  label?: string;
+  /**
+   * Shown between the team's summary and its actions: what stands out in the shown team (see `MyClub`). `open` opens a
+   * player's profile over the squad, as his name in the table does; `from` takes focus back once it is closed.
+   */
+  overview?: (team: ClubTeam, open: (player: SquadPlayer, from: HTMLElement) => void) => ReactNode;
 }
 
 /** The squad of the club `clubUid`: a switch between its teams, the team's summary and actions, and its table. */
-export function SquadTab({ clubUid, version, panel }: SquadTabProps) {
+export function SquadTab({ clubUid, version, panel, label, overview }: SquadTabProps) {
   const { editable, onEdited } = useContext(EditorContext);
   const loaded = useSquads(clubUid, version);
   // The team that is shown, by its place in the club's list.
@@ -267,13 +276,22 @@ export function SquadTab({ clubUid, version, panel }: SquadTabProps) {
   const act = (target: ClubTeam, action: TeamAction) =>
     write(target.index, async () => {
       const report = await teamAction(clubUid, target.index, action);
-      // Max cohesion leaves out the players who have no entry for the club yet, and says how many.
+      // Max cohesion leaves out the players who have no entry for the club yet, and Max tactics the history of those
+      // who do not train; each says how many.
       const without =
         action === "maxCohesion" ? target.players.filter((player) => player.cohesion === null).length : 0;
-      const written = text.written(report.applied);
+      const untrained =
+        action === "maxTactics"
+          ? target.players.filter((player) => player.tactics !== null && !player.trains).length
+          : 0;
+      const notes = [
+        text.written(report.applied),
+        without > 0 ? text.cohesionWithout(without) : null,
+        untrained > 0 ? text.tacticsUntrained(untrained) : null,
+      ];
       return {
         team: target.index,
-        message: without > 0 ? `${written} · ${text.cohesionWithout(without)}` : written,
+        message: notes.filter((note) => note !== null).join(" · "),
         failed: false,
         problems: refusalLines(report.failed),
         // An action that wrote nothing has nothing to take back.
@@ -351,9 +369,10 @@ export function SquadTab({ clubUid, version, panel }: SquadTabProps) {
   return (
     <div
       className="squad-tab"
-      role="tabpanel"
-      id={panel.id}
-      aria-labelledby={panel.labelledBy}
+      role={panel ? "tabpanel" : "region"}
+      id={panel?.id}
+      aria-labelledby={panel?.labelledBy}
+      aria-label={panel ? undefined : label}
       aria-busy={loaded === null || undefined}
     >
       {loaded === null && (
@@ -371,6 +390,11 @@ export function SquadTab({ clubUid, version, panel }: SquadTabProps) {
       {teams && team && (
         <>
           <TeamSummary teams={teams} team={team} onTeam={setTeamIndex} />
+
+          {overview?.(team, (player, from) => {
+            opener.current = from;
+            setShown(player);
+          })}
 
           <div className="squad-actions">
             <TeamActions team={team} editable={editable} busy={busy} onAction={(action) => void act(team, action)} />
@@ -408,6 +432,7 @@ export function SquadTab({ clubUid, version, panel }: SquadTabProps) {
                   {sortHeader("jadedness", "num")}
                   {sortHeader("morale", "num")}
                   {sortHeader("cohesion", "num")}
+                  {sortHeader("tactics", "num")}
                   <th className="col-actions">
                     <span className="sr-only">{text.columns.actions}</span>
                   </th>
@@ -492,9 +517,10 @@ interface TeamActionsProps {
 }
 
 /**
- * Heal all, Lift bans, Inspire all, Refresh all, Max attributes and Max cohesion for the shown team. Heal all and Lift
- * bans say how many players are injured or banned and wait until somebody is, and Max cohesion until somebody's
- * cohesion can be read; every one waits while the game cannot be written to, and says why.
+ * Heal all, Lift bans, Inspire all, Refresh all, Max attributes, Max cohesion and Max tactics for the shown team. Heal
+ * all and Lift bans say how many players are injured or banned and wait until somebody is, Max cohesion until
+ * somebody's cohesion can be read and Max tactics until somebody's familiarity with the tactic can; every one waits
+ * while the game cannot be written to, and says why.
  */
 function TeamActions({ team, editable, busy, onAction }: TeamActionsProps) {
   const { readOnlyNote } = useContext(EditorContext);
@@ -502,6 +528,8 @@ function TeamActions({ team, editable, busy, onAction }: TeamActionsProps) {
   const banned = team.players.filter((player) => player.bans > 0).length;
   // Those whose cohesion with the club the editor can read, and so set.
   const cohesive = team.players.filter((player) => player.cohesion !== null).length;
+  // Those whose familiarity with the team's tactic the editor can read, and so set.
+  const tactical = team.players.filter((player) => player.tactics !== null).length;
   const empty = team.players.length === 0;
   // What a button's hover text says: why it waits, or else what it does.
   const hover = (does: string, waiting: string | null) => (!editable ? readOnlyNote : (waiting ?? does));
@@ -549,6 +577,13 @@ function TeamActions({ team, editable, busy, onAction }: TeamActionsProps) {
         waiting={!editable || cohesive === 0}
         busy={busy}
         onPress={() => onAction("maxCohesion")}
+      />
+      <ActionButton
+        label={text.maxTactics}
+        title={hover(text.maxTacticsTitle, tactical === 0 ? text.tacticsNone : null)}
+        waiting={!editable || tactical === 0}
+        busy={busy}
+        onPress={() => onAction("maxTactics")}
       />
     </div>
   );
@@ -785,6 +820,7 @@ function SquadRow({ player, role, editable, busy, onCaptain, onOpen }: SquadRowP
       <td className="num">{formatNumber(player.jadedness)}</td>
       <td className="num">{profileText.morale(player.morale)}</td>
       <td className="num">{player.cohesion ?? <span className="muted">{profileText.none}</span>}</td>
+      <td className="num">{player.tactics ?? <span className="muted">{profileText.none}</span>}</td>
       <td className="col-actions">
         {player.playsHere && (
           <CaptainMenu name={player.name} holds={role} editable={editable} busy={busy} onPick={onCaptain} />

@@ -560,6 +560,7 @@ export const id: Strings = {
     club: "Klub",
     injuries: "Cedera",
     cohesion: "Kekompakan",
+    tactics: "Pemahaman taktik",
     bans: "Larangan bermain",
     retirement: "Pensiun",
     clause: "Klausul kontrak",
@@ -1188,6 +1189,7 @@ export const id: Strings = {
     staff: "staf",
     clubs: "klub",
     cohesion: "kekompakan dengan klub",
+    tactics: "pemahaman taktik",
   },
 
   update: {
@@ -1806,6 +1808,13 @@ export const id: Strings = {
     cohesionNone:
       "Editor tidak dapat membaca kekompakan tim ini: versi game ini belum diperiksa untuk itu, atau tidak ada pemainnya yang memiliki kekompakan dengan klub",
     cohesionWithout: (count: number) => `${format(count)} pemain belum memiliki kekompakan dengan klub`,
+    maxTactics: "Maksimalkan taktik",
+    maxTacticsTitle:
+      "Buat setiap pemain di tim ini memahami taktik yang dimainkan tim sebaik mungkin, di delapan area layar Efektivitas Taktik, seperti hasil latihan berminggu-minggu. Atribut tidak berubah. Area akan turun lagi seiring latihan menua, setelah sekitar enam minggu, dan taktik lain perlu ditekan sekali lagi. Game menampilkannya setelah waktu berjalan: tekan Lanjutkan di game",
+    tacticsNone:
+      "Editor tidak dapat membaca seberapa baik tim ini memahami taktiknya: versi game ini belum diperiksa untuk itu, atau tim tidak memainkan taktik yang Anda pilih",
+    tacticsUntrained: (count: number) =>
+      `${format(count)} pemain tidak berlatih (misalnya karena cedera): riwayat latihannya tetap seperti semula`,
     refreshAll: "Segarkan semua",
     refreshAllTitle:
       "Atur energi dan ketajaman bertanding setiap pemain di tim ini ke 100%, dan istirahatkan sepenuhnya (keletihan -500)",
@@ -1872,6 +1881,7 @@ export const id: Strings = {
       jadedness: "Letih",
       morale: "Moral",
       cohesion: "Kekompakan",
+      tactics: "Taktik",
       actions: "Kapten",
     },
     sortBy: (by: string) => `Urutkan berdasarkan ${by}`,
@@ -1886,6 +1896,7 @@ export const id: Strings = {
       jadedness: "keletihan",
       morale: "moral",
       cohesion: "kekompakan",
+      tactics: "pemahaman taktik",
     },
 
     injured: "Cedera",
@@ -2211,6 +2222,61 @@ export const id: Strings = {
       unwanted: () => "Status skuad: tidak lagi dibutuhkan",
       listed: () => "Sudah masuk daftar transfer",
     } as Record<string, (value: string) => string>,
+  },
+
+  /** The command palette and the names of the keys in the keyboard shortcuts (see en.ts). */
+  palette: {
+    button: "Cari",
+    title: "Cari atau jalankan perintah",
+    placeholder: "Cari pemain, staf, klub, dan perintah",
+    placeholderCommands: "Cari perintah",
+    commands: "Perintah",
+    goTo: (list: string) => `Buka ${list}`,
+    searchList: "Cari di daftar ini",
+    editProfile: "Edit profil ini",
+    doneEditing: "Selesai mengedit profil ini",
+    applyChanges: "Terapkan perubahan pada profil ini",
+    showAll: (count: number, list: string) => `Tampilkan semua ${format(count)} hasil di ${list}`,
+    searching: "Mencari…",
+    empty: (query: string) => `Tidak ada yang cocok dengan “${query}”.`,
+    notConnected: "Hubungkan ke game untuk mencari pemain, staf, dan klubnya.",
+    failed: (reason: string) => `Pencarian gagal: ${reason}`,
+    hintMove: "Pindah",
+    hintOpen: "Buka",
+    hintClose: "Tutup",
+    keys: { ctrl: "Ctrl", shift: "Shift", enter: "Enter", escape: "Esc" },
+  },
+
+  /** "My club", the page the app opens on (see en.ts). */
+  home: {
+    nav: "Klubku",
+    loading: "Mencari klubmu…",
+    failed: (reason: string) => `Klubmu tidak bisa dicari: ${reason}`,
+    manager: (name: string) => `Manajer: ${name}`,
+    following: "Klub yang kamu ikuti",
+    clubsLabel: "Klub-klubmu",
+    openProfile: "Profil klub",
+    openProfileTitle: "Buka klub ini di tab Klub: fasilitas, keuangan, stadion, dan lainnya",
+    noClubTitle: "Kamu tidak menangani klub di save ini",
+    noClubText:
+      "Pilih klub untuk diikuti di sini: skuadnya, siapa yang perlu diperhatikan, dan aksi untuk seluruh tim.",
+    chooseAnother: "Pilih klub lain",
+    searchLabel: "Klub yang diikuti",
+    squad: "Skuad",
+    cards: {
+      label: "Siapa yang perlu diperhatikan",
+      lowMorale: "Moral rendah",
+      tired: "Lelah",
+      contracts: "Kontrak segera habis",
+      injuredHint: "Pemain yang cedera",
+      bannedHint: "Pemain yang terkena larangan bermain",
+      lowMoraleHint: (below: string) => `Pemain dengan moral di bawah ${below}`,
+      tiredHint: (below: string) => `Pemain dengan energi di bawah ${below}`,
+      unrestHint: "Pemain yang membuat sebagian rekan setimnya tidak senang",
+      contractsHint: (months: number) => `Pemain yang kontraknya habis dalam ${months} bulan`,
+      none: "Tidak ada",
+      more: (count: number) => `dan ${format(count)} lainnya`,
+    },
   },
 
   errors,

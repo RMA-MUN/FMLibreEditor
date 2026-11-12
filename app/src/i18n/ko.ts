@@ -615,6 +615,7 @@ export const ko: Strings = {
     club: "구단",
     injuries: "부상",
     cohesion: "결속력",
+    tactics: "전술 숙련도",
     bans: "출장 정지",
     retirement: "은퇴",
     clause: "계약 조항",
@@ -1246,6 +1247,7 @@ export const ko: Strings = {
     staff: "스태프",
     clubs: "구단",
     cohesion: "구단과의 결속력",
+    tactics: "전술 숙련도",
   },
 
   update: {
@@ -1874,6 +1876,15 @@ export const ko: Strings = {
       "이 팀의 결속력을 읽을 수 없습니다. 이 게임 버전에서 아직 확인되지 않았거나, 구단에 대한 결속력 항목이 있는 " +
       "선수가 없습니다",
     cohesionWithout: (count) => `${playerCount(count)}은 아직 구단과의 결속력이 없습니다`,
+    maxTactics: "전술 최대",
+    maxTacticsTitle:
+      "이 팀의 모든 선수가 팀이 쓰는 전술을 '전술 효율성' 화면의 여덟 영역 모두에서 최고 수준으로 익히게 합니다. " +
+      "몇 주 동안 그 전술로 훈련한 것과 같습니다. 능력치는 바뀌지 않습니다. 훈련이 오래되면 약 6주 뒤부터 다시 " +
+      "떨어지며, 다른 전술로 바꾸면 다시 눌러야 합니다. 게임이 진행된 뒤 화면에 반영됩니다. 게임에서 '진행하기'를 누르세요",
+    tacticsNone:
+      "이 팀이 전술을 얼마나 익혔는지 읽을 수 없습니다. 이 게임 버전에서 아직 확인되지 않았거나, 팀이 직접 고른 " +
+      "전술을 쓰지 않습니다",
+    tacticsUntrained: (count) => `${playerCount(count)}은 훈련하지 않아(부상 등) 훈련 기록이 그대로 남습니다`,
     refreshAll: "모두 회복",
     refreshAllTitle: "이 팀 모든 선수의 컨디션과 경기력을 100%로 설정하고 완전히 쉬게 합니다(피로도 -500)",
     maxAll: "능력치 최대",
@@ -1942,6 +1953,7 @@ export const ko: Strings = {
       jadedness: "피로도",
       morale: "사기",
       cohesion: "결속력",
+      tactics: "전술",
       actions: "주장직",
     },
     sortBy: (by) => `${by} 기준으로 정렬`,
@@ -1956,6 +1968,7 @@ export const ko: Strings = {
       jadedness: "피로도",
       morale: "사기",
       cohesion: "결속력",
+      tactics: "전술 숙련도",
     },
 
     // The tags after a name
@@ -2279,6 +2292,61 @@ export const ko: Strings = {
       blocked: () => "성장하려면 출전이 필요함",
       unwanted: () => "팀 내 위상: 잉여 자원",
       listed: () => "이미 이적 명단에 등록됨",
+    },
+  },
+
+  /** The command palette and the names of the keys in the keyboard shortcuts (see en.ts). */
+  palette: {
+    button: "검색",
+    title: "검색 또는 명령 실행",
+    placeholder: "선수, 스태프, 구단, 명령 검색",
+    placeholderCommands: "명령 검색",
+    commands: "명령",
+    goTo: (list: string) => `${list} 탭으로 이동`,
+    searchList: "이 목록에서 검색",
+    editProfile: "이 프로필 편집",
+    doneEditing: "이 프로필 편집 끝내기",
+    applyChanges: "이 프로필의 변경 사항 적용",
+    showAll: (count: number, list: string) => `${list}에서 ${format(count)}개 모두 보기`,
+    searching: "검색하는 중…",
+    empty: (query: string) => `“${query}”와(과) 일치하는 항목이 없습니다.`,
+    notConnected: "선수, 스태프, 구단을 검색하려면 게임에 연결하세요.",
+    failed: (reason: string) => `검색하지 못했습니다: ${reason}`,
+    hintMove: "이동",
+    hintOpen: "열기",
+    hintClose: "닫기",
+    keys: { ctrl: "Ctrl", shift: "Shift", enter: "Enter", escape: "Esc" },
+  },
+
+  /** "My club", the page the app opens on (see en.ts). */
+  home: {
+    nav: "내 구단",
+    loading: "구단을 찾는 중…",
+    failed: (reason: string) => `구단을 찾을 수 없습니다: ${reason}`,
+    manager: (name: string) => `감독: ${name}`,
+    following: "팔로우하는 구단",
+    clubsLabel: "내 구단들",
+    openProfile: "구단 프로필",
+    openProfileTitle: "구단 탭에서 이 구단 열기: 시설, 재정, 경기장 등",
+    noClubTitle: "이 세이브에는 맡고 있는 구단이 없습니다",
+    noClubText:
+      "대신 여기서 팔로우할 구단을 선택하세요: 선수단, 살펴봐야 할 선수, 팀 전체에 적용하는 기능을 볼 수 있습니다.",
+    chooseAnother: "다른 구단 선택",
+    searchLabel: "팔로우할 구단",
+    squad: "선수단",
+    cards: {
+      label: "살펴봐야 할 선수",
+      lowMorale: "낮은 사기",
+      tired: "피로",
+      contracts: "계약 만료 임박",
+      injuredHint: "부상 중인 선수",
+      bannedHint: "출장 정지 중인 선수",
+      lowMoraleHint: (below: string) => `사기가 ${below} 미만인 선수`,
+      tiredHint: (below: string) => `컨디션이 ${below} 미만인 선수`,
+      unrestHint: "일부 동료가 불만을 가진 선수",
+      contractsHint: (months: number) => `계약이 ${months}개월 안에 끝나는 선수`,
+      none: "없음",
+      more: (count: number) => `외 ${format(count)}명`,
     },
   },
 

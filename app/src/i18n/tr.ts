@@ -573,6 +573,7 @@ export const tr: Strings = {
     club: "Kulüp",
     injuries: "Sakatlıklar",
     cohesion: "Uyum",
+    tactics: "Taktik aşinalığı",
     bans: "Cezalar",
     retirement: "Emeklilik",
     clause: "Sözleşme maddesi",
@@ -1210,6 +1211,7 @@ export const tr: Strings = {
     staff: "personel",
     clubs: "kulüpler",
     cohesion: "kulüplerle uyum",
+    tactics: "taktik aşinalığı",
   },
 
   update: {
@@ -1859,6 +1861,13 @@ export const tr: Strings = {
     cohesionNone:
       "Editör bu takımın uyumunu okuyamıyor: oyunun bu sürümü bunun için kontrol edilmedi ya da oyuncuların hiçbirinin kulüple uyumu yok",
     cohesionWithout: (count: number) => `${format(count)} oyuncunun henüz kulüple uyumu yok`,
+    maxTactics: "Taktiği tamamla",
+    maxTacticsTitle:
+      "Bu takımdaki her oyuncunun takımın oynadığı taktiği, Taktik Etkinliği ekranının sekiz alanında, haftalarca antrenman yapmış gibi en iyi şekilde bilmesini sağla. Özellikler değişmez. Antrenman eskidikçe, yaklaşık altı hafta sonra alanlar yeniden düşer; başka bir taktik için yeniden basmak gerekir. Oyun bunları bir kez ilerleyince gösterir: oyunda Devam'a basın",
+    tacticsNone:
+      "Editör bu takımın taktiğini ne kadar bildiğini okuyamıyor: oyunun bu sürümü bunun için kontrol edilmedi ya da takım senin seçtiğin bir taktiği oynamıyor",
+    tacticsUntrained: (count: number) =>
+      `${format(count)} oyuncu antrenman yapmıyor (örneğin sakat olduğu için): antrenman geçmişi olduğu gibi kalıyor`,
     refreshAll: "Hepsini dinlendir",
     refreshAllTitle: "Bu takımdaki her oyuncunun enerjisini ve maç kondisyonunu %100'e ayarla, onları tamamen dinlendir (yorgunluk -500)",
     maxAll: "Özellikleri tamamla",
@@ -1931,6 +1940,7 @@ export const tr: Strings = {
       jadedness: "Yorgunluk",
       morale: "Moral",
       cohesion: "Uyum",
+      tactics: "Taktik",
       actions: "Kaptanlık",
     } satisfies Record<SquadSort | "actions", string>,
     sortBy: (by) => `Sırala: ${by}`,
@@ -1946,6 +1956,7 @@ export const tr: Strings = {
       jadedness: "yorgunluk",
       morale: "moral",
       cohesion: "uyum",
+      tactics: "taktik aşinalığı",
     } satisfies Record<SquadSort, string>,
 
     // The tags after a name
@@ -2271,6 +2282,62 @@ export const tr: Strings = {
       blocked: () => "Gelişmek için forma şansı lazım",
       unwanted: () => "Forma süresi: ihtiyaç fazlası",
       listed: () => "Zaten transfer listesinde",
+    },
+  },
+
+  /** The command palette and the names of the keys in the keyboard shortcuts (see en.ts). */
+  palette: {
+    button: "Ara",
+    title: "Ara veya komut çalıştır",
+    placeholder: "Oyuncu, personel, kulüp veya komut ara",
+    placeholderCommands: "Komut ara",
+    commands: "Komutlar",
+    goTo: (list: string) => `${list} sekmesine git`,
+    searchList: "Bu listede ara",
+    editProfile: "Bu profili düzenle",
+    doneEditing: "Bu profili düzenlemeyi bitir",
+    applyChanges: "Bu profildeki değişiklikleri uygula",
+    showAll: (count: number, list: string) => `${list}: ${format(count)} sonucun hepsini göster`,
+    searching: "Aranıyor…",
+    empty: (query: string) => `“${query}” ile eşleşen bir şey yok.`,
+    notConnected: "Oyuncu, personel ve kulüp aramak için oyuna bağlanın.",
+    failed: (reason: string) => `Arama yapılamadı: ${reason}`,
+    hintMove: "Gezin",
+    hintOpen: "Aç",
+    hintClose: "Kapat",
+    keys: { ctrl: "Ctrl", shift: "Shift", enter: "Enter", escape: "Esc" },
+  },
+
+  /** "My club", the page the app opens on (see en.ts). */
+  home: {
+    nav: "Kulübüm",
+    loading: "Kulübünüz aranıyor…",
+    failed: (reason: string) => `Kulübünüz aranamadı: ${reason}`,
+    manager: (name: string) => `Teknik direktör: ${name}`,
+    following: "Takip ettiğiniz kulüp",
+    clubsLabel: "Kulüpleriniz",
+    openProfile: "Kulüp profili",
+    openProfileTitle: "Bu kulübü Kulüpler sekmesinde aç: tesisler, finans, stadyum ve daha fazlası",
+    noClubTitle: "Bu kayıtta yönettiğiniz bir kulüp yok",
+    noClubText:
+      "Onun yerine burada takip edeceğiniz bir kulüp seçin: kadrosu, ilgilenilmesi gerekenler ve tüm takıma " +
+      "uygulanan işlemler.",
+    chooseAnother: "Başka kulüp seç",
+    searchLabel: "Takip edilecek kulüp",
+    squad: "Kadro",
+    cards: {
+      label: "İlgilenilmesi gerekenler",
+      lowMorale: "Düşük moral",
+      tired: "Yorgun",
+      contracts: "Sözleşmesi bitenler",
+      injuredHint: "Sakatlığı olan oyuncular",
+      bannedHint: "Cezası olan oyuncular",
+      lowMoraleHint: (below: string) => `Morali ${below} değerinin altında olan oyuncular`,
+      tiredHint: (below: string) => `Enerjisi ${below} değerinin altında olan oyuncular`,
+      unrestHint: "Bazı takım arkadaşlarının memnun olmadığı oyuncular",
+      contractsHint: (months: number) => `Sözleşmesi ${months} ay içinde biten oyuncular`,
+      none: "Yok",
+      more: (count: number) => `ve ${format(count)} kişi daha`,
     },
   },
 

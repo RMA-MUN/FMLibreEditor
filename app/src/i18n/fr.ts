@@ -669,6 +669,7 @@ export const fr: Strings = {
     club: "Club",
     injuries: "Blessures",
     cohesion: "Cohésion",
+    tactics: "Familiarité tactique",
     bans: "Suspensions",
     retirement: "Départ à la retraite",
     clause: "Clause du contrat",
@@ -1350,6 +1351,7 @@ export const fr: Strings = {
     staff: "le staff",
     clubs: "les clubs",
     cohesion: "la cohésion avec les clubs",
+    tactics: "la familiarité tactique",
   },
 
   update: {
@@ -2022,6 +2024,19 @@ export const fr: Strings = {
       plural(count)
         ? `${format(count)} joueurs n'ont pas encore de cohésion avec le club`
         : `${format(count)} joueur n'a pas encore de cohésion avec le club`,
+    maxTactics: "Tactique au maximum",
+    maxTacticsTitle:
+      "Faire connaître au mieux à chaque joueur de cette équipe la tactique qu'elle joue, dans les huit domaines de " +
+      "l'écran Efficacité tactique, comme le feraient des semaines d'entraînement. Les attributs ne changent pas. Les " +
+      "domaines baissent de nouveau à mesure que l'entraînement vieillit, au bout de six semaines environ, et une autre " +
+      "tactique demande un autre clic. Le jeu les affiche une fois qu'il avance\u00a0: appuyez sur Continuer dans le jeu",
+    tacticsNone:
+      "L'éditeur ne peut pas lire à quel point cette équipe connaît sa tactique : cette version du jeu n'a pas été " +
+      "vérifiée pour cela, ou l'équipe ne joue pas une tactique que vous choisissez",
+    tacticsUntrained: (count: number) =>
+      plural(count)
+        ? `${format(count)} joueurs ne s'entraînent pas (blessés, par exemple) : leur historique d'entraînement reste tel quel`
+        : `${format(count)} joueur ne s'entraîne pas (blessé, par exemple) : son historique d'entraînement reste tel quel`,
     refreshAll: "Tout régénérer",
     refreshAllTitle:
       "Porter l'énergie et la forme physique de chaque joueur de cette équipe à 100\u00a0%, et le reposer complètement " +
@@ -2097,6 +2112,7 @@ export const fr: Strings = {
       jadedness: "Fatigue",
       morale: "Moral",
       cohesion: "Cohésion",
+      tactics: "Tactique",
       actions: "Capitanat",
     },
     sortBy: (by) => `Trier par ${by}`,
@@ -2111,6 +2127,7 @@ export const fr: Strings = {
       jadedness: "fatigue",
       morale: "moral",
       cohesion: "cohésion",
+      tactics: "familiarité tactique",
     },
 
     // Les étiquettes après un nom, avec leur sens au survol
@@ -2454,6 +2471,62 @@ export const fr: Strings = {
       blocked: () => "A besoin de jouer pour progresser",
       unwanted: () => "Statut effectif\u00a0: pas utile à l'équipe",
       listed: () => "Déjà sur liste des transferts",
+    },
+  },
+
+  /** The command palette and the names of the keys in the keyboard shortcuts (see en.ts). */
+  palette: {
+    button: "Rechercher",
+    title: "Rechercher ou lancer une commande",
+    placeholder: "Rechercher des joueurs, du staff, des clubs ou des commandes",
+    placeholderCommands: "Rechercher une commande",
+    commands: "Commandes",
+    goTo: (list: string) => `Aller à ${list}`,
+    searchList: "Rechercher dans cette liste",
+    editProfile: "Modifier ce profil",
+    doneEditing: "Terminer la modification de ce profil",
+    applyChanges: "Appliquer les modifications de ce profil",
+    showAll: (count: number, list: string) => `Afficher les ${format(count)} résultats dans ${list}`,
+    searching: "Recherche…",
+    empty: (query: string) => `Aucun résultat pour «\u00a0${query}\u00a0».`,
+    notConnected: "Connectez-vous au jeu pour rechercher ses joueurs, son staff et ses clubs.",
+    failed: (reason: string) => `La recherche a échoué\u00a0: ${reason}`,
+    hintMove: "Naviguer",
+    hintOpen: "Ouvrir",
+    hintClose: "Fermer",
+    keys: { ctrl: "Ctrl", shift: "Maj", enter: "Entrée", escape: "Échap" },
+  },
+
+  /** "My club", the page the app opens on (see en.ts). */
+  home: {
+    nav: "Mon club",
+    loading: "Recherche de votre club…",
+    failed: (reason: string) => `Impossible de rechercher votre club\u00a0: ${reason}`,
+    manager: (name: string) => `Entraîneur\u00a0: ${name}`,
+    following: "Un club que vous suivez",
+    clubsLabel: "Vos clubs",
+    openProfile: "Profil du club",
+    openProfileTitle: "Ouvrir ce club dans l'onglet Clubs\u00a0: installations, finances, stade et plus",
+    noClubTitle: "Vous n'entraînez aucun club dans cette partie",
+    noClubText:
+      "Choisissez plutôt un club à suivre ici\u00a0: son effectif, les joueurs à surveiller et les actions sur toute " +
+      "une équipe.",
+    chooseAnother: "Choisir un autre club",
+    searchLabel: "Club à suivre",
+    squad: "Effectif",
+    cards: {
+      label: "Joueurs à surveiller",
+      lowMorale: "Moral bas",
+      tired: "Fatigués",
+      contracts: "Fins de contrat",
+      injuredHint: "Joueurs blessés",
+      bannedHint: "Joueurs suspendus",
+      lowMoraleHint: (below: string) => `Joueurs dont le moral est inférieur à ${below}`,
+      tiredHint: (below: string) => `Joueurs dont l'énergie est inférieure à ${below}`,
+      unrestHint: "Joueurs dont certains coéquipiers sont mécontents",
+      contractsHint: (months: number) => `Joueurs dont le contrat se termine dans les ${months} mois`,
+      none: "Aucun",
+      more: (count: number) => `et ${format(count)} de plus`,
     },
   },
 

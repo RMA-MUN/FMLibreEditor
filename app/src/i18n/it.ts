@@ -629,6 +629,7 @@ export const it: Strings = {
     club: "Società",
     injuries: "Infortuni",
     cohesion: "Affiatamento",
+    tactics: "Familiarità tattica",
     bans: "Squalifiche",
     retirement: "Ritiro",
     clause: "Clausola del contratto",
@@ -1292,6 +1293,7 @@ export const it: Strings = {
     staff: "lo staff",
     clubs: "le società",
     cohesion: "l'affiatamento con le società",
+    tactics: "la familiarità tattica",
   },
 
   update: {
@@ -1951,6 +1953,15 @@ export const it: Strings = {
       "Porta a 100, il massimo, l'affiatamento con la società di ogni giocatore di questa squadra. Il gioco mostra l'affiatamento della squadra nella pagina Dinamiche quando va avanti: premi Continua nel gioco",
     cohesionNone:
       "L'editor non riesce a leggere l'affiatamento di questa squadra: questa versione del gioco non è stata verificata, oppure nessuno dei suoi giocatori ha affiatamento con la società",
+    maxTactics: "Tattica al massimo",
+    maxTacticsTitle:
+      "Fa conoscere al meglio a ogni giocatore di questa squadra la tattica che gioca, nelle otto aree della schermata Efficacia tattica, come farebbero settimane di allenamento. Gli attributi restano come sono. Le aree tornano a calare man mano che l'allenamento invecchia, dopo circa sei settimane, e un'altra tattica chiede un altro clic. Il gioco le mostra quando va avanti: premi Continua nel gioco",
+    tacticsNone:
+      "L'editor non riesce a leggere quanto questa squadra conosce la sua tattica: questa versione del gioco non è stata verificata, oppure la squadra non gioca una tattica scelta da te",
+    tacticsUntrained: (count: number) =>
+      count === 1
+        ? "1 giocatore non si allena (per esempio perché infortunato): il suo storico di allenamento resta com'è"
+        : `${format(count)} giocatori non si allenano (per esempio perché infortunati): il loro storico di allenamento resta com'è`,
     refreshAll: "Rigenera tutti",
     refreshAllTitle:
       "Porta al 100% energia e forma partita di ogni giocatore di questa squadra e lo fa riposare del tutto " +
@@ -2025,6 +2036,7 @@ export const it: Strings = {
       jadedness: "Stanch.",
       morale: "Morale",
       cohesion: "Affiat.",
+      tactics: "Tattica",
       actions: "Fascia di capitano",
     },
     sortBy: (by) => `Ordina per ${by}`,
@@ -2039,6 +2051,7 @@ export const it: Strings = {
       jadedness: "stanchezza",
       morale: "morale",
       cohesion: "affiatamento",
+      tactics: "familiarità tattica",
     },
 
     // Le etichette dopo un nome, con il loro significato come testo al passaggio del mouse
@@ -2372,6 +2385,62 @@ export const it: Strings = {
       blocked: () => "Ha bisogno di giocare per crescere",
       unwanted: () => "Stato in rosa: in esubero",
       listed: () => "Già in lista trasferimenti",
+    },
+  },
+
+  /** The command palette and the names of the keys in the keyboard shortcuts (see en.ts). */
+  palette: {
+    button: "Cerca",
+    title: "Cerca o esegui un comando",
+    placeholder: "Cerca giocatori, staff, società e comandi",
+    placeholderCommands: "Cerca comandi",
+    commands: "Comandi",
+    goTo: (list: string) => `Vai a ${list}`,
+    searchList: "Cerca in questo elenco",
+    editProfile: "Modifica questo profilo",
+    doneEditing: "Termina la modifica di questo profilo",
+    applyChanges: "Applica le modifiche a questo profilo",
+    showAll: (count: number, list: string) => `Mostra tutti i ${format(count)} risultati in ${list}`,
+    searching: "Ricerca…",
+    empty: (query: string) => `Nessun risultato per “${query}”.`,
+    notConnected: "Connettiti al gioco per cercare giocatori, staff e società.",
+    failed: (reason: string) => `La ricerca non è riuscita: ${reason}`,
+    hintMove: "Spostati",
+    hintOpen: "Apri",
+    hintClose: "Chiudi",
+    keys: { ctrl: "Ctrl", shift: "Maiusc", enter: "Invio", escape: "Esc" },
+  },
+
+  /** "My club", the page the app opens on (see en.ts). */
+  home: {
+    nav: "La mia società",
+    loading: "Ricerca della tua società…",
+    failed: (reason: string) => `Non è stato possibile cercare la tua società: ${reason}`,
+    manager: (name: string) => `Allenatore: ${name}`,
+    following: "Una società che segui",
+    clubsLabel: "Le tue società",
+    openProfile: "Profilo della società",
+    openProfileTitle: "Apri questa società nella scheda Società: strutture, finanze, stadio e altro",
+    noClubTitle: "Non alleni nessuna società in questo salvataggio",
+    noClubText:
+      "Scegli invece una società da seguire qui: la sua rosa, chi ha bisogno di attenzione e le azioni su tutta la " +
+      "squadra.",
+    chooseAnother: "Scegli un'altra società",
+    searchLabel: "Società da seguire",
+    squad: "Rosa",
+    cards: {
+      label: "Chi ha bisogno di attenzione",
+      lowMorale: "Morale basso",
+      tired: "Stanchi",
+      contracts: "Contratti in scadenza",
+      injuredHint: "Giocatori con un infortunio",
+      bannedHint: "Giocatori con una squalifica",
+      lowMoraleHint: (below: string) => `Giocatori con il morale sotto ${below}`,
+      tiredHint: (below: string) => `Giocatori con l'energia sotto ${below}`,
+      unrestHint: "Giocatori di cui alcuni compagni sono scontenti",
+      contractsHint: (months: number) => `Giocatori il cui contratto scade entro ${months} mesi`,
+      none: "Nessuno",
+      more: (count: number) => `e altri ${format(count)}`,
     },
   },
 

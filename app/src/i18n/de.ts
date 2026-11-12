@@ -646,6 +646,7 @@ export const de: Strings = {
     club: "Verein",
     injuries: "Verletzungen",
     cohesion: "Teambuilding",
+    tactics: "Taktische Vertrautheit",
     bans: "Sperren",
     retirement: "Karriereende",
     clause: "Vertragsklausel",
@@ -1326,6 +1327,7 @@ export const de: Strings = {
     staff: "Mitarbeiter",
     clubs: "Vereine",
     cohesion: "Teambuilding mit den Vereinen",
+    tactics: "taktische Vertrautheit",
   },
 
   update: {
@@ -2007,6 +2009,19 @@ export const de: Strings = {
       count === 1
         ? "1 Spieler hat noch kein Teambuilding mit dem Verein"
         : `${format(count)} Spieler haben noch kein Teambuilding mit dem Verein`,
+    maxTactics: "Taktik maximieren",
+    maxTacticsTitle:
+      "Lässt jeden Spieler dieser Mannschaft die Taktik, die sie spielt, bestmöglich kennen, in den acht Bereichen der " +
+      "Seite Taktische Effektivität, wie es wochenlanges Training täte. Die Attribute bleiben, wie sie sind. Die " +
+      "Bereiche sinken wieder, wenn das Training altert, nach etwa sechs Wochen, und eine andere Taktik braucht einen " +
+      "weiteren Klick. Das Spiel zeigt sie, sobald es weiterläuft: Klicken Sie im Spiel auf Fortfahren",
+    tacticsNone:
+      "Der Editor kann nicht lesen, wie gut diese Mannschaft ihre Taktik kennt: Diese Version des Spiels wurde dafür " +
+      "nicht geprüft, oder die Mannschaft spielt keine Taktik, die Sie wählen",
+    tacticsUntrained: (count) =>
+      count === 1
+        ? "1 Spieler trainiert nicht (etwa wegen einer Verletzung): Sein Trainingsverlauf bleibt, wie er ist"
+        : `${format(count)} Spieler trainieren nicht (etwa wegen einer Verletzung): Ihr Trainingsverlauf bleibt, wie er ist`,
     refreshAll: "Alle regenerieren",
     refreshAllTitle:
       "Setzt Energie und Spielpraxis jedes Spielers dieser Mannschaft auf 100 % und lässt ihn sich voll erholen " +
@@ -2082,6 +2097,7 @@ export const de: Strings = {
       jadedness: "Ersch.",
       morale: "Moral",
       cohesion: "Teamb.",
+      tactics: "Taktik",
       actions: "Kapitänsamt",
     },
     sortBy: (by) => `Sortieren nach ${by}`,
@@ -2096,6 +2112,7 @@ export const de: Strings = {
       jadedness: "Erschöpfung",
       morale: "Moral",
       cohesion: "Teambuilding",
+      tactics: "taktische Vertrautheit",
     },
 
     // Die Markierungen nach einem Namen, mit ihrer Bedeutung als Hinweistext
@@ -2434,6 +2451,62 @@ export const de: Strings = {
       blocked: () => "Braucht Spiele, um sich zu entwickeln",
       unwanted: () => "Teamstatus: Nicht benötigt",
       listed: () => "Bereits auf der Transferliste",
+    },
+  },
+
+  /** The command palette and the names of the keys in the keyboard shortcuts (see en.ts). */
+  palette: {
+    button: "Suchen",
+    title: "Suchen oder Befehl ausführen",
+    placeholder: "Spieler, Mitarbeiter, Vereine und Befehle suchen",
+    placeholderCommands: "Befehle suchen",
+    commands: "Befehle",
+    goTo: (list: string) => `Zu „${list}“ wechseln`,
+    searchList: "In dieser Liste suchen",
+    editProfile: "Dieses Profil bearbeiten",
+    doneEditing: "Bearbeiten dieses Profils beenden",
+    applyChanges: "Änderungen an diesem Profil anwenden",
+    showAll: (count: number, list: string) => `Alle ${format(count)} Treffer in „${list}“ anzeigen`,
+    searching: "Suche läuft…",
+    empty: (query: string) => `Keine Treffer für „${query}“.`,
+    notConnected: "Verbinden Sie sich mit dem Spiel, um Spieler, Mitarbeiter und Vereine zu suchen.",
+    failed: (reason: string) => `Die Suche ist fehlgeschlagen: ${reason}`,
+    hintMove: "Navigieren",
+    hintOpen: "Öffnen",
+    hintClose: "Schließen",
+    keys: { ctrl: "Strg", shift: "Umschalt", enter: "Enter", escape: "Esc" },
+  },
+
+  /** "My club", the page the app opens on (see en.ts). */
+  home: {
+    nav: "Mein Verein",
+    loading: "Ihr Verein wird gesucht…",
+    failed: (reason: string) => `Ihr Verein konnte nicht gesucht werden: ${reason}`,
+    manager: (name: string) => `Trainer: ${name}`,
+    following: "Ein Verein, dem Sie folgen",
+    clubsLabel: "Ihre Vereine",
+    openProfile: "Vereinsprofil",
+    openProfileTitle: "Diesen Verein im Tab „Vereine“ öffnen: Anlagen, Finanzen, Stadion und mehr",
+    noClubTitle: "Sie trainieren in diesem Spielstand keinen Verein",
+    noClubText:
+      "Wählen Sie stattdessen einen Verein, dem Sie hier folgen: sein Kader, wer Aufmerksamkeit braucht, und die " +
+      "Aktionen für eine ganze Mannschaft.",
+    chooseAnother: "Anderen Verein wählen",
+    searchLabel: "Verein, dem Sie folgen",
+    squad: "Kader",
+    cards: {
+      label: "Wer Aufmerksamkeit braucht",
+      lowMorale: "Niedrige Moral",
+      tired: "Müde",
+      contracts: "Auslaufende Verträge",
+      injuredHint: "Spieler mit einer Verletzung",
+      bannedHint: "Spieler mit einer Sperre",
+      lowMoraleHint: (below: string) => `Spieler mit einer Moral unter ${below}`,
+      tiredHint: (below: string) => `Spieler mit einer Energie unter ${below}`,
+      unrestHint: "Spieler, mit denen einige Mitspieler unzufrieden sind",
+      contractsHint: (months: number) => `Spieler, deren Vertrag in den nächsten ${months} Monaten endet`,
+      none: "Keine",
+      more: (count: number) => `und ${format(count)} weitere`,
     },
   },
 
