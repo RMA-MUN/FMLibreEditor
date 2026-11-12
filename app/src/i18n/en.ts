@@ -14,6 +14,7 @@
 
 import type {
   CheckKey,
+  Concern,
   Entity,
   ExportEntity,
   ExportFormat,
@@ -26,6 +27,8 @@ import type {
   Storefront,
 } from "../types";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { REASONS_EN } from "./reasons/en";
 
 const numbers = new Intl.NumberFormat("en-GB");
 const percents = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 });
@@ -207,13 +210,6 @@ const CLAUSE_NAMES_EN: Partial<Record<number, string>> = {
   56: "Active non promotion release clause",
   58: "Not shown in the game (58)",
   63: "Not shown in the game (63)",
-};
-
-/** Reasons to be unhappy, by the codes the game keeps them as; named as FMRTE names them. */
-const CONCERN_MOTIVES_EN: Partial<Record<number, string>> = {
-  596: "Left out of a competition squad",
-  808: "Thinks a teammate has been treated unfairly",
-  926: "Doesn't believe a teammate deserves the playing time he wants",
 };
 
 /** Players' traits (preferred moves), by their bit in the game's mask; named as FMRTE names them. */
@@ -645,10 +641,11 @@ export const en = {
     removeUnhappinessFollows:
       "The reasons his teammates hold about him end by themselves once the game moves on: press Continue in the game",
     concernSince: (date: string) => `since ${date}`,
-    /** After a reason held about a teammate: who he is. */
+    /** After a reason held about a teammate whose sentence does not name him: who he is. */
     concernAbout: (name: string) => `about ${name}`,
     concernKind: (kind: number) => (kind === 1 ? "Concerned" : kind === 2 ? "Internal" : `Type ${kind}`),
-    concernMotive: (motive: number) => CONCERN_MOTIVES_EN[motive] ?? `Reason ${motive}`,
+    /** A reason by the game's sentence for it (see `reasons.ts`); a motive without one by its number. */
+    concernMotive: (concern: Concern) => reasonText(REASONS_EN, concern) ?? `Reason ${concern.motive}`,
     /** A contract's clauses and bonuses: the heading, and what each kind the game has is called. */
     clauses: "Bonuses and clauses",
     noClauses: "No bonuses or clauses",

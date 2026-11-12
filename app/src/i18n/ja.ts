@@ -9,9 +9,11 @@
 //
 // Japanese has no plural, and counts take a counter word after the number ("選手3人", "12クラブ", "3件の変更").
 
-import type { Entity, ExportEntity } from "../types";
+import type { Concern, Entity, ExportEntity } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { REASONS_JA } from "./reasons/ja";
 
 const numbers = new Intl.NumberFormat("ja-JP");
 const percents = new Intl.NumberFormat("ja-JP", { maximumFractionDigits: 1 });
@@ -300,13 +302,6 @@ const CLAUSE_NAMES_JA: Partial<Record<number, string>> = {
   56: "有効な昇格失敗時の契約解除条項",
   58: "ゲーム内で表示なし（58）",
   63: "ゲーム内で表示なし（63）",
-};
-
-/** Reasons to be unhappy, by the codes the game keeps them as (see `en.ts`). */
-const CONCERN_MOTIVES_JA: Partial<Record<number, string>> = {
-  596: "大会の登録メンバーから外された",
-  808: "チームメイトが不当な扱いを受けたと思っている",
-  926: "チームメイトが望む出場時間に値しないと思っている",
 };
 
 /** Players' traits (preferred moves), by their bit in the game's mask (see `en.ts`). */
@@ -712,7 +707,7 @@ export const ja: Strings = {
     concernSince: (date: string) => `${date}から`,
     concernAbout: (name: string) => `${name}について`,
     concernKind: (kind: number) => (kind === 1 ? "懸念" : kind === 2 ? "内部" : `種類 ${kind}`),
-    concernMotive: (motive: number) => CONCERN_MOTIVES_JA[motive] ?? `理由 ${motive}`,
+    concernMotive: (concern: Concern) => reasonText(REASONS_JA, concern) ?? `理由 ${concern.motive}`,
     clauses: "ボーナスと条項",
     noClauses: "ボーナス・条項なし",
     loyaltyBonus: "ロイヤルティボーナス",

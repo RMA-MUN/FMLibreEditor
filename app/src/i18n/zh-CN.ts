@@ -2,6 +2,7 @@
 // 注释保留英文源文件中的用途说明，便于和界面位置对应。
 import type {
   CheckKey,
+  Concern,
   Entity,
   ExportEntity,
   ExportFormat,
@@ -15,6 +16,8 @@ import type {
 } from "../types";
 import type { Strings } from "./en";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { REASONS_ZH_CN } from "./reasons/zh-CN";
 
 const numbers = new Intl.NumberFormat("zh-CN");
 const percents = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 1 });
@@ -310,13 +313,6 @@ const CLAUSE_NAMES_ZH: Partial<Record<number, string>> = {
   56: "已生效的未能升级解约金条款",
   58: "游戏中不显示（58）",
   63: "游戏中不显示（63）",
-};
-
-/** Reasons to be unhappy, by the codes the game keeps them as; named as FMRTE names them. */
-const CONCERN_MOTIVES_ZH: Partial<Record<number, string>> = {
-  596: "落选赛事名单",
-  808: "认为队友受到不公平对待",
-  926: "认为队友不配获得其想要的出场时间",
 };
 
 /** Players' traits (preferred moves), by their bit in the game's mask; named as FMRTE names them. */
@@ -747,7 +743,7 @@ export const zhCN: Strings = {
     concernSince: (date: string) => `始于 ${date}`,
     concernAbout: (name: string) => `针对 ${name}`,
     concernKind: (kind: number) => (kind === 1 ? "不满" : kind === 2 ? "内部问题" : `类型 ${kind}`),
-    concernMotive: (motive: number) => CONCERN_MOTIVES_ZH[motive] ?? `原因 ${motive}`,
+    concernMotive: (concern: Concern) => reasonText(REASONS_ZH_CN, concern) ?? `原因 ${concern.motive}`,
     /** A contract's clauses and bonuses: the heading, and what each kind the game has is called. */
     clauses: "奖金与条款",
     noClauses: "没有奖金或条款",

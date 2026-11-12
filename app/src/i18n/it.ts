@@ -10,9 +10,11 @@
 // with its noun in gender and number ("1 modifica applicata", "3 modifiche applicate"; "1 giocatore escluso", "3
 // giocatori esclusi"), so the sentences with a count are written out for one and for many.
 
-import type { Entity } from "../types";
+import type { Concern, Entity } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { REASONS_IT } from "./reasons/it";
 
 const numbers = new Intl.NumberFormat("it-IT");
 const percents = new Intl.NumberFormat("it-IT", { maximumFractionDigits: 1 });
@@ -166,13 +168,6 @@ const CLAUSE_NAMES_IT: Partial<Record<number, string>> = {
   56: "Rescissione per mancata promozione attivata",
   58: "Non mostrata nel gioco (58)",
   63: "Non mostrata nel gioco (63)",
-};
-
-/** Reasons to be unhappy, by the codes the game keeps them as (see `en.ts`). */
-const CONCERN_MOTIVES_IT: Partial<Record<number, string>> = {
-  596: "Escluso dalla lista di una competizione",
-  808: "Pensa che un compagno sia stato trattato ingiustamente",
-  926: "Non crede che un compagno meriti il minutaggio che vuole",
 };
 
 /** Players' traits (preferred moves), by their bit in the game's mask (see `en.ts`); the game's Italian names. */
@@ -757,7 +752,7 @@ export const it: Strings = {
     concernSince: (date) => `dal ${date}`,
     concernAbout: (name) => `riguarda ${name}`,
     concernKind: (kind) => (kind === 1 ? "Preoccupato" : kind === 2 ? "Interno" : `Tipo ${kind}`),
-    concernMotive: (motive) => CONCERN_MOTIVES_IT[motive] ?? `Motivo ${motive}`,
+    concernMotive: (concern: Concern) => reasonText(REASONS_IT, concern) ?? `Motivo ${concern.motive}`,
     clauses: "Bonus e clausole",
     noClauses: "Nessun bonus o clausola",
     loyaltyBonus: "Bonus fedeltà",
