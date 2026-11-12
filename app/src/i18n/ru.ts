@@ -117,7 +117,8 @@ const recordNoun = (entity: string | undefined) =>
 
 /** The reasons the Rust side gives for a field that cannot be changed some way. */
 const UNSUPPORTED: Partial<Record<string, string>> = {
-  "a date can only be set": "дату можно только задать",
+  "a date can only be set or moved by years": "дату можно только задать или сдвинуть на годы",
+  "only a date can be moved by years": "на годы можно сдвинуть только дату",
   "it is changed one person at a time": "это меняется только для одного человека за раз",
   "the new value is not one of the game's own records of that kind":
     "новое значение не является записью игры такого типа",
@@ -708,6 +709,10 @@ export const ru: Strings = {
     signed: "Подписан",
     expires: "Истекает",
     joined: "В клубе с",
+    extendContract: (years: number) => `Продлить на ${counted(years, "год", "года", "лет")}`,
+    extendingContract: "Продлеваем…",
+    extendContractTitle: (years: number, until: string) =>
+      `Продлить контракт на ${counted(years, "год", "года", "лет")}, до ${until}; можно отменить в «Изменениях»`,
     squadStatus: "Статус в команде",
     squadStatusName: (status) => SQUAD_STATUSES[status] ?? `Статус ${status}`,
     contractType: "Тип контракта",
@@ -1454,17 +1459,23 @@ export const ru: Strings = {
     row: (position) => `Изменение ${position}`,
     field: "Поле",
     operation: "Операция",
-    operations: { set: "Задать", add: "Прибавить", scale: "Масштаб в %" },
-    values: { set: "Значение", add: "Величина", scale: "Процент" },
+    operations: { set: "Задать", add: "Прибавить", scale: "Масштаб в %", addYears: "Прибавить годы" },
+    values: { set: "Значение", add: "Величина", scale: "Процент", addYears: "Число лет" },
     addTitle: "Прибавляется к каждому значению в том виде, как оно показано; отрицательное число вычитает",
     addPointsTitle: "Процентные пункты, прибавляемые к каждому значению (70% плюс 10 — это 80%); отрицательное число вычитает",
     rangeHint: (min, max) => `${format(min)}–${format(max)}`,
     amountHint: (max) => `±${format(max)}`,
     ofCurrent: "% от текущего",
     percentTitle: "Процент от текущего значения: 100 — без изменений, 110 — на десятую больше, 50 — вдвое меньше",
+    addYearsTitle:
+      "Число лет, прибавляемое к каждой дате; день и месяц сохраняются, отрицательное число сдвигает дату назад. " +
+      "29 февраля в невисокосном году становится 28 февраля",
+    years: "лет",
     invalidAdd: (min, max) => `Введите целое число от ${format(min)} до ${format(max)}`,
     invalidPercent: (min, max) => `Введите целый процент от ${min} до ${max}`,
-    dateSetOnly: "Дату можно только задать",
+    invalidYears: (min: number, max: number) => `Введите целое число лет от ${format(min)} до ${format(max)}`,
+    dateSetOnly: "Дату можно только задать или сдвинуть на годы",
+    yearsDateOnly: "На годы можно сдвинуть только дату",
     addField: "Добавить поле",
     addFieldFull: (max) => `Массовое редактирование меняет не более ${max} полей`,
     remove: "Убрать это поле",

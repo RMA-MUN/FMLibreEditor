@@ -4318,6 +4318,11 @@ button.danger:hover:not(:disabled) {
   font-size: 13px;
 }
 
+/* Under a contract's dates: Extend, which makes the contract run five years longer, and why it did not. */
+.contract-extend {
+  margin-top: 8px;
+}
+
 /* Club squad */
 
 /* The tabs under the header of a club's profile: the body scrolls under them. The open tab is underlined in the accent

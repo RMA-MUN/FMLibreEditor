@@ -121,7 +121,8 @@ const thisRecord = (entity: string | undefined) => {
 
 /** The reasons the Rust side gives for a field that cannot be changed some way. */
 const UNSUPPORTED: Partial<Record<string, string>> = {
-  "a date can only be set": "une date peut seulement être fixée",
+  "a date can only be set or moved by years": "une date peut seulement être fixée ou décalée d'années",
+  "only a date can be moved by years": "seule une date peut être décalée d'années",
   "it is changed one person at a time": "il se modifie une personne à la fois",
   "the new value is not one of the game's own records of that kind":
     "la nouvelle valeur ne fait pas partie des enregistrements du jeu de ce type",
@@ -753,6 +754,10 @@ export const fr: Strings = {
     signed: "Signature",
     expires: "Expire le",
     joined: "Arrivée",
+    extendContract: (years: number) => `Prolonger de ${years}\u00a0ans`,
+    extendingContract: "Prolongation…",
+    extendContractTitle: (years: number, until: string) =>
+      `Le contrat court ${years}\u00a0ans de plus, jusqu'au ${until}\u00a0; annulable dans Modifications`,
     squadStatus: "Statut effectif",
     squadStatusName: (status) => SQUAD_STATUSES[status] ?? `Statut ${status}`,
     contractType: "Type de contrat",
@@ -1578,8 +1583,8 @@ export const fr: Strings = {
     row: (position) => `Modification ${position}`,
     field: "Champ",
     operation: "Opération",
-    operations: { set: "Fixer à", add: "Ajouter", scale: "Porter à %" },
-    values: { set: "Valeur", add: "Quantité", scale: "Pourcentage" },
+    operations: { set: "Fixer à", add: "Ajouter", scale: "Porter à %", addYears: "Ajouter des années" },
+    values: { set: "Valeur", add: "Quantité", scale: "Pourcentage", addYears: "Années" },
     addTitle: "Ajouté à chaque valeur telle qu'elle est affichée\u00a0; un nombre négatif retire",
     addPointsTitle:
       "Points de pourcentage ajoutés à chaque valeur (70\u00a0% plus 10 font 80\u00a0%)\u00a0; un nombre négatif retire",
@@ -1588,9 +1593,16 @@ export const fr: Strings = {
     ofCurrent: "% de la valeur actuelle",
     percentTitle:
       "Un pourcentage de la valeur actuelle\u00a0: 100 la garde, 110 l'augmente d'un dixième, 50 la divise par deux",
+    addYearsTitle:
+      "Années ajoutées à chaque date, qui garde son jour et son mois\u00a0; un nombre négatif la recule. " +
+      "Le 29\u00a0février devient le 28\u00a0février une année qui n'en a pas",
+    years: "ans",
     invalidAdd: (min, max) => `Saisissez un nombre entier de ${format(min)} à ${format(max)}`,
     invalidPercent: (min, max) => `Saisissez un pourcentage entier de ${min} à ${max}`,
-    dateSetOnly: "Une date peut seulement être fixée",
+    invalidYears: (min: number, max: number) =>
+      `Saisissez un nombre entier d'années de ${format(min)} à ${format(max)}`,
+    dateSetOnly: "Une date peut seulement être fixée ou décalée d'années",
+    yearsDateOnly: "Seule une date peut être décalée d'années",
     addField: "Ajouter un champ",
     addFieldFull: (max) => `Une modification groupée change au plus ${max} champs`,
     remove: "Retirer ce champ",
