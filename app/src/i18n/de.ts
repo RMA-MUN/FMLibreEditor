@@ -11,7 +11,7 @@
 // club are all masculine ("Spieler", "Mitarbeiter", "Verein"), so the words around them agree the same way, and after
 // "von" a count takes the dative ("von 3 Spielern", "von 12 Vereinen").
 
-import type { Entity } from "../types";
+import type { Entity, OpportunityKind } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
 
@@ -2181,6 +2181,8 @@ export const de: Strings = {
     tabs: {
       label: "Scouting-Bereiche",
       recommend: "Transferempfehlungen",
+      opportunities: "Gelegenheiten",
+      similar: "Ähnliche Spieler",
       depth: "Kadertiefe",
       departures: "Abgabekandidaten",
     },
@@ -2283,6 +2285,7 @@ export const de: Strings = {
       fit: "Eignung",
       probability: "Wahrscheinlichkeit",
       fee: "Ablöse",
+      similarity: "Ähnlichkeit",
     },
     backToScoutOrder: "Zurück zur Reihenfolge des Scouts",
     showMore: (count) => (count === 1 ? "1 weiteren zeigen" : `${format(count)} weitere zeigen`),
@@ -2351,6 +2354,10 @@ export const de: Strings = {
       },
       attention: "Genauer ansehen:",
       allFine: "Jeder Mannschaftsteil wirkt ausgewogen.",
+      views: { label: "Kader darstellen als", pitch: "Spielfeld", table: "Tabelle" },
+      pitchLabel: "Der Kader auf dem Spielfeld, Mannschaftsteil für Mannschaftsteil",
+      coverCount: (count) => (count === 1 ? "1 kann aushelfen" : `${format(count)} können aushelfen`),
+      adviceFor: (position) => `Transferempfehlungen für ${position}`,
     },
     departures: {
       intro: "Spieler, die Ihr Scout abgeben würde, die dringendsten zuerst.",
@@ -2379,6 +2386,199 @@ export const de: Strings = {
       },
       actions: { sell: "Verkaufen", loan: "Verleihen", release: "Vertrag auflösen" },
       rank: (line, rank) => `${line} · ${rank}.`,
+    },
+    actions: {
+      column: "Aktionen",
+      compare: "Mit Ihrem Kader vergleichen",
+      compareLabel: (name) => `${name} mit Ihrem Kader vergleichen`,
+      similar: "Ähnliche Spieler finden",
+      similarLabel: (name) => `Spieler wie ${name} finden`,
+      report: "Scoutingbericht",
+      reportLabel: (name) => `Scoutingbericht zu ${name}`,
+      replacement: "Ersatz finden",
+      replacementLabel: (name) => `Ersatz für ${name} finden`,
+      replacementTitle: "Spieler wie er, die seinen Platz einnehmen könnten",
+    },
+    why: {
+      freeAgent: () => "Vertragslos",
+      expiring: (value) => `Vertrag endet in ${value} ${value === "1" ? "Tag" : "Tagen"}`,
+      releaseClause: (value, against) =>
+        against === null ? `Ausstiegsklausel ${value}` : `Ausstiegsklausel ${value} (Wert ${against})`,
+      unhappy: (value) =>
+        value === "1" ? "Unzufrieden bei seinem Verein" : `Unzufrieden bei seinem Verein (${value} Gründe)`,
+      inTheRed: (value) => `Sein Verein steckt in den roten Zahlen (${value})`,
+      listed: () => "Auf Transferliste",
+      loanListed: () => "Auf Leihliste",
+      wonderkid: (value) => `Potenzial ${value}`,
+    },
+    verdicts: {
+      better: "Besser als Ihre Nr. 1",
+      close: "Nah an Ihrer Nr. 1",
+      below: "Schwächer als Ihre Nr. 1",
+      none: "Niemand in Ihrem Kader spielt hier",
+    },
+    chances: { likely: "Wechselt wahrscheinlich", possible: "Könnte wechseln", hard: "Schwer zu verpflichten" },
+    opportunities: {
+      kindsLabel: "Listen der Gelegenheiten",
+      kinds: {
+        bosman: "Bosman",
+        releaseClause: "Ausstiegsklauseln",
+        unhappy: "Unzufriedene",
+        inTheRed: "Vereine in den roten Zahlen",
+        listed: "Transferliste",
+        loanListed: "Leihliste",
+        wonderkid: "Wunderkinder",
+      } satisfies Record<OpportunityKind, string>,
+      hints: {
+        bosman: "Vertragslose Spieler und Verträge, die innerhalb von sechs Monaten enden",
+        releaseClause: "Ausstiegsklausel unter seinem Wert",
+        unhappy: "Unzufrieden bei seinem Verein",
+        inTheRed: "Sein Verein braucht das Geld",
+        listed: "Sein Verein würde ihn verkaufen",
+        loanListed: "Sein Verein würde ihn verleihen",
+        wonderkid: "19 oder jünger, mit großer Zukunft",
+      } satisfies Record<OpportunityKind, string>,
+      countLabel: "Spieler auf dieser Liste",
+      count: (count, more) => (more ? `${format(count)}+` : format(count)),
+      position: "Position",
+      anyPosition: "Jede Position",
+      maxAge: "Höchstalter",
+      maxFee: "Max. Ablöse",
+      betterOnly: "Besser als meine Nr. 1",
+      betterOnlyTitle: "Nur Spieler, die besser auf ihre Position passen als Ihr bester Spieler dort",
+      summary: (kind, lowest, highest, pool) =>
+        `${kind} · Spieler mit Fähigkeit ${lowest}–${highest}, rund um das Niveau Ihres Kaders · ${pool} betrachtet`,
+      how: {
+        label: "Wie entstehen diese Listen?",
+        note:
+          "Der Scout betrachtet die Spieler, deren derzeitige Fähigkeit nahe an der Ihrer besten Elf liegt (30 darunter " +
+          "bis 45 darüber), lässt die Spieler Ihres eigenen Vereins und anderer menschlicher Trainer weg und bewertet " +
+          "jeden auf seiner besten Position (oder der, die Sie wählen). Jede Liste behält, wen ihre Regel erfasst: " +
+          "einen Vertrag, der innerhalb von sechs Monaten endet oder fehlt, eine Ausstiegsklausel unter seinem Wert, " +
+          "Gründe für Unzufriedenheit, einen Verein mit negativem Kontostand, die Transfer- oder Leihliste seines " +
+          "Vereins. Wunderkinder sind 19 oder jünger, haben ein Potenzial von mindestens 140 und liegen über dem " +
+          "Niveau Ihres Kaders. Jede Liste ist wie die Empfehlungen geordnet: Eignung und Wahrscheinlichkeit zusammen.",
+      },
+      empty: "Niemand auf dieser Liste mit diesen Filtern.",
+      emptyWonderkids: "Keine Wunderkinder mit diesen Filtern.",
+      better: "Besser als Ihre Nr. 1 hier",
+      columns: { position: "Pos.", why: "Grund" },
+    },
+    similar: {
+      intro:
+        "Wählen Sie einen Spieler, um andere wie ihn zu finden: Verglichen werden die Attribute, die seine Position " +
+        "braucht.",
+      search: "Spieler zum Vergleichen",
+      searchPlaceholder: "Spieler nach Namen suchen…",
+      noMatch: "Kein Spieler mit diesem Namen.",
+      quickPicks: "Oder mit einem Ihrer Spieler beginnen:",
+      change: "Anderen Spieler wählen",
+      reference: "Spieler wie",
+      position: "Vergleichen als",
+      cheaper: "Günstiger",
+      cheaperTitle: "Nur Spieler, die weniger wert sind als er",
+      younger: "Jünger",
+      youngerTitle: "Nur Spieler, die jünger sind als er",
+      maxFee: "Max. Ablöse",
+      value: "Wert",
+      notForSale: "Steht nicht zum Verkauf",
+      doesNotPlay: (position) => `Er spielt nicht auf der Position ${position}: Es werden nur seine Attribute verglichen.`,
+      summary: (candidates, shown, position) => `${candidates} Spieler spielen ${position} · die ${shown} ähnlichsten`,
+      how: {
+        label: "Wie wird die Ähnlichkeit gemessen?",
+        note:
+          "Der Scout vergleicht die Attribute, auf die sich die Rollen der Position stützen (die wichtigsten zählen " +
+          "dreifach), und ein wenig vom Rest. Am meisten zählt die Form: wo ein Spieler stark und wo er schwach ist. " +
+          "Sein Niveau zählt weniger, daher kann auch eine günstigere oder jüngere Version eines Spielers ihm sehr " +
+          "ähnlich sein. Verglichen werden nur Spieler, die auf der Position mindestens kompetent sind; die Spieler " +
+          "Ihres eigenen Vereins und anderer menschlicher Trainer bleiben außen vor.",
+      },
+      empty: "Niemand Ähnliches mit diesen Einstellungen.",
+      columns: { similarity: "Ähnlich", value: "Wert" },
+      similarityTitle: (value) => `${format(value)} % ähnlich`,
+    },
+    compare: {
+      title: "Mit Ihrem Kader vergleichen",
+      hint: (position, name) =>
+        `Gegen ${name}, Ihren besten Spieler auf ${position}. Die Schlüsselattribute der Rolle stehen zuerst.`,
+      noStarter: "Niemand in Ihrem Kader spielt diese Position.",
+      starter: "Ihre Nr. 1",
+      candidate: "Kandidat",
+      inPossession: "Mit Ball",
+      outOfPossession: "Ohne Ball",
+      add: "Spieler hinzufügen",
+      addNone: "Aus der Liste wählen…",
+      remove: (name) => `${name} aus dem Vergleich nehmen`,
+      removeShort: "Entfernen",
+      scoutView: "Einschätzung des Scouts",
+      rows: {
+        fit: "Eignung",
+        position: (position) => `Als ${position}`,
+        roleRating: (role) => `Als ${role}`,
+        probability: "Wahrscheinlichkeit",
+        fee: "Gesch. Ablöse",
+        wage: "Gehalt",
+        contract: "Vertrag bis",
+        verdict: "Urteil",
+      },
+      ownPlayer: "Ihr Spieler",
+      roleAttributes: (roles) => `Die Attribute der Rolle: ${roles}`,
+      keyAttribute: "Ein Schlüsselattribut der Rolle",
+      versus: (difference) => `${difference} gegenüber Ihrer Nr. 1`,
+      best: "der Beste",
+      age: (age) => `Alter ${format(age)}`,
+      allAttributes: "Alle Attribute",
+      loading: "Spieler werden gelesen…",
+      close: "Schließen",
+    },
+    report: {
+      title: (name) => `Scoutingbericht: ${name}`,
+      hint: "Speichern Sie ihn als Bild oder kopieren Sie ihn zum Teilen.",
+      making: "Bericht wird erstellt…",
+      failed: (reason) => `Der Bericht konnte nicht erstellt werden: ${reason}`,
+      alt: (name) => `Der Scoutingbericht zu ${name}`,
+      save: "Als Bild speichern",
+      savePdf: "Als PDF speichern",
+      saving: "Wird gespeichert…",
+      copy: "Bild kopieren",
+      copied: "In die Zwischenablage kopiert.",
+      copyFailed: (reason) => `Das Bild konnte nicht kopiert werden: ${reason}`,
+      similar: "Ähnliche Spieler finden",
+      saved: (file) => `Gespeichert als ${file}.`,
+      open: "Öffnen",
+      show: "Im Ordner anzeigen",
+      close: "Schließen",
+      heading: "Scoutingbericht",
+      age: (age) => `Alter ${format(age)}`,
+      freeAgent: "Vertragslos",
+      contract: "Vertrag bis",
+      fit: "Eignung",
+      probability: "Wahrscheinlichkeit",
+      fee: "Gesch. Ablöse",
+      abilities: "CA / PA",
+      value: "Wert",
+      verdict: "Urteil",
+      role: "Rolle",
+      versus: (name) => `Markierungen: ${name}, Ihre Nr. 1`,
+      strengths: "Stärken",
+      weaknesses: "Schwächen",
+      profile: "Charakter",
+      note: "Notiz des Scouts",
+      similarity: (value) => `${format(value)} % ähnlich`,
+      footer: "FMLibreEditor-Scoutingbericht · Ablösen, Gehälter und Wahrscheinlichkeiten sind Schätzungen",
+      traits: {
+        consistent: "Konstant",
+        inconsistent: "Unbeständig",
+        bigGames: "Spieler für große Spiele",
+        nervous: "Nervös in großen Spielen",
+        injuryProne: "Verletzungsanfällig",
+        robust: "Selten verletzt",
+        versatile: "Vielseitig",
+        professional: "Vorbildlicher Profi",
+        ambitious: "Ehrgeizig",
+        loyal: "Loyal",
+        hotHeaded: "Hitzköpfig",
+      },
     },
     roles: {
       bgk: "Ballspielender Torwart",

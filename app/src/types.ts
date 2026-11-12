@@ -1233,3 +1233,115 @@ export interface Scouted {
   candidates: number;
   eligible: number;
 }
+
+/** A list of opportunities: what the market makes easier to sign than a player's ability says. */
+export type OpportunityKind =
+  | "bosman"
+  | "releaseClause"
+  | "unhappy"
+  | "inTheRed"
+  | "listed"
+  | "loanListed"
+  | "wonderkid";
+
+/** What `scouting_opportunities` looks for; omitted fields are open. */
+export interface OpportunityRequest {
+  /** The list whose players to return; every list is counted. */
+  kind: OpportunityKind;
+  /** A position key from `ScoutingOverview.positions`; null for any, each player measured where he plays best. */
+  position?: string | null;
+  minAge?: number | null;
+  maxAge?: number | null;
+  /** Pounds. */
+  maxFee?: number | null;
+  /** Only players who fit their position better than the club's best player there (not for wonderkids). */
+  betterOnly?: boolean;
+  limit?: number;
+}
+
+/**
+ * What makes a player an opportunity: `freeAgent`, `expiring` (value: days left), `releaseClause` (value: the fee it
+ * lets a club pay; against: his value, null when he is not for sale), `unhappy` (value: his reasons), `inTheRed`
+ * (value: his club's balance), `listed`, `loanListed`, `wonderkid` (value: his potential ability). Amounts in pounds.
+ */
+export interface Why {
+  code: string;
+  value: number | null;
+  against: number | null;
+}
+
+export interface Opportunity extends Suggestion {
+  /** The position he was measured for: the one asked for, or the one he plays best. */
+  position: string;
+  why: Why;
+  /** He fits his position better than the club's best player there. */
+  better: boolean;
+}
+
+/** How many players a list holds with the filters: at most 300, `more` when it holds more. */
+export interface KindCount {
+  kind: OpportunityKind;
+  count: number;
+  more: boolean;
+}
+
+/** The club's best player at a position. */
+export interface Starter extends Fitting {
+  position: string;
+}
+
+/** What `scouting_opportunities` returns. */
+export interface Opportunities {
+  kind: OpportunityKind;
+  items: Opportunity[];
+  counts: KindCount[];
+  starters: Starter[];
+  /** The average ability of the club's best eleven, and the abilities looked at around it. */
+  level: number;
+  lowest: number;
+  highest: number;
+  /** Players looked at, and those near the club's level sorted into the lists. */
+  examined: number;
+  pool: number;
+  transferBudget: number | null;
+  wageRoom: number | null;
+}
+
+/** What `scouting_similar` looks for. */
+export interface SimilarRequest {
+  /** The player they should be like. */
+  uid: number;
+  /** A position key; null for the one he plays best. */
+  position?: string | null;
+  /** Only players worth less than him, or younger. */
+  cheaper?: boolean;
+  younger?: boolean;
+  /** Pounds. */
+  maxFee?: number | null;
+  limit?: number;
+}
+
+export interface SimilarPlayer extends Suggestion {
+  /** 0–100: how alike their attributes are where the position needs them. */
+  similarity: number;
+  /** He fits the position better than the club's best player there. */
+  better: boolean;
+}
+
+/** What `scouting_similar` returns. */
+export interface Similar {
+  /** The player they are like, measured for the position; null when he does not play it. */
+  reference: Fitting | null;
+  player: PlayerSummary;
+  /** His transfer value in pounds; null where the game keeps none or he is not for sale. */
+  value: number | null;
+  notForSale: boolean;
+  /** The position compared at, and the ones he plays well, best first. */
+  position: string;
+  positions: string[];
+  items: SimilarPlayer[];
+  /** The club's best player at the position. */
+  starter: Fitting | null;
+  examined: number;
+  candidates: number;
+}

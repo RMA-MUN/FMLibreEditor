@@ -518,7 +518,7 @@ function App() {
                   active={view === "clubs"}
                   request={request?.kind === "club" ? request.ask : null}
                 />
-                <ScoutingBrowser version={dataVersion} active={view === "scouting"} />
+                <ScoutingBrowser version={dataVersion} active={view === "scouting"} gameDate={connection.gameDate} />
                 {view === "changes" && <ChangesView log={log} error={logError} reload={reloadLog} onUndone={edited} />}
               </div>
             </ComparisonContext.Provider>

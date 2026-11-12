@@ -13,7 +13,7 @@
 // member of staff and a club are all masculine nouns here. French typography wants a no-break space before : ; ? ! and
 // %, and inside « » ("\u00a0" below).
 
-import type { Entity } from "../types";
+import type { Entity, OpportunityKind } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
 
@@ -2199,6 +2199,8 @@ export const fr: Strings = {
     tabs: {
       label: "Sections du recrutement",
       recommend: "Conseils de transfert",
+      opportunities: "Opportunités",
+      similar: "Joueurs similaires",
       depth: "Profondeur de l'effectif",
       departures: "Départs conseillés",
     },
@@ -2301,6 +2303,7 @@ export const fr: Strings = {
       fit: "adéquation",
       probability: "probabilité",
       fee: "montant",
+      similarity: "similarité",
     },
     backToScoutOrder: "Revenir à l'ordre du recruteur",
     showMore: (count) => `Afficher ${format(count)} de plus`,
@@ -2367,6 +2370,10 @@ export const fr: Strings = {
       },
       attention: "À examiner\u00a0:",
       allFine: "Chaque ligne semble équilibrée.",
+      views: { label: "Afficher l'effectif en", pitch: "Terrain", table: "Tableau" },
+      pitchLabel: "L'effectif sur le terrain, ligne par ligne",
+      coverCount: (count) => counted(count, "peut dépanner", "peuvent dépanner"),
+      adviceFor: (position) => `Conseils de transfert pour ${position}`,
     },
     departures: {
       intro: "Les joueurs dont votre recruteur se séparerait, les plus urgents d'abord.",
@@ -2395,6 +2402,206 @@ export const fr: Strings = {
       },
       actions: { sell: "Vendre", loan: "Prêter", release: "Libérer" },
       rank: (line, rank) => `${line} · ${rank === 1 ? "1er" : `${rank}e`}`,
+    },
+    actions: {
+      column: "Actions",
+      compare: "Comparer avec votre effectif",
+      compareLabel: (name) => `Comparer ${name} avec votre effectif`,
+      similar: "Trouver des joueurs similaires",
+      similarLabel: (name) => `Trouver des joueurs comme ${name}`,
+      report: "Rapport du recruteur",
+      reportLabel: (name) => `Rapport du recruteur sur ${name}`,
+      replacement: "Trouver un remplaçant",
+      replacementLabel: (name) => `Trouver un remplaçant pour ${name}`,
+      replacementTitle: "Des joueurs comme lui, qui pourraient prendre sa place",
+    },
+    why: {
+      freeAgent: () => "Libre de tout contrat",
+      expiring: (value) => `Fin de contrat dans ${value} ${days(value)}`,
+      releaseClause: (value, against) =>
+        against === null
+          ? `Clause libératoire\u00a0: ${value}`
+          : `Clause libératoire\u00a0: ${value} (valeur ${against})`,
+      unhappy: (value) => (value === "1" ? "Mécontent dans son club" : `Mécontent dans son club (${value} raisons)`),
+      inTheRed: (value) => `Son club est dans le rouge (${value})`,
+      listed: () => "Sur liste des transferts",
+      loanListed: () => "Sur liste des prêts",
+      wonderkid: (value) => `Potentiel ${value}`,
+    },
+    verdicts: {
+      better: "Meilleur que votre n° 1",
+      close: "Proche de votre n° 1",
+      below: "Moins bon que votre n° 1",
+      none: "Personne dans votre effectif ne joue ici",
+    },
+    chances: {
+      likely: "Susceptible de vous rejoindre",
+      possible: "Pourrait vous rejoindre",
+      hard: "Difficile à recruter",
+    },
+    opportunities: {
+      kindsLabel: "Listes d'opportunités",
+      kinds: {
+        bosman: "Bosman",
+        releaseClause: "Clauses libératoires",
+        unhappy: "Mécontents",
+        inTheRed: "Clubs dans le rouge",
+        listed: "Liste des transferts",
+        loanListed: "Liste des prêts",
+        wonderkid: "Jeunes pépites",
+      } satisfies Record<OpportunityKind, string>,
+      hints: {
+        bosman: "Joueurs libres et contrats qui se terminent dans les six mois",
+        releaseClause: "Clause libératoire inférieure à sa valeur",
+        unhappy: "Mécontent dans son club",
+        inTheRed: "Son club a besoin d'argent",
+        listed: "Son club le vendrait",
+        loanListed: "Son club le prêterait",
+        wonderkid: "19 ans ou moins, avec un grand avenir",
+      } satisfies Record<OpportunityKind, string>,
+      countLabel: "Joueurs de cette liste",
+      count: (count, more) => (more ? `${format(count)}+` : format(count)),
+      position: "Poste",
+      anyPosition: "Tous les postes",
+      maxAge: "Âge max",
+      maxFee: "Montant max",
+      betterOnly: "Meilleurs que mon n° 1",
+      betterOnlyTitle: "Uniquement les joueurs qui conviennent mieux au poste que votre meilleur joueur actuel",
+      summary: (kind, lowest, highest, pool) =>
+        `${kind} · joueurs de niveau ${lowest}–${highest}, autour de celui de votre effectif · ${pool} examinés`,
+      how: {
+        label: "Comment ces listes sont-elles établies\u00a0?",
+        note:
+          "Le recruteur examine les joueurs dont le niveau actuel est proche de celui de votre meilleur onze (de 30 en " +
+          "dessous à 45 au-dessus), en excluant les joueurs de votre club et ceux des autres entraîneurs humains, et " +
+          "évalue chacun au poste où il est le meilleur (ou à celui que vous choisissez). Chaque liste garde ceux que " +
+          "sa règle retient\u00a0: un contrat qui se termine dans les six mois ou aucun contrat, une clause libératoire " +
+          "inférieure à sa valeur, des raisons d'être mécontent, un club dont le solde est négatif, la liste des " +
+          "transferts ou des prêts de son club. Les jeunes pépites ont 19 ans ou moins, un potentiel d'au moins 140 et " +
+          "dépassent le niveau de votre effectif. Chaque liste est ordonnée comme les conseils\u00a0: adéquation et " +
+          "probabilité combinées.",
+      },
+      empty: "Personne dans cette liste avec ces filtres.",
+      emptyWonderkids: "Aucune jeune pépite avec ces filtres.",
+      better: "Meilleur que votre n° 1 ici",
+      columns: { position: "Poste", why: "Raison" },
+    },
+    similar: {
+      intro:
+        "Choisissez un joueur pour en trouver d'autres comme lui\u00a0: on compare leurs attributs là où son poste en a " +
+        "besoin.",
+      search: "Joueur à comparer",
+      searchPlaceholder: "Rechercher un joueur par son nom…",
+      noMatch: "Aucun joueur de ce nom.",
+      quickPicks: "Ou partez d'un de vos joueurs\u00a0:",
+      change: "Choisir un autre joueur",
+      reference: "Joueurs comme",
+      position: "Comparer au poste",
+      cheaper: "Moins chers",
+      cheaperTitle: "Uniquement les joueurs qui valent moins que lui",
+      younger: "Plus jeunes",
+      youngerTitle: "Uniquement les joueurs plus jeunes que lui",
+      maxFee: "Montant max",
+      value: "Valeur",
+      notForSale: "Pas à vendre",
+      doesNotPlay: (position) => `Il ne joue pas au poste ${position}\u00a0: seuls ses attributs sont comparés.`,
+      summary: (candidates, shown, position) =>
+        `${position}\u00a0: ${candidates} joueurs · les ${shown} plus ressemblants`,
+      how: {
+        label: "Comment la ressemblance est-elle mesurée\u00a0?",
+        note:
+          "Le recruteur compare les attributs sur lesquels s'appuient les rôles du poste (ceux dont ils dépendent le " +
+          "plus comptent triple), et un peu du reste. Ce qui compte le plus, c'est la forme\u00a0: où un joueur est fort " +
+          "et où il est faible. Son niveau compte moins, de sorte qu'une version moins chère ou plus jeune d'un joueur " +
+          "peut lui ressembler beaucoup. Seuls les joueurs au moins compétents au poste sont comparés\u00a0; les " +
+          "joueurs de votre club et ceux des autres entraîneurs humains sont exclus.",
+      },
+      empty: "Personne de ressemblant avec ces réglages.",
+      columns: { similarity: "Similaire", value: "Valeur" },
+      similarityTitle: (value) => `${format(value)}\u00a0% de ressemblance`,
+    },
+    compare: {
+      title: "Comparer avec votre effectif",
+      hint: (position, name) =>
+        `Face à ${name}, votre meilleur joueur au poste ${position}. Les attributs clés du rôle viennent en premier.`,
+      noStarter: "Personne dans votre effectif ne joue à ce poste.",
+      starter: "Votre n° 1",
+      candidate: "Candidat",
+      inPossession: "Avec le ballon",
+      outOfPossession: "Sans le ballon",
+      add: "Ajouter un joueur",
+      addNone: "Choisir dans la liste…",
+      remove: (name) => `Retirer ${name} de la comparaison`,
+      removeShort: "Retirer",
+      scoutView: "Avis du recruteur",
+      rows: {
+        fit: "Adéquation",
+        position: (position) => `Au poste ${position}`,
+        roleRating: (role) => `Comme ${role}`,
+        probability: "Probabilité",
+        fee: "Montant est.",
+        wage: "Salaire",
+        contract: "Contrat jusqu'au",
+        verdict: "Verdict",
+      },
+      ownPlayer: "Votre joueur",
+      roleAttributes: (roles) => `Les attributs du rôle\u00a0: ${roles}`,
+      keyAttribute: "Un attribut clé du rôle",
+      versus: (difference) => `${difference} par rapport à votre n° 1`,
+      best: "le meilleur",
+      age: (age) => `${format(age)} ans`,
+      allAttributes: "Tous les attributs",
+      loading: "Lecture des joueurs…",
+      close: "Fermer",
+    },
+    report: {
+      title: (name) => `Rapport du recruteur\u00a0: ${name}`,
+      hint: "Enregistrez-le comme image ou copiez-le pour le partager.",
+      making: "Rédaction du rapport…",
+      failed: (reason) => `Impossible de créer le rapport\u00a0: ${reason}`,
+      alt: (name) => `Le rapport du recruteur sur ${name}`,
+      save: "Enregistrer comme image",
+      savePdf: "Enregistrer en PDF",
+      saving: "Enregistrement…",
+      copy: "Copier l'image",
+      copied: "Copié dans le presse-papiers.",
+      copyFailed: (reason) => `Impossible de copier l'image\u00a0: ${reason}`,
+      similar: "Trouver des joueurs similaires",
+      saved: (file) => `Enregistré sous ${file}.`,
+      open: "Ouvrir",
+      show: "Afficher dans le dossier",
+      close: "Fermer",
+      heading: "Rapport du recruteur",
+      age: (age) => `${format(age)} ans`,
+      freeAgent: "Libre de tout contrat",
+      contract: "contrat jusqu'au",
+      fit: "Adéquation",
+      probability: "Probabilité",
+      fee: "Montant est.",
+      abilities: "CA / PA",
+      value: "Valeur",
+      verdict: "Verdict",
+      role: "Rôle",
+      versus: (name) => `Repères\u00a0: ${name}, votre n° 1`,
+      strengths: "Points forts",
+      weaknesses: "Points faibles",
+      profile: "Caractère",
+      note: "Note du recruteur",
+      similarity: (value) => `${format(value)}\u00a0% de ressemblance`,
+      footer: "Rapport du recruteur FMLibreEditor · les montants, salaires et probabilités sont des estimations",
+      traits: {
+        consistent: "Régulier",
+        inconsistent: "Irrégulier",
+        bigGames: "Joueur des grands matchs",
+        nervous: "Nerveux dans les grands matchs",
+        injuryProne: "Fragile",
+        robust: "Rarement blessé",
+        versatile: "Polyvalent",
+        professional: "Professionnel modèle",
+        ambitious: "Ambitieux",
+        loyal: "Loyal",
+        hotHeaded: "Sanguin",
+      },
     },
     // The game's names, matched through the editor's keys, which are the game's abbreviations (its French ones beside
     // them: GAP, DCP, ALI, LOI, LOM, LOA, AMJ, AtD...). Its AP is the Advanced Playmaker, its OAM and OCF the Central

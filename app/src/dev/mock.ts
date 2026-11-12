@@ -3,7 +3,7 @@
 
 import { dateFromNumber, numberFromDate } from "../editing";
 import { fold } from "../format";
-import { scoutingOverview, scoutingSuggest } from "./mockScouting";
+import { scoutingOpportunities, scoutingOverview, scoutingSimilar, scoutingSuggest } from "./mockScouting";
 import type {
   ApplyReport,
   ArrayRef,
@@ -15,6 +15,7 @@ import type {
   CaptainRole,
   ClubTeam,
   ScoutRequest,
+  SimilarRequest,
   SquadPlayer,
   TeamAction,
   TeamFreeze,
@@ -62,6 +63,7 @@ import type {
   MassReport,
   ClubName,
   MovePreview,
+  OpportunityRequest,
   MoveTerms,
   PlannedChange,
   RoomMaker,
@@ -3181,6 +3183,25 @@ export async function mockInvoke<T>(command: string, args?: Record<string, unkno
       return scoutingOverview({ players, clubs, ratings, women }) as T;
     case "scouting_suggest":
       return scoutingSuggest({ players, clubs, ratings, women }, (args?.request ?? {}) as ScoutRequest) as T;
+    case "scouting_opportunities":
+      return scoutingOpportunities({ players, clubs, ratings, women }, (args?.request ?? {}) as OpportunityRequest) as T;
+    case "scouting_similar":
+      return scoutingSimilar({ players, clubs, ratings, women }, (args?.request ?? {}) as SimilarRequest) as T;
+    case "save_scout_report": {
+      // Nothing is written in a browser: the report names the file a real save would have.
+      const player = players.find((p) => p.uid === Number(args?.uid));
+      const name = (player?.name ?? "player")
+        .toLowerCase()
+        .split(/[^\p{L}\p{N}]+/u)
+        .filter(Boolean)
+        .join("-");
+      const folder = "C:\\Users\\you\\Documents\\FMLibreEditor\\Exports";
+      const two = (n: number) => String(n).padStart(2, "0");
+      const date = gameDate ? `-${gameDate.year}-${two(gameDate.month)}-${two(gameDate.day)}` : "";
+      const file = `scout-report-${name}${date}.${args?.format === "pdf" ? "pdf" : "png"}`;
+      const report: ExportReport = { path: `${folder}\\${file}`, file, folder, count: 1, skipped: 0 };
+      return report as T;
+    }
     case "club_squads":
       return clubSquads(Number(args?.uid)) as T;
     case "set_captain":

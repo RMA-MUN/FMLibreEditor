@@ -2504,16 +2504,7 @@ async fn export_list(
     tauri::async_runtime::spawn_blocking(move || -> Result<ExportReport, Failure> {
         let folder = app.state::<ExportsFolder>().0.clone();
         let folder = folder.ok_or_else(|| Failure::new("export.noFolder", "There is no folder to export to."))?;
-        // macOS may ask the user before an app first writes to the Documents folder (see Info.plist): a no is said as
-        // such, with where to change it.
-        let failed = |err: std::io::Error| {
-            if cfg!(target_os = "macos") && err.kind() == std::io::ErrorKind::PermissionDenied {
-                Failure::new("export.notAllowed", format!("FMLibreEditor may not write to {}: {err}", folder.display()))
-                    .with("folder", folder.display())
-            } else {
-                Failure::new("export.failed", err.to_string()).with("reason", err)
-            }
-        };
+        let failed = |err: std::io::Error| export_failure(&folder, err);
         let state = app.state::<AppState>();
         let guard = state.0.lock()?;
         let connection = guard.as_ref().ok_or_else(not_connected)?;
@@ -2531,6 +2522,17 @@ async fn export_list(
         Ok(ExportReport { path, file, folder, count: exported.count, skipped: exported.skipped })
     })
     .await?
+}
+
+/// What a failed write to the exports `folder` says. macOS may ask the user before an app first writes to the Documents
+/// folder (see Info.plist): a no is said as such, with where to change it.
+fn export_failure(folder: &Path, err: std::io::Error) -> Failure {
+    if cfg!(target_os = "macos") && err.kind() == std::io::ErrorKind::PermissionDenied {
+        Failure::new("export.notAllowed", format!("FMLibreEditor may not write to {}: {err}", folder.display()))
+            .with("folder", folder.display())
+    } else {
+        Failure::new("export.failed", err.to_string()).with("reason", err)
+    }
 }
 
 /// A new file for an export of `what` ("players", "staff", "clubs") in `folder`, named after the in-game date: the first of
@@ -3478,6 +3480,86 @@ fn scouting_suggest(state: State<'_, AppState>, request: ScoutRequest) -> Result
     Ok(connection.session.scout(&request, &buyer, &connection.players, &connection.clubs, &connection.human_clubs)?)
 }
 
+/// The players of one list of opportunities (contracts running out, release clauses below a player's value, unhappy
+/// players, clubs in the red, the transfer and loan lists, wonderkids) for the human manager's club, and how many every
+/// list holds. Only reads memory.
+#[tauri::command]
+fn scouting_opportunities(
+    state: State<'_, AppState>,
+    request: fmlibre_core::OpportunityRequest,
+) -> Result<fmlibre_core::Opportunities, Failure> {
+    let guard = state.0.lock()?;
+    let connection = guard.as_ref().ok_or_else(not_connected)?;
+    let club = scouting_club(connection)?;
+    let buyer = scouting_buyer(connection, club)?;
+    let (players, clubs, humans) = (&connection.players, &connection.clubs, &connection.human_clubs);
+    Ok(connection.session.opportunities(&request, &buyer, players, clubs, humans)?)
+}
+
+/// Players like the player `request.uid` at a position, most alike first, as signings for the human manager's club.
+/// Only reads memory.
+#[tauri::command]
+fn scouting_similar(
+    state: State<'_, AppState>,
+    request: fmlibre_core::SimilarRequest,
+) -> Result<fmlibre_core::Similar, Failure> {
+    let guard = state.0.lock()?;
+    let connection = guard.as_ref().ok_or_else(not_connected)?;
+    let club = scouting_club(connection)?;
+    let buyer = scouting_buyer(connection, club)?;
+    let reference = connection.players.get(request.uid).ok_or_else(|| not_found(Entity::Player, request.uid))?;
+    let (players, clubs, humans) = (&connection.players, &connection.clubs, &connection.human_clubs);
+    Ok(connection.session.similar(reference, &request, &buyer, players, clubs, humans)?)
+}
+
+/// The headers of `save_scout_report`: the UID of the player the report is about, and what the body is, "png" or
+/// "pdf".
+const REPORT_PLAYER_HEADER: &str = "x-fmlibre-player";
+const REPORT_FORMAT_HEADER: &str = "x-fmlibre-format";
+
+/// A player's name as part of a file name: its letters and digits in lower case, words joined by dashes.
+fn file_slug(name: &str) -> String {
+    let words: Vec<String> =
+        name.split(|c: char| !c.is_alphanumeric()).filter(|word| !word.is_empty()).map(str::to_lowercase).collect();
+    words.join("-")
+}
+
+/// Saves the scout report the request's body holds, a PNG picture or a PDF (as the `x-fmlibre-format` header says), to
+/// a new file in the exports folder, named after the player whose UID the `x-fmlibre-player` header gives and the
+/// in-game date ("scout-report-arda-güler-2027-01-02.png").
+#[tauri::command]
+fn save_scout_report(app: tauri::AppHandle, request: tauri::ipc::Request<'_>) -> Result<ExportReport, Failure> {
+    let header = |name: &str| request.headers().get(name).and_then(|value| value.to_str().ok());
+    let (extension, signature): (&str, &[u8]) = match header(REPORT_FORMAT_HEADER) {
+        Some("pdf") => ("pdf", b"%PDF-"),
+        _ => ("png", b"\x89PNG\r\n\x1a\n"),
+    };
+    let tauri::ipc::InvokeBody::Raw(bytes) = request.body() else {
+        return Err(Failure::new("export.failed", "The report came without its file.").with("reason", "no file"));
+    };
+    if !bytes.starts_with(signature) {
+        let reason = format!("not a {}", extension.to_uppercase());
+        return Err(Failure::new("export.failed", format!("The report is {reason}.")).with("reason", reason));
+    }
+    let uid = header(REPORT_PLAYER_HEADER).and_then(|value| value.parse::<u32>().ok());
+    let folder = app.state::<ExportsFolder>().0.clone();
+    let folder = folder.ok_or_else(|| Failure::new("export.noFolder", "There is no folder to export to."))?;
+    let (name, date) = {
+        let state = app.state::<AppState>();
+        let guard = state.0.lock()?;
+        let connection = guard.as_ref().ok_or_else(not_connected)?;
+        let name = uid.and_then(|uid| connection.players.get(uid)).map(|player| file_slug(&player.name));
+        (name.filter(|name| !name.is_empty()).unwrap_or_else(|| "player".to_owned()), connection.session.game_date())
+    };
+    let failed = |err: std::io::Error| export_failure(&folder, err);
+    std::fs::create_dir_all(&folder).map_err(failed)?;
+    let (path, mut file) =
+        new_export_file(&folder, &format!("scout-report-{name}"), date, extension).map_err(failed)?;
+    std::io::Write::write_all(&mut file, bytes).map_err(failed)?;
+    let file = path.file_name().map(|name| name.to_string_lossy().into_owned()).unwrap_or_default();
+    Ok(ExportReport { path, file, folder, count: 1, skipped: 0 })
+}
+
 /// The teams of the club `uid`, the senior team first, with their players: each one's list
 /// row and the live values a squad screen shows, read now.
 #[tauri::command]
@@ -3966,6 +4048,9 @@ pub fn run() {
             club_squads,
             scouting_overview,
             scouting_suggest,
+            scouting_opportunities,
+            scouting_similar,
+            save_scout_report,
             set_captain,
             team_action,
             max_attributes,
@@ -3983,6 +4068,14 @@ pub fn run() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn report_files_are_named_after_the_player() {
+        assert_eq!(file_slug("Arda Güler"), "arda-güler");
+        assert_eq!(file_slug("N'Golo Kanté"), "n-golo-kanté");
+        assert_eq!(file_slug("  Vinícius Júnior / 7 "), "vinícius-júnior-7");
+        assert_eq!(file_slug("?:*"), "");
+    }
 
     #[test]
     fn frozen_files_of_earlier_versions_are_read() {

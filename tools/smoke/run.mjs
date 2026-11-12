@@ -19,6 +19,7 @@ import * as mass from "./tests/mass.mjs";
 import * as medical from "./tests/medical.mjs";
 import * as move from "./tests/move.mjs";
 import * as palette from "./tests/palette.mjs";
+import * as scouting from "./tests/scouting.mjs";
 import * as sign from "./tests/sign.mjs";
 import * as stadium from "./tests/stadium.mjs";
 import * as staff from "./tests/staff.mjs";
@@ -27,7 +28,7 @@ import * as ties from "./tests/ties.mjs";
 import * as unknown from "./tests/unknown.mjs";
 
 /** In the order they run: the ones that only read first. */
-const TESTS = [connect, home, dialog, palette, edit, mass, move, sign, medical, loan, stadium, ties, staff, tactics, freeze, unknown];
+const TESTS = [connect, home, dialog, palette, scouting, edit, mass, move, sign, medical, loan, stadium, ties, staff, tactics, freeze, unknown];
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const { values: options } = parseArgs({

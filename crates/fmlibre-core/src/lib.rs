@@ -35,6 +35,7 @@ mod relations;
 mod retirement;
 pub mod rtti;
 mod scan;
+mod scout_lists;
 mod scouting;
 mod selection;
 mod session;
@@ -97,6 +98,10 @@ pub use profile::{
 pub use relations::{HOMEGROWN_RULES, Relation, RelationPlan, RelationSet, Tie, TieTarget};
 pub use retirement::{PlannedRetirement, RetirementPlan, RetirementSet};
 pub use scan::{ArrayCandidate, ScanOptions, VtableCount, scan_object_arrays};
+pub use scout_lists::{
+    KIND_MOST, KindCount, OPPORTUNITY_KINDS, Opportunities, Opportunity, OpportunityKind, OpportunityRequest,
+    POOL_MOST, Similar, SimilarPlayer, SimilarRequest, Starter, Why,
+};
 pub use scouting::{
     Buyer, ClubTactic, Fitting, LIKELY, Line, NOT_FOR_SALE, Phase, Purpose, ROLES, Reason, Role, SCOUT_POSITIONS,
     ScoutError, ScoutOrder, ScoutPosition, ScoutRequest, Scouted, Side, Suggestion, TacticSlot, role, role_of_mask,

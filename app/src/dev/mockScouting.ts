@@ -11,6 +11,10 @@ import type {
   DepthStatus,
   Fitting,
   Line,
+  Opportunities,
+  Opportunity,
+  OpportunityKind,
+  OpportunityRequest,
   PlayerSummary,
   Reason,
   Role,
@@ -18,7 +22,11 @@ import type {
   Scouted,
   ScoutingOverview,
   ScoutRequest,
+  Similar,
+  SimilarRequest,
+  Starter,
   Suggestion,
+  Why,
 } from "../types";
 
 /** [key, phase, line] of every role the core knows, in its order. */
@@ -354,5 +362,129 @@ export function scoutingSuggest(f: ScoutingFixtures, request: ScoutRequest): Sco
     examined: f.players.length,
     candidates: fitting.length,
     eligible: suggestions.length,
+  };
+}
+
+/** The position among the core's a fixture player plays best: the one he is rated highest at. */
+function bestPositionOf(f: ScoutingFixtures, uid: number): string {
+  let found = POSITIONS[0].key;
+  let top = 0;
+  for (const position of POSITIONS) {
+    const here = rating(f, uid, position.key);
+    if (here > top) {
+      top = here;
+      found = position.key;
+    }
+  }
+  return found;
+}
+
+/** The club's best player at each position it has one for. */
+function startersOf(f: ScoutingFixtures, club: ClubSummary): Starter[] {
+  const own = f.players.filter((p) => p.clubUid === club.uid);
+  return POSITIONS.flatMap((position) => {
+    const best = own
+      .filter((p) => rating(f, p.uid, position.key) >= 10)
+      .map((p) => measure(f, p, { position: position.key }))
+      .sort((a, b) => b.fit - a.fit)[0];
+    return best ? [{ ...best, position: position.key }] : [];
+  });
+}
+
+const KINDS: OpportunityKind[] = ["bosman", "releaseClause", "unhappy", "inTheRed", "listed", "loanListed", "wonderkid"];
+
+/** What makes a fixture player an opportunity of each list, picked steadily from his UID. */
+function whysOf(p: PlayerSummary): [OpportunityKind, Why][] {
+  const out: [OpportunityKind, Why][] = [];
+  const why = (code: string, value: number | null, against: number | null = null): Why => ({ code, value, against });
+  if (p.clubUid === null) out.push(["bosman", why("freeAgent", null)]);
+  else if (p.uid % 4 === 0) out.push(["bosman", why("expiring", 120 + (p.uid % 60))]);
+  if (p.clubUid !== null && p.uid % 6 === 1) {
+    out.push(["releaseClause", why("releaseClause", Math.round(valueOf(p) * 0.7), valueOf(p))]);
+  }
+  if (p.clubUid !== null && p.uid % 5 === 2) out.push(["unhappy", why("unhappy", 1 + (p.uid % 2))]);
+  if (p.clubUid !== null && p.uid % 7 === 3) out.push(["inTheRed", why("inTheRed", -1_200_000 - (p.uid % 9) * 900_000)]);
+  if (p.clubUid !== null && p.uid % 7 === 0) out.push(["listed", why("listed", null)]);
+  if (p.clubUid !== null && p.uid % 8 === 5) out.push(["loanListed", why("loanListed", null)]);
+  if ((p.age ?? 99) <= 19 && p.potentialAbility - p.currentAbility >= 20) {
+    out.push(["wonderkid", why("wonderkid", p.potentialAbility)]);
+  }
+  return out;
+}
+
+export function scoutingOpportunities(f: ScoutingFixtures, request: OpportunityRequest): Opportunities {
+  const club = humanClub(f);
+  const starters = startersOf(f, club);
+  const starterFit = new Map(starters.map((s) => [s.position, s.fit]));
+  const own = f.players.filter((p) => p.clubUid === club.uid);
+  const abilities = own.map((p) => p.currentAbility).sort((a, b) => b - a).slice(0, 11);
+  const level = abilities.length ? Math.round(abilities.reduce((s, a) => s + a, 0) / abilities.length) : 0;
+  const pool = f.players
+    .filter((p) => !f.women.has(p.uid) && p.clubUid !== club.uid)
+    .filter((p) => request.maxAge == null || (p.age ?? 0) <= request.maxAge)
+    .filter((p) => request.minAge == null || (p.age ?? 99) >= request.minAge);
+  const lists = new Map<OpportunityKind, Opportunity[]>(KINDS.map((kind) => [kind, []]));
+  for (const p of pool) {
+    const position = request.position || bestPositionOf(f, p.uid);
+    if (rating(f, p.uid, position) < 10) continue;
+    const s = suggestion(f, p, { position, purpose: "any" }, club);
+    const better = s.fit > (starterFit.get(position) ?? 0);
+    if (request.maxFee != null && (s.fee === null || s.fee > request.maxFee)) continue;
+    for (const [kind, why] of whysOf(p)) {
+      if (request.betterOnly && kind !== "wonderkid" && !better) continue;
+      lists.get(kind)!.push({ ...s, position, why, better });
+    }
+  }
+  const items = [...(lists.get(request.kind) ?? [])].sort((a, b) => b.score - a.score);
+  return {
+    kind: request.kind,
+    items: items.slice(0, request.limit ?? 50),
+    counts: KINDS.map((kind) => ({ kind, count: lists.get(kind)!.length, more: false })),
+    starters,
+    level,
+    lowest: Math.max(0, level - 30),
+    highest: level + 45,
+    examined: f.players.length,
+    pool: pool.length,
+    transferBudget: TRANSFER_BUDGET,
+    wageRoom: WAGE_ROOM,
+  };
+}
+
+export function scoutingSimilar(f: ScoutingFixtures, request: SimilarRequest): Similar {
+  const club = humanClub(f);
+  const reference = f.players.find((p) => p.uid === request.uid);
+  if (!reference) {
+    throw { code: "notFound", message: `no player with UID ${request.uid}`, params: { entity: "player", uid: String(request.uid) } };
+  }
+  const positions = POSITIONS.map((p) => p.key).filter((key) => rating(f, reference.uid, key) >= 15);
+  const position = request.position || positions[0] || bestPositionOf(f, reference.uid);
+  const starter = startersOf(f, club).find((s) => s.position === position) ?? null;
+  const value = valueOf(reference);
+  const candidates = f.players
+    .filter((p) => p.uid !== reference.uid && !f.women.has(p.uid) && p.clubUid !== club.uid)
+    .filter((p) => rating(f, p.uid, position) >= 13)
+    .filter((p) => !request.younger || (p.age ?? 99) < (reference.age ?? 0))
+    .filter((p) => !request.cheaper || valueOf(p) < value);
+  const items = candidates
+    .map((p) => {
+      const s = suggestion(f, p, { position, purpose: "any" }, club);
+      const gap = Math.abs(p.currentAbility - reference.currentAbility) / 2;
+      const similarity = Math.max(0, Math.min(100, Math.round(96 - gap - (p.uid % 23))));
+      return { ...s, similarity, better: s.fit > (starter?.fit ?? 0) };
+    })
+    .filter((s) => request.maxFee == null || (s.fee !== null && s.fee <= request.maxFee))
+    .sort((a, b) => b.similarity - a.similarity);
+  return {
+    reference: rating(f, reference.uid, position) >= 10 ? measure(f, reference, { position }) : null,
+    player: reference,
+    value,
+    notForSale: false,
+    position,
+    positions: positions.length > 0 ? positions : [position],
+    items: items.slice(0, request.limit ?? 50),
+    starter,
+    examined: f.players.length,
+    candidates: candidates.length,
   };
 }
