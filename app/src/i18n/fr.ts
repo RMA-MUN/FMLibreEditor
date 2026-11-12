@@ -364,6 +364,16 @@ const errors: ErrorTexts = {
   "staff.noRoom": (p) =>
     `La liste ${STAFF_DEPARTMENTS[p.department] ?? `«\u00a0${p.department}\u00a0»`} du club n'a plus de place pour ` +
     `quelqu'un d'autre (${p.staff} actuellement), et l'éditeur ne peut pas l'agrandir ici.`,
+  "names.unknown": () =>
+    "L'éditeur ne trouve pas où le jeu range les noms des personnes dans cette version du jeu, et ne peut donc pas " +
+    "les modifier.",
+  "names.noRoom": (p) =>
+    `Le jeu n'a pas de place pour un autre nouveau ${({ first: "prénom", last: "nom de famille", common: "nom utilisé communément" } as Record<string, string>)[p.table] ?? "nom"} pour le moment. ` +
+    "Il en fait lui-même à mesure que de nouveaux joueurs et membres du staff arrivent ; ou sauvegardez la " +
+    "partie, rechargez la sauvegarde et réessayez.",
+  "names.same": () => "C'est déjà ce nom.",
+  "names.bad": (p) =>
+    `Un prénom ou un nom de famille ne peut pas être vide, et aucun nom ne peut commencer ou finir par une espace, contenir de caractères de contrôle ni dépasser ${p.max} octets.`,
   "stadium.none": () => "Impossible de lire le stade où joue l'équipe première du club.",
   "stadium.shared": (p) =>
     `${p.holders} éléments du jeu portent le même nom que ce stade\u00a0; il ne peut pas être changé pour le stade seul.`,
@@ -693,6 +703,10 @@ export const fr: Strings = {
     "finance.total_wage_budget": "Budget salarial total",
     "stadium.capacity": "Capacité du stade",
     "stadium.name": "Nom du stade",
+    "name.first": "Prénom",
+    "name.last": "Nom de famille",
+    "name.common": "Nom utilisé communément",
+    "name.full": "Nom complet",
     "stadium.seating": "Places assises",
     "stadium.used": "Capacité utilisée",
     "stadium.expansion": "Agrandissement du stade",
@@ -1939,6 +1953,44 @@ export const fr: Strings = {
     hint: "Rien ne change dans le jeu tant que vous n'appuyez pas sur Libérer.",
     release: "Libérer",
     releasing: "Libération…",
+    cancel: "Annuler",
+  },
+
+  rename: {
+    button: "Renommer",
+    buttonTitle: "Modifier les noms de ce joueur dans le jeu",
+
+    // La fenêtre
+    title: "Renommer",
+    loading: "Lecture des noms…",
+    first: "Prénom",
+    last: "Nom de famille",
+    common: "Nom utilisé communément",
+    commonHint:
+      "Le nom que le jeu affiche à la place du prénom et du nom de famille, comme pour Pedri ou Vinícius Júnior. " +
+      "Laissez vide pour n'en mettre aucun",
+    full: "Nom complet",
+    fullHint: "Le nom en entier, tel que le donne le profil. Laissez vide pour n'en mettre aucun",
+    none: "Aucun",
+    required: "Ne peut pas être vide",
+    tooLong: (max: number) => `Trop long : ${max} octets au maximum`,
+    noRoom:
+      "Le jeu n'a pas de place pour un autre nouveau nom de ce type pour le moment : sauvegardez la partie, " +
+      "rechargez la sauvegarde et réessayez",
+    unavailable: "L'éditeur ne peut pas modifier les noms dans cette version du jeu",
+    doesHeading: "Ce que cela fait",
+    does: [
+      "Le jeu affiche le nouveau nom dès que vous appuyez sur Continuer dans le jeu",
+      "Le nom reste quand vous sauvegardez la partie",
+      "Un nouveau prénom, nom de famille ou nom utilisé communément entre dans les tables de noms du jeu, où il ne " +
+        "sert que pour ce joueur",
+      "Apparaît dans Modifications, une ligne par nom, où Annuler remet l'ancien nom",
+    ],
+
+    // Le pied de la fenêtre
+    hint: "Rien ne change dans le jeu tant que vous n'appuyez pas sur Renommer.",
+    rename: "Renommer",
+    renaming: "Renommage…",
     cancel: "Annuler",
   },
 

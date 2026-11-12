@@ -2353,6 +2353,7 @@ input::placeholder {
 .compare-toggle,
 .move-toggle,
 .release-toggle,
+.rename-toggle,
 .heal-toggle,
 .max-toggle,
 .squad-action {
@@ -4115,6 +4116,77 @@ button.danger:hover:not(:disabled) {
   border-width: 1px 0 0;
   border-radius: 0;
   font-size: 13px;
+}
+
+/* Renaming a player: a label over its input, and the hint or the reason it cannot be written under it. */
+.name-form {
+  display: grid;
+  gap: 12px;
+}
+
+.name-field {
+  display: grid;
+  gap: 4px;
+}
+
+.name-field label {
+  font-weight: 600;
+}
+
+.name-input {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--field);
+  color: var(--text);
+  font: inherit;
+}
+
+.name-input:not(.changed, .invalid):hover:not(:read-only) {
+  border-color: var(--muted);
+}
+
+.name-input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 1px;
+}
+
+/* A name other than the game's is marked with the highlighter until it is written. */
+.name-input.changed {
+  border-color: var(--text);
+  background: var(--pending-soft);
+  color: var(--on-pending);
+}
+
+/* A name that cannot be written: red, in the text colour of the theme, as the highlighter's dark text would not read on it. */
+.name-input.invalid {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--danger);
+}
+
+.name-input.invalid:focus-visible {
+  outline-color: var(--danger);
+}
+
+.name-input:read-only {
+  opacity: 0.6;
+}
+
+.name-hint,
+.name-error {
+  margin: 0;
+  font-size: 13px;
+}
+
+.name-hint {
+  color: var(--muted);
+}
+
+.name-error {
+  color: var(--danger);
 }
 
 /* Medical */

@@ -334,6 +334,14 @@ const errors: ErrorTexts = {
   "staff.noRoom": (p) =>
     `La lista ${STAFF_DEPARTMENTS[p.department] ?? `di ${p.department}`} della società non ha posto per nessun altro ` +
     `(ora ${p.staff}) e l'editor qui non può ingrandirla.`,
+  "names.unknown": () =>
+    "L'editor non trova dove il gioco tiene i nomi delle persone in questa versione, quindi non può cambiarli.",
+  "names.noRoom": (p) =>
+    `Al momento il gioco non ha posto per un altro nuovo ${({ first: "nome", last: "cognome", common: "nome comune" } as Record<string, string>)[p.table] ?? "nome"}. ` +
+    "Ne fa da solo man mano che arrivano nuovi giocatori e staff; oppure salva la partita, ricarica il salvataggio e riprova.",
+  "names.same": () => "È già questo il nome.",
+  "names.bad": (p) =>
+    `Un nome o un cognome non può essere vuoto, e nessun nome può iniziare o finire con uno spazio, contenere caratteri di controllo o superare ${p.max} byte.`,
   "stadium.none": () => "Non si riesce a leggere lo stadio in cui gioca la prima squadra della società.",
   "stadium.shared": (p) =>
     `${p.holders} elementi del gioco condividono questo nome; non si può cambiare solo per lo stadio.`,
@@ -653,6 +661,10 @@ export const it: Strings = {
     "finance.total_wage_budget": "Budget stipendi complessivo",
     "stadium.capacity": "Capienza dello stadio",
     "stadium.name": "Nome dello stadio",
+    "name.first": "Nome",
+    "name.last": "Cognome",
+    "name.common": "Nome comune",
+    "name.full": "Nome completo",
     "stadium.seating": "Posti a sedere",
     "stadium.used": "Capienza utilizzata",
     "stadium.expansion": "Capienza massima ampliabile",
@@ -1870,6 +1882,41 @@ export const it: Strings = {
     hint: "Nel gioco non cambia nulla finché non premi Svincola.",
     release: "Svincola",
     releasing: "Svincolo…",
+    cancel: "Annulla",
+  },
+
+  rename: {
+    button: "Rinomina",
+    buttonTitle: "Cambia i nomi di questo giocatore nel gioco",
+
+    // La finestra
+    title: "Rinomina",
+    loading: "Lettura dei nomi…",
+    first: "Nome",
+    last: "Cognome",
+    common: "Nome comune",
+    commonHint:
+      "Il nome che il gioco mostra al posto di nome e cognome, come per Pedri o Vinícius Júnior. Lascia vuoto per nessuno",
+    full: "Nome completo",
+    fullHint: "Il nome per intero, come lo riporta il profilo. Lascia vuoto per nessuno",
+    none: "Nessuno",
+    required: "Non può essere vuoto",
+    tooLong: (max: number) => `Troppo lungo: al massimo ${max} byte`,
+    noRoom:
+      "Al momento il gioco non ha posto per un altro nome nuovo di questo tipo: salva la partita, ricarica il salvataggio e riprova",
+    unavailable: "L'editor non può cambiare i nomi in questa versione del gioco",
+    doesHeading: "Cosa fa",
+    does: [
+      "Il gioco mostra il nuovo nome quando premi Continua nel gioco",
+      "Il nome resta quando salvi la partita",
+      "Un nuovo nome, cognome o nome comune entra nelle tabelle dei nomi del gioco, dove il gioco lo usa solo per questo giocatore",
+      "Compare in Modifiche, una riga per nome, dove Ripristina rimette il nome precedente",
+    ],
+
+    // Il piè di pagina
+    hint: "Nel gioco non cambia nulla finché non premi Rinomina.",
+    rename: "Rinomina",
+    renaming: "Rinomina in corso…",
     cancel: "Annulla",
   },
 

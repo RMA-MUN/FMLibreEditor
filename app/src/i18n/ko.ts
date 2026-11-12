@@ -324,6 +324,14 @@ const errors: ErrorTexts = {
   "staff.noRoom": (p) =>
     `구단의 ${STAFF_DEPARTMENTS[p.department] ?? p.department} 명단에 자리가 없고(현재 ${p.staff}명), 여기서는 에디터가 ` +
     "명단을 늘릴 수 없습니다.",
+  "names.unknown": () =>
+    "에디터가 이 게임 버전에서 사람 이름이 저장된 위치를 찾지 못해 이름을 바꿀 수 없습니다.",
+  "names.noRoom": (p) =>
+    `지금은 게임에 새 ${({ first: "이름", last: "성", common: "호칭" } as Record<string, string>)[p.table] ?? "이름"} 항목을 더 넣을 자리가 없습니다. ` +
+    "새 선수와 스태프가 들어오면 게임이 스스로 자리를 만듭니다. 또는 게임을 저장하고 저장 파일을 다시 불러온 뒤 다시 시도하세요.",
+  "names.same": () => "이미 그 이름입니다.",
+  "names.bad": (p) =>
+    `이름과 성은 비워 둘 수 없고, 어떤 이름도 공백으로 시작하거나 끝날 수 없으며, 제어 문자를 넣거나 ${p.max}바이트를 넘길 수 없습니다.`,
   "stadium.none": () => "구단 1군이 사용하는 경기장을 읽을 수 없습니다.",
   "stadium.shared": (p) => `게임 안의 ${p.holders}곳이 이 이름을 함께 쓰고 있어 경기장 이름만 따로 바꿀 수 없습니다.`,
   "stadium.nameLength": (p) =>
@@ -639,6 +647,10 @@ export const ko: Strings = {
     "finance.total_wage_budget": "총 급료 예산",
     "stadium.capacity": "경기장 수용 인원",
     "stadium.name": "경기장 이름",
+    "name.first": "이름",
+    "name.last": "성",
+    "name.common": "호칭",
+    "name.full": "성명",
     "stadium.seating": "좌석 수",
     "stadium.used": "사용 중인 수용 인원",
     "stadium.expansion": "확장 용량",
@@ -1798,6 +1810,39 @@ export const ko: Strings = {
     hint: "'방출'을 누르기 전까지 게임은 아무것도 바뀌지 않습니다.",
     release: "방출",
     releasing: "방출하는 중…",
+    cancel: "취소",
+  },
+
+  rename: {
+    button: "이름 변경",
+    buttonTitle: "게임에서 이 선수의 이름을 바꿉니다",
+
+    title: "이름 변경",
+    loading: "이름을 읽는 중…",
+    first: "이름",
+    last: "성",
+    common: "호칭",
+    commonHint:
+      "게임이 이름과 성 대신 보여 주는 이름으로, Pedri나 Vinícius Júnior 같은 경우입니다. 비워 두면 없음",
+    full: "성명",
+    fullHint: "프로필에 표시되는 전체 이름입니다. 비워 두면 없음",
+    none: "없음",
+    required: "비워 둘 수 없습니다",
+    tooLong: (max: number) => `너무 깁니다: 최대 ${max}바이트`,
+    noRoom:
+      "지금은 게임에 이 종류의 새 이름을 더 넣을 자리가 없습니다. 게임을 저장하고 저장 파일을 다시 불러온 뒤 다시 시도하세요",
+    unavailable: "이 게임 버전에서는 에디터가 이름을 바꿀 수 없습니다",
+    doesHeading: "바뀌는 것",
+    does: [
+      "게임에서 '진행하기'를 누르면 새 이름이 표시됩니다",
+      "게임을 저장해도 이름은 그대로 유지됩니다",
+      "새 이름, 성, 호칭은 게임의 이름 표에 들어가며, 게임은 이를 이 선수에게만 사용합니다",
+      "변경 내역에 이름마다 한 줄씩 기록되며, 되돌리기를 누르면 이전 이름으로 돌아갑니다",
+    ],
+
+    hint: "'이름 변경'을 누르기 전까지 게임은 아무것도 바뀌지 않습니다.",
+    rename: "이름 변경",
+    renaming: "이름을 바꾸는 중…",
     cancel: "취소",
   },
 

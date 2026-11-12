@@ -121,6 +121,14 @@ const errors: ErrorTexts = {
   "edit.notApplied": (p) => `${field(p.field)}: wrote ${p.wrote} but read back ${p.read}.`,
   "edit.conflict": (p) => `${field(p.field)} is now ${p.found}, not ${p.expected}: the game has changed it since.`,
   "move.outOfRange": (p) => `${p.value} is not a valid ${field(p.field)}: it takes ${p.min} to ${p.max}.`,
+  "names.unknown": () =>
+    "The editor cannot find where the game keeps people's names in this version of the game, so it cannot change them.",
+  "names.noRoom": (p) =>
+    `The game has no room for another new ${({ first: "first name", last: "last name", common: "common name" } as Record<string, string>)[p.table] ?? "name"} just now. ` +
+    "It makes room itself as new players and staff come in; or save the game, load the save again, and try again.",
+  "names.same": () => "That is the name already.",
+  "names.bad": (p) =>
+    `A first or last name cannot be empty, and no name can start or end with a space, hold control characters or take more than ${p.max} bytes.`,
   "export.failed": (p) => `Could not write the file: ${p.reason}`,
   "export.notAllowed": (p) =>
     `FMLibreEditor may not write to ${p.folder}. If macOS asked whether it may use your Documents folder, allow it ` +
@@ -532,6 +540,10 @@ export const en = {
     "finance.total_wage_budget": "Total wage budget",
     "stadium.capacity": "Stadium capacity",
     "stadium.name": "Stadium name",
+    "name.first": "First name",
+    "name.last": "Last name",
+    "name.common": "Common name",
+    "name.full": "Full name",
     "stadium.seating": "Seated capacity",
     "stadium.used": "Capacity in use",
     "stadium.expansion": "Expansion capacity",
@@ -2026,6 +2038,44 @@ export const en = {
     hint: "Nothing changes in the game until you press Release.",
     release: "Release",
     releasing: "Releasing…",
+    cancel: "Cancel",
+  },
+
+  /** Changing a player's names: the button beside Release and its dialog. */
+  rename: {
+    /** The button in the header of a player's profile, beside Release. */
+    button: "Rename",
+    buttonTitle: "Change this player's names in the game",
+
+    // The dialog
+    title: "Rename",
+    loading: "Reading the names…",
+    first: "First name",
+    last: "Last name",
+    common: "Common name",
+    commonHint:
+      "The name the game shows instead of the first and last name, as with Pedri or Vinícius Júnior. Leave it empty for none",
+    full: "Full name",
+    fullHint: "The name in full, as the profile gives it. Leave it empty for none",
+    /** The placeholder of a name that can be left empty. */
+    none: "None",
+    required: "Cannot be empty",
+    tooLong: (max: number) => `Too long: at most ${max} bytes`,
+    noRoom:
+      "The game has no room for another new name of this kind just now: save the game, load the save again, and try again",
+    unavailable: "The editor cannot change names in this version of the game",
+    doesHeading: "What it does",
+    does: [
+      "The game shows the new name once you press Continue in it",
+      "The name stays when you save the game",
+      "A new first, last or common name goes into the game's tables of names, where the game uses it for this player only",
+      "Listed under Changes, one line per name, where Undo puts the old name back",
+    ],
+
+    // The foot
+    hint: "Nothing changes in the game until you press Rename.",
+    rename: "Rename",
+    renaming: "Renaming…",
     cancel: "Cancel",
   },
 
