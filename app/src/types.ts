@@ -988,9 +988,14 @@ export type MassOperationKind =
   /** May be negative; the result stays within the field's range. */
   | { op: "add"; amount: number }
   /** Multiplies by percent / 100, rounded; the result stays within the field's range. */
-  | { op: "scale"; percent: number };
+  | { op: "scale"; percent: number }
+  /**
+   * Moves a date by whole years (back, for a negative count), keeping its day: 29 February is 28 February in a year
+   * without one. Only for dates; a date it would take out of the field's range is left as it is.
+   */
+  | { op: "addYears"; years: number };
 
-/** One field of a mass edit and what to do with it. Dates can only be set. */
+/** One field of a mass edit and what to do with it. Dates can only be set or moved by years. */
 export interface MassOperation {
   field: string;
   operation: MassOperationKind;
