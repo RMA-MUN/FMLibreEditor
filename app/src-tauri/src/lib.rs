@@ -10,12 +10,12 @@ use fmlibre_core::{
     ArraySource, Buyer, COHESION_RANGE, CaptainRole, CaptainSet, Change, Clause, ClauseSet, ClubDetails, ClubFilter,
     ClubIndex, ClubMove, ClubSummary, Coded, CohesionSet, EditError, Entity, EntityArrays, ExportFormat, ExportHeader,
     Exported, FeePlan, Field, FmDate, GAME_EXE, GAME_PLUGIN, GameInfo, GraphicsCounts, GraphicsIndex, HOMEGROWN_RULES,
-    Healed, Health, Kind, LOAN_EXPIRES, LOAN_OPTION_FEE, Lifted, Listed, Loan, MoveError, MovePlan, MoveTerms, Nation,
-    NewContract, NewStaffContract, Operation, Paid, People, Picture, Planned, PlayerDetails, PlayerFilter, PlayerIndex,
-    PlayerOrder, PlayerSummary, ROLES, RelationSet, RetirementSet, Role, SCOUT_POSITIONS, ScoutError, ScoutPosition,
-    ScoutRequest, Scouted, SearchIndex, Session, SessionError, Skipped, SquadReport, StadiumName, StadiumRename,
-    StaffChange, StaffDetails, StaffFilter, StaffIndex, StaffOrder, StaffPlan, TacticsSet, Target, Tie, TieTarget,
-    diagnostics_report, find_game, nations, sort_players, sort_staff,
+    Healed, Health, Kind, LOAN_EXPIRES, LOAN_OPTION_FEE, Lifted, Listed, Loan, MoveError, MovePlan, MoveTerms,
+    NameChange, NameKind, Nation, NewContract, NewStaffContract, Operation, Paid, People, PersonNames, Picture,
+    Planned, PlayerDetails, PlayerFilter, PlayerIndex, PlayerOrder, PlayerSummary, ROLES, RelationSet, RetirementSet,
+    Role, SCOUT_POSITIONS, ScoutError, ScoutPosition, ScoutRequest, Scouted, SearchIndex, Session, SessionError,
+    Skipped, SquadReport, StadiumName, StadiumRename, StaffChange, StaffDetails, StaffFilter, StaffIndex, StaffOrder,
+    StaffPlan, TacticsSet, Target, Tie, TieTarget, diagnostics_report, find_game, nations, sort_players, sort_staff,
 };
 use fmlibre_mem::{Process, find_processes, is_current_process_elevated, list_modules};
 use serde::{Deserialize, Serialize};
@@ -823,6 +823,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: None,
         };
         self.log.push(logged.clone());
@@ -888,6 +889,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Captain(done)),
         };
         self.log.push(logged.clone());
@@ -916,6 +918,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Heal(done)),
         };
         self.log.push(logged.clone());
@@ -944,6 +947,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Cohesion(done)),
         };
         self.log.push(logged.clone());
@@ -973,6 +977,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Tactics(done)),
         };
         self.log.push(logged.clone());
@@ -1001,6 +1006,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Lift(done)),
         };
         self.log.push(logged.clone());
@@ -1030,6 +1036,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Retirement(done)),
         };
         self.log.push(logged.clone());
@@ -1074,6 +1081,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Tie(done)),
         };
         self.log.push(logged.clone());
@@ -1104,10 +1112,55 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: Some(StadiumNames { from: done.from.clone(), to: done.to.clone() }),
+            person_name: None,
             undo: Some(Undo::Stadium(done)),
         };
         self.log.push(logged.clone());
         logged
+    }
+
+    /// Logs a change of a player's name just written, as a change of his field `name.first`, `name.last`,
+    /// `name.common` or `name.full` from one length in bytes to the other (0 for none), with the names.
+    fn log_name(&mut self, done: NameChange) -> LoggedChange {
+        let bytes = |name: &Option<String>| name.as_ref().map_or(0, |name| name.len() as i64);
+        let change = Change {
+            entity: Entity::Player,
+            uid: done.person,
+            field: format!("name.{}", done.kind.key()),
+            old: bytes(&done.from),
+            new: bytes(&done.to),
+        };
+        let logged = LoggedChange {
+            id: self.log.len() + 1,
+            at: now_ms(),
+            name: self.player_name(done.person),
+            change,
+            undone_at: None,
+            batch: None,
+            moved: None,
+            captaincy: None,
+            tie: None,
+            clause: None,
+            recall: None,
+            stadium: None,
+            person_name: Some(PersonNameChange { from: done.from.clone(), to: done.to.clone() }),
+            undo: Some(Undo::Name(done)),
+        };
+        self.log.push(logged.clone());
+        logged
+    }
+
+    /// Reads the names of the player `uid` again into his row of the list, after the editor gave him another one or
+    /// put his old one back: the name he is shown and found by, and his full name.
+    fn renamed_player(&mut self, uid: u32) {
+        let Some(names) = self.players.get(uid).and_then(|player| self.session.player_names(player).ok()) else {
+            return;
+        };
+        let shown = names.shown(uid);
+        self.players.rename(uid, |player| {
+            player.name = shown;
+            player.full_name = names.full;
+        });
     }
 
     /// Logs a change to a player's contract clauses just written, as a change of his field `clause` from one amount to
@@ -1134,6 +1187,7 @@ impl Connection {
             clause: Some(ClauseChange { from: done.before.clone(), to: done.after.clone() }),
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Clause(done)),
         };
         self.log.push(logged.clone());
@@ -1205,6 +1259,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Staff(LoggedStaff { done, club, club_uid, job, contract_expires })),
         };
         self.log.push(logged.clone());
@@ -1350,6 +1405,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Move(before)),
         };
         self.log.push(logged.clone());
@@ -1392,6 +1448,7 @@ impl Connection {
             clause: None,
             recall: None,
             stadium: None,
+            person_name: None,
             undo: Some(Undo::Move(LoggedMove { done, rows, paid: Vec::new() })),
         };
         self.log.push(logged.clone());
@@ -1426,6 +1483,10 @@ impl Connection {
                 self.note_change(&entry.change, entry.change.old);
             }
             Some(Undo::Stadium(renamed)) => self.undo_stadium(&renamed)?,
+            Some(Undo::Name(done)) => {
+                self.session.undo_name_change(&done)?;
+                self.renamed_player(done.person);
+            }
             Some(Undo::Move(moved)) => {
                 // The fee goes back first, by what it changed; if the player cannot go back, it is paid again.
                 self.session.refund_fee(&moved.paid)?;
@@ -1644,6 +1705,10 @@ struct LoggedChange {
     /// other: the names.
     #[serde(skip_serializing_if = "Option::is_none")]
     stadium: Option<StadiumNames>,
+    /// For a player given another name, logged as a change of his field `name.first`, `name.last`, `name.common` or
+    /// `name.full` from one length in bytes to the other (0 for none): the names.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    person_name: Option<PersonNameChange>,
     /// For a move, healing, lifting bans, a captaincy, a tie or a clause: what undoing it takes. Other changes write
     /// back `old`.
     #[serde(skip)]
@@ -1667,6 +1732,14 @@ struct StadiumNames {
     to: String,
 }
 
+/// A person's name before and after a change: none for a common or full name he did not have, or no longer has.
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct PersonNameChange {
+    from: Option<String>,
+    to: Option<String>,
+}
+
 /// What undoing a change takes when writing back its old value is not enough.
 #[derive(Clone)]
 enum Undo {
@@ -1675,6 +1748,8 @@ enum Undo {
     Recall(Change),
     /// A stadium renamed: the bytes it wrote, which the undo writes back.
     Stadium(StadiumRename),
+    /// A player given another name: the person's pointer it wrote, which the undo writes back.
+    Name(NameChange),
     Move(LoggedMove),
     Heal(Healed),
     Lift(Lifted),
@@ -3394,6 +3469,35 @@ fn rename_stadium(
     Ok(logged)
 }
 
+/// The names of the player `uid` as stored, and how many new names the game's tables of names take (see `names.rs`).
+/// Only reads memory.
+#[tauri::command]
+fn player_names(state: State<'_, AppState>, uid: u32) -> Result<PersonNames, Failure> {
+    let guard = state.0.lock()?;
+    let connection = guard.as_ref().ok_or_else(not_connected)?;
+    let player = connection.players.get(uid).ok_or_else(|| not_found(Entity::Player, uid))?;
+    Ok(connection.session.player_names(player)?)
+}
+
+/// Gives the player `uid` the name `name` of kind `kind` (his first, last, common or full name), or with none takes his
+/// common or full name away, as the game names a person it makes (see `names.rs`). Logged and undone like any change.
+/// The game keeps people's names in its saves, so the name stays once the game is saved.
+#[tauri::command]
+fn rename_player(
+    state: State<'_, AppState>,
+    uid: u32,
+    kind: NameKind,
+    name: Option<String>,
+) -> Result<LoggedChange, Failure> {
+    let mut guard = state.0.lock()?;
+    let connection = guard.as_mut().ok_or_else(not_connected)?;
+    let player = connection.players.get(uid).ok_or_else(|| not_found(Entity::Player, uid))?;
+    let plan = connection.session.plan_player_name(player, kind, name.as_deref())?;
+    let done = connection.session.apply_name_change(&plan)?;
+    connection.renamed_player(uid);
+    Ok(connection.log_name(done))
+}
+
 /// Gives the contract of the player `uid`, which has none, a release clause of `amount` pounds, where its list has
 /// room. Logged and undone like any change.
 #[tauri::command]
@@ -3962,6 +4066,8 @@ pub fn run() {
             add_release_clause,
             stadium_name,
             rename_stadium,
+            player_names,
+            rename_player,
             homegrown_rules,
             club_squads,
             scouting_overview,

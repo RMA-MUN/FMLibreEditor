@@ -339,6 +339,14 @@ const errors: ErrorTexts = {
   "staff.noRoom": (p) =>
     `Die Liste ${STAFF_DEPARTMENTS[p.department] ?? `der Abteilung ${p.department}`} des Vereins hat keinen Platz ` +
     `für einen weiteren Mitarbeiter (derzeit ${p.staff}), und der Editor kann sie hier nicht vergrößern.`,
+  "names.unknown": () =>
+    "Der Editor findet in dieser Version des Spiels nicht, wo das Spiel die Namen von Personen ablegt, und kann sie deshalb nicht ändern.",
+  "names.noRoom": (p) =>
+    `Das Spiel hat gerade keinen Platz für einen weiteren neuen ${({ first: "Vornamen", last: "Nachnamen", common: "Allgemeinen Namen" } as Record<string, string>)[p.table] ?? "Namen"}. ` +
+    "Es schafft selbst Platz, wenn neue Spieler und Mitarbeiter hinzukommen; oder Sie speichern das Spiel, laden den Spielstand erneut und versuchen es noch einmal.",
+  "names.same": () => "Das ist bereits der Name.",
+  "names.bad": (p) =>
+    `Ein Vor- oder Nachname darf nicht leer sein, und kein Name darf mit einem Leerzeichen beginnen oder enden, Steuerzeichen enthalten oder länger als ${p.max} Byte sein.`,
   "stadium.none": () => "Das Stadion, in dem die 1. Mannschaft des Vereins spielt, lässt sich nicht lesen.",
   "stadium.shared": (p) =>
     `${p.holders} Einträge im Spiel teilen sich diesen Namen; er lässt sich nicht für das Stadion allein ändern.`,
@@ -671,6 +679,10 @@ export const de: Strings = {
     "finance.total_wage_budget": "Gesamtes Gehaltsbudget",
     "stadium.capacity": "Stadionkapazität",
     "stadium.name": "Stadionname",
+    "name.first": "Vorname",
+    "name.last": "Nachname",
+    "name.common": "Allgemeiner Name",
+    "name.full": "Voller Name",
     "stadium.seating": "Sitzplatzkapazität",
     "stadium.used": "Genutzte Kapazität",
     "stadium.expansion": "Ausbaumöglichkeit",
@@ -1925,6 +1937,41 @@ export const de: Strings = {
     hint: "Im Spiel ändert sich nichts, bis Sie auf Vertrag auflösen klicken.",
     release: "Vertrag auflösen",
     releasing: "Vertrag wird aufgelöst…",
+    cancel: "Abbrechen",
+  },
+
+  rename: {
+    button: "Umbenennen",
+    buttonTitle: "Ändert im Spiel die Namen dieses Spielers",
+
+    // Das Fenster
+    title: "Umbenennen",
+    loading: "Namen werden gelesen…",
+    first: "Vorname",
+    last: "Nachname",
+    common: "Allgemeiner Name",
+    commonHint:
+      "Der Name, den das Spiel statt Vor- und Nachname anzeigt, etwa bei Pedri oder Vinícius Júnior. Leer lassen für keinen",
+    full: "Voller Name",
+    fullHint: "Der Name in voller Länge, wie ihn das Profil angibt. Leer lassen für keinen",
+    none: "Keiner",
+    required: "Darf nicht leer sein",
+    tooLong: (max: number) => `Zu lang: höchstens ${max} Byte`,
+    noRoom:
+      "Das Spiel hat gerade keinen Platz für einen weiteren neuen Namen dieser Art: Speichern Sie das Spiel, laden Sie den Spielstand erneut und versuchen Sie es noch einmal",
+    unavailable: "Der Editor kann Namen in dieser Version des Spiels nicht ändern",
+    doesHeading: "Was das bewirkt",
+    does: [
+      "Das Spiel zeigt den neuen Namen, sobald Sie darin auf Weiter klicken",
+      "Der Name bleibt beim Speichern des Spiels erhalten",
+      "Ein neuer Vor-, Nach- oder Allgemeiner Name kommt in die Namenstabellen des Spiels, wo das Spiel ihn nur für diesen Spieler verwendet",
+      "Steht unter Änderungen, eine Zeile pro Name, wo Rückgängig den alten Namen zurückholt",
+    ],
+
+    // Die Fußzeile
+    hint: "Im Spiel ändert sich nichts, bis Sie auf Umbenennen klicken.",
+    rename: "Umbenennen",
+    renaming: "Wird umbenannt…",
     cancel: "Abbrechen",
   },
 

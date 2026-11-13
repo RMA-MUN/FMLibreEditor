@@ -67,6 +67,26 @@ pub struct Layout {
     /// The prize money a competition's stages pay (see `prize_money.rs`); only in the layouts it has been checked in.
     #[serde(default)]
     pub prize_money: Option<PrizeMoneyLayout>,
+    /// The game's tables of first, last and common names (see `names.rs`); only in the layouts they have been checked
+    /// in.
+    #[serde(default)]
+    pub names: Option<NamesLayout>,
+}
+
+/// The game's tables of first, last and common names (see `names.rs`): where it keeps the list of each table's entries
+/// by id, and what an entry holds after its text, an FM string pointer at its start.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct NamesLayout {
+    /// How far before the players' list (`ArrayRvas::players`) the game plugin keeps a pointer to the `(begin, end,
+    /// capacity)` of each table's list of entries by id: first, last and common names.
+    pub lists_before_players: [u64; 3],
+    /// The size of an entry, and in it the `u32` id (its place in the list by id), the `u16` nation it was made for and
+    /// the `u16` weight the game picks it by for a new person.
+    pub entry_size: u64,
+    pub id: u64,
+    pub nation: u64,
+    pub weight: u64,
 }
 
 /// What an entry of a player's reasons to be unhappy says besides its dates, motive and kind (see `concerns.rs`): the
@@ -1147,6 +1167,10 @@ mod tests {
         assert_eq!(mac.prize_money, windows.prize_money);
         assert_eq!(mac.competition, windows.competition);
         assert_eq!(mac.player.identity() - mac.player.person_block, mac.staff.identity() - mac.staff.person_block);
+
+        // The tables of names are reached and laid out alike.
+        assert!(windows.names.is_some());
+        assert_eq!(mac.names, windows.names);
 
         // The records the people point at are laid out alike. The kind of contract is left out of a layout until it
         // has been read on that system; where both have it, it sits at the same place.

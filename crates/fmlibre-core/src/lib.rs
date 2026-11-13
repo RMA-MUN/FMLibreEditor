@@ -26,6 +26,7 @@ mod loans;
 mod locate;
 mod mass;
 mod medical;
+mod names;
 mod object_pool;
 mod own_memory;
 mod players;
@@ -84,6 +85,7 @@ pub use locate::{
 };
 pub use mass::{Operation, Plan, Planned, Skipped};
 pub use medical::{Ban, HealPlan, Healed, Injury, LiftPlan, Lifted};
+pub use names::{LONGEST_PERSON_NAME, NameChange, NameKind, PersonNames};
 pub use object_pool::ObjectPool;
 pub use players::{Nation, PLAYABLE_RATING, PlayerIndex, PlayerSummary, is_woman, nations, read_players};
 pub use prize_money::{

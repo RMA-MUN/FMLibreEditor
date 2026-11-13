@@ -296,6 +296,14 @@ const errors: ErrorTexts = {
   "staff.noRoom": (p) =>
     `La lista ${STAFF_DEPARTMENTS[p.department] ?? `de ${p.department}`} del club no tiene sitio para nadie más ` +
     `(ahora ${p.staff}) y el editor no puede ampliarla aquí.`,
+  "names.unknown": () =>
+    "El editor no encuentra dónde guarda el juego los nombres de las personas en esta versión, así que no puede cambiarlos.",
+  "names.noRoom": (p) =>
+    `El juego no tiene sitio ahora mismo para otro ${({ first: "nombre", last: "apellido", common: "nombre común" } as Record<string, string>)[p.table] ?? "nombre"} nuevo. ` +
+    "Lo hace él solo cuando entran jugadores y personal nuevos; o guarda la partida, vuelve a cargarla e inténtalo de nuevo.",
+  "names.same": () => "Ese ya es el nombre.",
+  "names.bad": (p) =>
+    `Un nombre o un apellido no puede estar vacío, y ningún nombre puede empezar o acabar con un espacio, tener caracteres de control ni ocupar más de ${p.max} bytes.`,
   "stadium.none": () => "No se puede leer el estadio en el que juega el primer equipo del club.",
   "stadium.shared": (p) => `${p.holders} cosas del juego comparten este nombre; no se puede cambiar solo para el estadio.`,
   "stadium.nameLength": (p) =>
@@ -611,6 +619,10 @@ export const es: Strings = {
     "finance.total_wage_budget": "Presupuesto salarial total",
     "stadium.capacity": "Aforo del estadio",
     "stadium.name": "Nombre del estadio",
+    "name.first": "Nombre",
+    "name.last": "Apellido",
+    "name.common": "Nombre común",
+    "name.full": "Nombre completo",
     "stadium.seating": "Aforo con asientos",
     "stadium.used": "Aforo en uso",
     "stadium.expansion": "Aforo ampliable",
@@ -1851,6 +1863,41 @@ export const es: Strings = {
     hint: "Nada cambia en el juego hasta que pulsas Rescindir.",
     release: "Rescindir",
     releasing: "Rescindiendo…",
+    cancel: "Cancelar",
+  },
+
+  rename: {
+    button: "Renombrar",
+    buttonTitle: "Cambiar los nombres de este jugador en el juego",
+
+    // El diálogo
+    title: "Renombrar",
+    loading: "Leyendo los nombres…",
+    first: "Nombre",
+    last: "Apellido",
+    common: "Nombre común",
+    commonHint:
+      "El nombre que el juego muestra en lugar del nombre y el apellido, como Pedri o Vinícius Júnior. Déjalo vacío para no poner ninguno",
+    full: "Nombre completo",
+    fullHint: "El nombre entero, tal como lo da el perfil. Déjalo vacío para no poner ninguno",
+    none: "Ninguno",
+    required: "No puede estar vacío",
+    tooLong: (max: number) => `Demasiado largo: como máximo ${max} bytes`,
+    noRoom:
+      "El juego no tiene sitio ahora mismo para otro nombre nuevo de este tipo: guarda la partida, vuelve a cargarla e inténtalo de nuevo",
+    unavailable: "El editor no puede cambiar nombres en esta versión del juego",
+    doesHeading: "Qué hace",
+    does: [
+      "El juego muestra el nombre nuevo cuando pulsas Continuar en el juego",
+      "El nombre se mantiene al guardar la partida",
+      "Un nombre, apellido o nombre común nuevo entra en las tablas de nombres del juego, donde el juego lo usa solo para este jugador",
+      "Aparece en Cambios, una línea por nombre, donde Deshacer devuelve el nombre anterior",
+    ],
+
+    // El pie
+    hint: "Nada cambia en el juego hasta que pulses Renombrar.",
+    rename: "Renombrar",
+    renaming: "Renombrando…",
     cancel: "Cancelar",
   },
 

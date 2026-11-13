@@ -183,6 +183,14 @@ const errors: ErrorTexts = {
     p.staff === "0"
       ? "Klub ini sama sekali tidak punya staf: game tidak menyimpan staf di klub dari liga yang tidak bisa dimainkan di save ini."
       : "Tidak ada staf klub ini yang punya kontrak penuh sendiri untuk dijadikan contoh kontrak baru.",
+  "names.unknown": () =>
+    "Editor tidak menemukan tempat game menyimpan nama orang di versi game ini, jadi tidak bisa mengubahnya.",
+  "names.noRoom": (p) =>
+    `Game sedang tidak punya ruang untuk ${({ first: "nama depan", last: "nama belakang", common: "nama umum" } as Record<string, string>)[p.table] ?? "nama"} baru lagi. ` +
+    "Game membuat ruang sendiri saat pemain dan staf baru masuk; atau simpan game, muat ulang simpanan, lalu coba lagi.",
+  "names.same": () => "Itu sudah menjadi namanya.",
+  "names.bad": (p) =>
+    `Nama depan atau belakang tidak boleh kosong, dan tidak ada nama yang boleh diawali atau diakhiri spasi, berisi karakter kontrol, atau lebih dari ${p.max} byte.`,
   "stadium.none": () => "Stadion tempat tim senior klub bermain tidak bisa dibaca.",
   "stadium.shared": (p) => `${p.holders} hal di game memakai nama ini, jadi tidak bisa diubah hanya untuk stadion ini.`,
   "stadium.nameLength": (p) =>
@@ -584,6 +592,10 @@ export const id: Strings = {
     "finance.total_wage_budget": "Total anggaran gaji",
     "stadium.capacity": "Kapasitas stadion",
     "stadium.name": "Nama stadion",
+    "name.first": "Nama depan",
+    "name.last": "Nama belakang",
+    "name.common": "Nama umum",
+    "name.full": "Nama lengkap",
     "stadium.seating": "Kapasitas tempat duduk",
     "stadium.used": "Kapasitas terpakai",
     "stadium.expansion": "Kapasitas ekspansi",
@@ -1733,6 +1745,39 @@ export const id: Strings = {
     hint: "Tidak ada yang berubah di game sampai kamu menekan Lepas.",
     release: "Lepas",
     releasing: "Melepas…",
+    cancel: "Batal",
+  },
+
+  rename: {
+    button: "Ganti Nama",
+    buttonTitle: "Ubah nama pemain ini di game",
+
+    title: "Ganti Nama",
+    loading: "Membaca nama…",
+    first: "Nama depan",
+    last: "Nama belakang",
+    common: "Nama umum",
+    commonHint:
+      "Nama yang ditampilkan game sebagai pengganti nama depan dan belakang, seperti Pedri atau Vinícius Júnior. Kosongkan jika tidak ada",
+    full: "Nama lengkap",
+    fullHint: "Nama secara lengkap, seperti yang tertera di profil. Kosongkan jika tidak ada",
+    none: "Tidak ada",
+    required: "Tidak boleh kosong",
+    tooLong: (max: number) => `Terlalu panjang: maksimal ${max} byte`,
+    noRoom:
+      "Game sedang tidak punya ruang untuk satu nama baru lagi dari jenis ini: simpan game, muat ulang simpanan, lalu coba lagi",
+    unavailable: "Editor tidak bisa mengubah nama di versi game ini",
+    doesHeading: "Yang dilakukan",
+    does: [
+      "Game menampilkan nama baru setelah kamu menekan Lanjutkan di game",
+      "Nama tetap ada saat kamu menyimpan game",
+      "Nama depan, belakang, atau umum yang baru masuk ke tabel nama game, tempat game memakainya hanya untuk pemain ini",
+      "Tercantum di Perubahan, satu baris per nama, tempat Urungkan mengembalikan nama lama",
+    ],
+
+    hint: "Tidak ada yang berubah di game sampai kamu menekan Ganti Nama.",
+    rename: "Ganti Nama",
+    renaming: "Mengganti nama…",
     cancel: "Batal",
   },
 
