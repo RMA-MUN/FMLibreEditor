@@ -376,11 +376,25 @@ function details(player: PlayerSummary): PlayerDetails {
                     ended: { year: 2026, month: 7, day: 9 },
                     motive: 1202,
                     kind: 1,
+                    wording: 0,
+                    flags: 0,
                     about: null,
                   },
-                  { started: { year: 2026, month: 7, day: 12 }, ended: null, motive: 926, kind: 1, about: teammateOf(player) },
+                  {
+                    started: { year: 2026, month: 7, day: 12 },
+                    ended: null,
+                    motive: 926,
+                    kind: 1,
+                    wording: 0,
+                    flags: 0,
+                    about: teammateOf(player),
+                  },
+                  // Left out of a competition squad, and wanting more playing time, which the game words by the entry.
                   ...(next() < 0.5
-                    ? [{ started: { year: 2026, month: 7, day: 15 }, ended: null, motive: 596, kind: 2, about: null }]
+                    ? [
+                        { started: { year: 2026, month: 7, day: 15 }, ended: null, motive: 596, kind: 2, wording: 0, flags: 0, about: null },
+                        { started: { year: 2026, month: 7, day: 16 }, ended: null, motive: 650, kind: 1, wording: 1, flags: 0, about: null },
+                      ]
                     : []),
                 ]
               : [],

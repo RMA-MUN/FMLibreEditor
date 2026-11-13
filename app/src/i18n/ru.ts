@@ -5,9 +5,11 @@
 // Russian has three plural forms after a number: "1 игрок", "2 игрока", "5 игроков" (and 21 is like 1, 22 like 2, 11–14
 // like 5); `plural` picks one. Where a count would have to change its case, the sentences put it after a colon instead.
 
-import type { Entity, OpportunityKind } from "../types";
+import type { Concern, Entity, OpportunityKind } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { REASONS_RU } from "./reasons/ru";
 
 const numbers = new Intl.NumberFormat("ru-RU");
 const percents = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 1 });
@@ -348,13 +350,6 @@ const CLAUSE_NAMES_RU: Partial<Record<number, string>> = {
   56: "Действующие отступные при невыходе в высший дивизион",
   58: "Не отображается в игре (58)",
   63: "Не отображается в игре (63)",
-};
-
-/** Reasons to be unhappy, by the codes the game keeps them as. */
-const CONCERN_MOTIVES_RU: Partial<Record<number, string>> = {
-  596: "Не включён в заявку на турнир",
-  808: "Считает, что с партнёром обошлись несправедливо",
-  926: "Не считает, что партнёр заслуживает желаемого игрового времени",
 };
 
 /** Players' traits (preferred moves), by their bit in the game's mask. */
@@ -769,7 +764,7 @@ export const ru: Strings = {
     concernSince: (date) => `с ${date}`,
     concernAbout: (name) => `партнёр: ${name}`,
     concernKind: (kind) => (kind === 1 ? "Обеспокоен" : kind === 2 ? "Внутреннее" : `Тип ${kind}`),
-    concernMotive: (motive) => CONCERN_MOTIVES_RU[motive] ?? `Причина ${motive}`,
+    concernMotive: (concern: Concern) => reasonText(REASONS_RU, concern) ?? `Причина ${concern.motive}`,
     clauses: "Бонусы и пункты",
     noClauses: "Нет бонусов и пунктов",
     loyaltyBonus: "Бонус за лояльность",

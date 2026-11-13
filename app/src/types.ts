@@ -494,10 +494,16 @@ export interface Concern {
   started: FmDate | null;
   /** When it was over; null while it lasts. */
   ended: FmDate | null;
-  /** The game's code for what it is about; `concernMotive` names the known ones. */
+  /** The game's code for what it is about; `concernMotive` words it with the game's sentence for it. */
   motive: number;
   /** 1 concerned, 2 internal. */
   kind: number;
+  /**
+   * The value the game picks the sentence of some motives by, and the entry's flags (see `reasons.ts`); null where
+   * the layout does not place them.
+   */
+  wording: number | null;
+  flags: number | null;
   /**
    * The teammate it is about, for a reason held about one: null for any other reason, and for a teammate the lists do
    * not know.

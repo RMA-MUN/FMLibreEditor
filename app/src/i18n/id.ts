@@ -8,9 +8,11 @@
 //
 // Indonesian has no plural after a number ("3 perubahan", "1 pemain"), so the counts need no forms of their own.
 
-import type { Entity, GraphicsCounts, MassPreview, OpportunityKind } from "../types";
+import type { Concern, Entity, GraphicsCounts, MassPreview, OpportunityKind } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { REASONS_ID } from "./reasons/id";
 
 const numbers = new Intl.NumberFormat("id-ID");
 const percents = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 1 });
@@ -296,12 +298,6 @@ const CLAUSE_NAMES_ID: Partial<Record<number, string>> = {
   56: "Klausul pelepasan aktif jika gagal promosi",
   58: "Tidak ditampilkan di game (58)",
   63: "Tidak ditampilkan di game (63)",
-};
-
-const CONCERN_MOTIVES_ID: Partial<Record<number, string>> = {
-  596: "Tidak dimasukkan ke skuad kompetisi",
-  808: "Merasa rekan setimnya diperlakukan tidak adil",
-  926: "Merasa rekan setimnya tidak pantas mendapat waktu bermain yang diinginkannya",
 };
 
 const TRAIT_NAMES_ID: readonly string[] = [
@@ -699,7 +695,7 @@ export const id: Strings = {
     concernSince: (date: string) => `sejak ${date}`,
     concernAbout: (name: string) => `tentang ${name}`,
     concernKind: (kind: number) => (kind === 1 ? "Khawatir" : kind === 2 ? "Internal" : `Jenis ${kind}`),
-    concernMotive: (motive: number) => CONCERN_MOTIVES_ID[motive] ?? `Alasan ${motive}`,
+    concernMotive: (concern: Concern) => reasonText(REASONS_ID, concern) ?? `Alasan ${concern.motive}`,
     clauses: "Bonus dan klausul",
     noClauses: "Tidak ada bonus atau klausul",
     loyaltyBonus: "Bonus loyalitas",

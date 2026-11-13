@@ -13,9 +13,11 @@
 // member of staff and a club are all masculine nouns here. French typography wants a no-break space before : ; ? ! and
 // %, and inside « » ("\u00a0" below).
 
-import type { Entity, OpportunityKind } from "../types";
+import type { Concern, Entity, OpportunityKind } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { placeNameFR, REASONS_FR } from "./reasons/fr";
 
 const numbers = new Intl.NumberFormat("fr-FR");
 const percents = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 });
@@ -186,13 +188,6 @@ const CLAUSE_NAMES_FR: Partial<Record<number, string>> = {
   56: "Clause de départ active de non-promotion",
   58: "Non affichée dans le jeu (58)",
   63: "Non affichée dans le jeu (63)",
-};
-
-/** Reasons to be unhappy, by the codes the game keeps them as (see `en.ts`). */
-const CONCERN_MOTIVES_FR: Partial<Record<number, string>> = {
-  596: "Non inscrit dans l'effectif d'une compétition",
-  808: "Estime qu'un coéquipier a été traité injustement",
-  926: "Estime qu'un coéquipier ne mérite pas le temps de jeu qu'il réclame",
 };
 
 /**
@@ -820,7 +815,7 @@ export const fr: Strings = {
     concernSince: (date) => `depuis le ${date}`,
     concernAbout: (name) => `à propos de ${name}`,
     concernKind: (kind) => (kind === 1 ? "Préoccupé" : kind === 2 ? "Interne" : `Type ${kind}`),
-    concernMotive: (motive) => CONCERN_MOTIVES_FR[motive] ?? `Motif ${motive}`,
+    concernMotive: (concern: Concern) => reasonText(REASONS_FR, concern, placeNameFR) ?? `Motif ${concern.motive}`,
     clauses: "Primes et clauses",
     noClauses: "Aucune prime ni clause",
     loyaltyBonus: "Prime de fidélité",

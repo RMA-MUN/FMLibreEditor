@@ -5,6 +5,7 @@
 // number, so the sentences are built to put an ending on a noun ("oyuncunun"), never on a figure.
 
 import type {
+  Concern,
   Entity,
   MassOperationKind,
   MassPreview,
@@ -15,6 +16,8 @@ import type {
 } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { placeNameTR, REASONS_TR } from "./reasons/tr";
 
 const numbers = new Intl.NumberFormat("tr-TR");
 const percents = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 1 });
@@ -326,12 +329,6 @@ const TRAIT_NAMES_TR: readonly string[] = [
   "Topu savunmadan çıkarır",
   "Topu ayaklarıyla oynar"
 ];
-
-const CONCERN_MOTIVES_TR: Partial<Record<number, string>> = {
-  596: "Bir turnuvanın kadrosuna alınmadı",
-  808: "Bir takım arkadaşına haksızlık yapıldığını düşünüyor",
-  926: "Bir takım arkadaşının istediği forma süresini hak etmediğini düşünüyor",
-};
 
 const CLAUSE_NAMES_TR: Partial<Record<number, string>> = {
   0: "Serbest kalma maddesi",
@@ -726,7 +723,7 @@ export const tr: Strings = {
     concernSince: (date) => `${date} tarihinden beri`,
     concernAbout: (name) => `${name} hakkında`,
     concernKind: (kind) => (kind === 1 ? "Endişeli" : kind === 2 ? "İçsel" : `Tür ${kind}`),
-    concernMotive: (motive) => CONCERN_MOTIVES_TR[motive] ?? `Neden ${motive}`,
+    concernMotive: (concern: Concern) => reasonText(REASONS_TR, concern, placeNameTR) ?? `Neden ${concern.motive}`,
     clauses: "Primler ve maddeler",
     noClauses: "Prim ya da madde yok",
     loyaltyBonus: "Sadakat primi",

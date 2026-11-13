@@ -11,9 +11,11 @@
 // particle after a word depends on whether it ends in a consonant ("구단을", "선수를"), so the sentences that put one
 // after a name or a number pick it with `particle`.
 
-import type { Entity, OpportunityKind } from "../types";
+import type { Concern, Entity, OpportunityKind } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { placeNameKO, REASONS_KO } from "./reasons/ko";
 
 const numbers = new Intl.NumberFormat("ko-KR");
 const percents = new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 1 });
@@ -176,13 +178,6 @@ const CLAUSE_NAMES_KO: Partial<Record<number, string>> = {
   56: "승격 실패 시 이적 허용 조항 발동",
   58: "게임에 표시되지 않음 (58)",
   63: "게임에 표시되지 않음 (63)",
-};
-
-/** Reasons to be unhappy, by the codes the game keeps them as (see `en.ts`). */
-const CONCERN_MOTIVES_KO: Partial<Record<number, string>> = {
-  596: "대회 등록 명단에서 제외됨",
-  808: "동료가 부당한 대우를 받았다고 생각함",
-  926: "동료가 원하는 만큼의 출전 시간을 받을 자격이 없다고 생각함",
 };
 
 /** Players' traits (preferred moves), by their bit in the game's mask (see `en.ts`); the game's Korean names. */
@@ -761,7 +756,7 @@ export const ko: Strings = {
     concernSince: (date) => `${date}부터`,
     concernAbout: (name) => `${name} 관련`,
     concernKind: (kind) => (kind === 1 ? "우려" : kind === 2 ? "내부" : `유형 ${kind}`),
-    concernMotive: (motive) => CONCERN_MOTIVES_KO[motive] ?? `사유 ${motive}`,
+    concernMotive: (concern: Concern) => reasonText(REASONS_KO, concern, placeNameKO) ?? `사유 ${concern.motive}`,
     clauses: "보너스 및 조항",
     noClauses: "보너스나 조항 없음",
     loyaltyBonus: "로열티 보너스",

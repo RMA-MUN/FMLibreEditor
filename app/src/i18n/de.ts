@@ -11,9 +11,11 @@
 // club are all masculine ("Spieler", "Mitarbeiter", "Verein"), so the words around them agree the same way, and after
 // "von" a count takes the dative ("von 3 Spielern", "von 12 Vereinen").
 
-import type { Entity, OpportunityKind } from "../types";
+import type { Concern, Entity, OpportunityKind } from "../types";
 import type { ErrorTexts, Strings } from "./en";
 import { fieldName } from "./fieldNames";
+import { reasonText } from "./reasons";
+import { placeNameDE, REASONS_DE } from "./reasons/de";
 
 const numbers = new Intl.NumberFormat("de-DE");
 const percents = new Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 });
@@ -165,13 +167,6 @@ const CLAUSE_NAMES_DE: Partial<Record<number, string>> = {
   56: "Aktive Ausstiegsklausel bei Nicht-Aufstieg",
   58: "Im Spiel nicht angezeigt (58)",
   63: "Im Spiel nicht angezeigt (63)",
-};
-
-/** Reasons to be unhappy, by the codes the game keeps them as (see `en.ts`). */
-const CONCERN_MOTIVES_DE: Partial<Record<number, string>> = {
-  596: "Nicht im Kader für einen Wettbewerb",
-  808: "Findet, dass ein Mitspieler unfair behandelt wurde",
-  926: "Glaubt nicht, dass ein Mitspieler die gewünschten Einsatzzeiten verdient",
 };
 
 /**
@@ -795,7 +790,7 @@ export const de: Strings = {
     concernSince: (date) => `seit ${date}`,
     concernAbout: (name) => `wegen ${name}`,
     concernKind: (kind) => (kind === 1 ? "Besorgt" : kind === 2 ? "Intern" : `Art ${kind}`),
-    concernMotive: (motive) => CONCERN_MOTIVES_DE[motive] ?? `Grund ${motive}`,
+    concernMotive: (concern: Concern) => reasonText(REASONS_DE, concern, placeNameDE) ?? `Grund ${concern.motive}`,
     clauses: "Prämien & Klauseln",
     noClauses: "Keine Prämien oder Klauseln",
     loyaltyBonus: "Loyalitätsbonus",
