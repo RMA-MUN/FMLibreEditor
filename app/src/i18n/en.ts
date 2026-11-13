@@ -2470,7 +2470,7 @@ export const en = {
     how: {
       label: "How is this list made?",
       note: (rule: string, count: string) =>
-        `The scout looks at every player who can play this position (rated 10 or more there), leaving out your own club's players and those of other human managers. Of those he keeps the ones who ${rule}. For the 400 who fit best he works out how likely each is to join you, then recommends the best ${count} by fit and probability together. Recommended order: 70% fit and 30% probability, a little less for players past 30; Rotation weighs the two alike and Future counts potential too. Click a column title to sort the list; # is the scout's own order.`,
+        `Players rated 10 or more at this position (not yours or other human managers') who ${rule}. The best ${count} are shown by fit (70%) and probability (30%); Rotation weighs both alike, Future counts potential too. Click a column title to sort.`,
     },
     purposeRules: {
       firstTeam: "fit the position better than your best player there",
@@ -2663,7 +2663,7 @@ export const en = {
         `${kind} · players of ability ${lowest}–${highest}, around your squad's level · ${pool} looked at`,
       how: {
         label: "How are these lists made?",
-        note: "The scout looks at the players whose current ability is near your best eleven's (30 below to 45 above), leaving out your own club's and other human managers' players, and measures each at the position he plays best (or the one you pick). Each list keeps those its rule takes: a contract that ends within six months or none, a release clause below his value, reasons to be unhappy, a club whose balance is below nothing, his club's transfer or loan list. Wonderkids are 19 or younger with a potential of 140 or more, above your squad's level. Every list is ordered like the advice: fit and probability together.",
+        note: "Players near your best eleven's level (30 below to 45 above), not yours or other human managers', each measured at his best position or the one you pick. Each list is sorted by fit and probability together.",
       },
       empty: "Nobody on this list with these filters.",
       emptyWonderkids: "No wonderkids with these filters.",
@@ -2691,7 +2691,7 @@ export const en = {
         `${candidates} players play ${position} · the ${shown} most alike`,
       how: {
         label: "How is similarity measured?",
-        note: "The scout compares the attributes the roles of the position lean on (the ones they lean on most count three times), and a little of the rest. What counts most is the shape: where a player is strong and where he is weak. His level counts less, so a cheaper or younger version of a player can still be very alike. Only players competent at the position or better are compared; your own club's and other human managers' players are left out.",
+        note: "The scout compares the attributes the position's roles rely on, the key ones most. Where a player is strong and where he is weak counts more than his level, so a cheaper or younger player can still be very alike.",
       },
       empty: "Nobody alike with these settings.",
       columns: { similarity: "Alike", value: "Value" },
@@ -2794,7 +2794,7 @@ export const en = {
       lent: (count: number) => (count === 1 ? "1 out on loan" : `${format(count)} out on loan`),
       how: {
         label: "How is this list made?",
-        note: "The game marks every player it makes. A club's youth intake are the players it made who joined the club at 17 or younger and were trained at no other club: those it has now, the ones out on loan included. A player bought from another club's intake is left out, and so is one the club has let go. A youth candidate another club let go, who started out here, joins the intake of his day. Those who joined on one day make one intake.",
+        note: "Players the game made who joined this club at 17 or younger and were trained at no other club, by the day they joined. Those out on loan are listed; those sold or let go are not.",
       },
       unmarked:
         "The editor does not know how this version of the game marks the players it makes: the club's own young players from the game's database are listed too.",

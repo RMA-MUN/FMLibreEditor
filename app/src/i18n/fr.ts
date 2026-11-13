@@ -2334,13 +2334,7 @@ export const fr: Strings = {
     how: {
       label: "Comment cette liste est-elle établie\u00a0?",
       note: (rule, count) =>
-        "Le recruteur examine chaque joueur capable de jouer à ce poste (avec une note d'au moins 10), en excluant les " +
-        `joueurs de votre club et ceux des autres entraîneurs humains. Parmi eux, il garde ceux qui ${rule}. Pour les ` +
-        "400 qui conviennent le mieux, il estime la probabilité que chacun vous rejoigne, puis recommande les " +
-        `${count} meilleurs selon l'adéquation et la probabilité combinées. Ordre recommandé\u00a0: 70\u00a0% ` +
-        "d'adéquation et 30\u00a0% de probabilité, un peu moins pour les joueurs de plus de 30 ans\u00a0; Rotation pèse " +
-        "les deux à égalité, et Avenir tient aussi compte du potentiel. Cliquez sur le titre d'une colonne pour trier " +
-        "la liste\u00a0; # est l'ordre du recruteur.",
+        `Joueurs notés 10 ou plus à ce poste (hors ceux de votre club et des autres entraîneurs humains) qui ${rule}. Les ${count} meilleurs sont affichés selon l'adéquation (70\u00a0%) et la probabilité (30\u00a0%)\u00a0; Rotation pèse les deux à égalité, Avenir tient aussi compte du potentiel. Cliquez sur le titre d'une colonne pour trier.`,
     },
     purposeRules: {
       firstTeam: "conviennent mieux au poste que votre meilleur joueur actuel",
@@ -2526,15 +2520,7 @@ export const fr: Strings = {
         `${kind} · joueurs de niveau ${lowest}–${highest}, autour de celui de votre effectif · ${pool} examinés`,
       how: {
         label: "Comment ces listes sont-elles établies\u00a0?",
-        note:
-          "Le recruteur examine les joueurs dont le niveau actuel est proche de celui de votre meilleur onze (de 30 en " +
-          "dessous à 45 au-dessus), en excluant les joueurs de votre club et ceux des autres entraîneurs humains, et " +
-          "évalue chacun au poste où il est le meilleur (ou à celui que vous choisissez). Chaque liste garde ceux que " +
-          "sa règle retient\u00a0: un contrat qui se termine dans les six mois ou aucun contrat, une clause libératoire " +
-          "inférieure à sa valeur, des raisons d'être mécontent, un club dont le solde est négatif, la liste des " +
-          "transferts ou des prêts de son club. Les jeunes pépites ont 19 ans ou moins, un potentiel d'au moins 140 et " +
-          "dépassent le niveau de votre effectif. Chaque liste est ordonnée comme les conseils\u00a0: adéquation et " +
-          "probabilité combinées.",
+        note: "Joueurs proches du niveau de votre meilleur onze (de 30 en dessous à 45 au-dessus), hors ceux de votre club et des autres entraîneurs humains, chacun évalué à son meilleur poste ou à celui que vous choisissez. Chaque liste est triée selon l'adéquation et la probabilité réunies.",
       },
       empty: "Personne dans cette liste avec ces filtres.",
       emptyWonderkids: "Aucune jeune pépite avec ces filtres.",
@@ -2564,12 +2550,7 @@ export const fr: Strings = {
         `${position}\u00a0: ${candidates} joueurs · les ${shown} plus ressemblants`,
       how: {
         label: "Comment la ressemblance est-elle mesurée\u00a0?",
-        note:
-          "Le recruteur compare les attributs sur lesquels s'appuient les rôles du poste (ceux dont ils dépendent le " +
-          "plus comptent triple), et un peu du reste. Ce qui compte le plus, c'est la forme\u00a0: où un joueur est fort " +
-          "et où il est faible. Son niveau compte moins, de sorte qu'une version moins chère ou plus jeune d'un joueur " +
-          "peut lui ressembler beaucoup. Seuls les joueurs au moins compétents au poste sont comparés\u00a0; les " +
-          "joueurs de votre club et ceux des autres entraîneurs humains sont exclus.",
+        note: "Le recruteur compare les attributs sur lesquels s'appuient les rôles du poste, les plus importants comptant le plus. Les points forts et les points faibles d'un joueur comptent plus que son niveau, donc un joueur moins cher ou plus jeune peut rester très semblable.",
       },
       empty: "Personne de ressemblant avec ces réglages.",
       columns: { similarity: "Similaire", value: "Valeur" },
@@ -2671,7 +2652,7 @@ export const fr: Strings = {
       lent: (count) => `${counted(count, "prêté", "prêtés")}`,
       how: {
         label: "Comment cette liste est-elle établie ?",
-        note: "Le jeu marque chaque joueur qu'il crée. Les jeunes arrivés dans un club sont les joueurs qu'il a créés, qui ont rejoint le club à 17 ans ou moins et n'ont été formés dans aucun autre club : ceux qu'il a actuellement, prêtés compris. Un joueur acheté à l'arrivée de jeunes d'un autre club est exclu, tout comme celui que le club a laissé partir. Un jeune libéré par un autre club, qui a débuté ici, rejoint l'arrivée de son jour. Ceux arrivés le même jour forment une arrivée.",
+        note: "Joueurs créés par le jeu, arrivés dans ce club à 17 ans ou moins et formés dans aucun autre club, classés par jour d'arrivée. Les prêtés sont listés\u00a0; les vendus ou libérés ne le sont pas.",
       },
       unmarked:
         "L'éditeur ne sait pas comment cette version du jeu marque les joueurs qu'il crée : les jeunes du club issus de la base de données du jeu sont donc listés aussi.",

@@ -2251,12 +2251,7 @@ export const it: Strings = {
     how: {
       label: "Come viene fatto questo elenco?",
       note: (rule, count) =>
-        `L'osservatore guarda ogni giocatore che può giocare in questo ruolo (con una valutazione di almeno 10), ` +
-        `escludendo i giocatori della tua società e quelli degli altri allenatori umani. Di questi tiene quelli che ${rule}. ` +
-        `Per i 400 più adatti calcola quanto è probabile che ognuno venga da te, poi consiglia i migliori ${count} per ` +
-        "idoneità e probabilità insieme. Ordine consigliato: 70% idoneità e 30% probabilità, un po' meno per i " +
-        "giocatori oltre i 30 anni; Turnover pesa le due cose allo stesso modo e Futuro tiene conto anche del " +
-        "potenziale. Fai clic sul titolo di una colonna per ordinare l'elenco; # è l'ordine dell'osservatore.",
+        `Giocatori valutati 10 o più in questo ruolo (non della tua società né degli altri allenatori umani) che ${rule}. I migliori ${count} sono mostrati per idoneità (70%) e probabilità (30%); Turnover pesa le due cose allo stesso modo, Futuro conta anche il potenziale. Fai clic sul titolo di una colonna per ordinare.`,
     },
     purposeRules: {
       firstTeam: "sono più adatti al ruolo del tuo miglior giocatore lì",
@@ -2434,14 +2429,7 @@ export const it: Strings = {
         `${kind} · giocatori con abilità ${lowest}–${highest}, intorno al livello della tua rosa · ${pool} esaminati`,
       how: {
         label: "Come sono fatti questi elenchi?",
-        note:
-          "L'osservatore guarda i giocatori la cui abilità attuale è vicina a quella dei tuoi migliori undici (da 30 " +
-          "sotto a 45 sopra), escludendo i giocatori della tua società e quelli degli altri allenatori umani, e valuta " +
-          "ognuno nel ruolo in cui rende meglio (o in quello che scegli tu). Ogni elenco tiene quelli che la sua regola " +
-          "prende: un contratto che scade entro sei mesi o nessun contratto, una clausola di rescissione sotto il suo " +
-          "valore, motivi per essere scontento, una società con il bilancio in negativo, la lista trasferimenti o " +
-          "prestiti della sua società. I wonderkid hanno 19 anni o meno, un potenziale di almeno 140 e sono sopra il " +
-          "livello della tua rosa. Ogni elenco è ordinato come i consigli: idoneità e probabilità insieme.",
+        note: "Giocatori vicini al livello dei tuoi migliori undici (da 30 sotto a 45 sopra), non della tua società né degli altri allenatori umani, ognuno valutato nel ruolo in cui rende meglio o in quello che scegli tu. Ogni elenco è ordinato per idoneità e probabilità insieme.",
       },
       empty: "Nessuno in questo elenco con questi filtri.",
       emptyWonderkids: "Nessun wonderkid con questi filtri.",
@@ -2469,12 +2457,7 @@ export const it: Strings = {
       summary: (candidates, shown, position) => `${candidates} giocatori giocano come ${position} · i ${shown} più simili`,
       how: {
         label: "Come si misura la somiglianza?",
-        note:
-          "L'osservatore confronta gli attributi su cui si basano i ruoli della posizione (quelli su cui si basano di " +
-          "più contano il triplo) e un po' degli altri. Conta di più la forma: dove un giocatore è forte e dove è " +
-          "debole. Il suo livello conta meno, quindi una versione più economica o più giovane di un giocatore può " +
-          "essere molto simile. Si confrontano solo giocatori almeno competenti nel ruolo; i giocatori della tua " +
-          "società e quelli degli altri allenatori umani sono esclusi.",
+        note: "L'osservatore confronta gli attributi su cui si basano i ruoli della posizione, quelli chiave di più. Dove un giocatore è forte e dove è debole conta più del suo livello, quindi anche uno più economico o più giovane può essere molto simile.",
       },
       empty: "Nessuno di simile con queste impostazioni.",
       columns: { similarity: "Simile", value: "Valore" },
@@ -2576,7 +2559,7 @@ export const it: Strings = {
       lent: (count) => (count === 1 ? "1 in prestito" : `${format(count)} in prestito`),
       how: {
         label: "Come viene creato questo elenco?",
-        note: "Il gioco segna ogni giocatore che crea. I nuovi giovani di una società sono i giocatori che ha creato, arrivati in società a 17 anni o meno e non cresciuti in nessun'altra società: quelli che ha adesso, compresi quelli in prestito. Un giocatore comprato dai nuovi giovani di un'altra società è escluso, come uno che la società ha lasciato andare. Un giovane lasciato andare da un'altra società, che aveva iniziato qui, rientra nei nuovi giovani del suo giorno. Chi è arrivato nello stesso giorno forma un gruppo di nuovi giovani.",
+        note: "Giocatori creati dal gioco, arrivati in questa società a 17 anni o meno e non cresciuti in nessun'altra società, per giorno di arrivo. Quelli in prestito sono elencati; quelli venduti o lasciati andare no.",
       },
       unmarked:
         "L'editor non sa come questa versione del gioco segna i giocatori che crea: vengono elencati anche i giovani della società presi dal database del gioco.",

@@ -2162,7 +2162,7 @@ export const tr: Strings = {
     how: {
       label: "Bu liste nasıl oluşuyor?",
       note: (rule, count) =>
-        `Gözlemci bu mevkide oynayabilen (mevki puanı 10 ve üstü) tüm oyunculara bakar; senin kulübünün ve diğer insan menajerlerin oyuncularını dışarıda bırakır. Bunlardan ${rule} oyuncuları ayırır. Mevkiye en uygun 400 oyuncu için takımına gelme olasılığını hesaplar ve uyum ile olasılığı birlikte en iyi olan ${count} oyuncuyu önerir. Önerilen sıra: %70 uyum, %30 olasılık; 30 yaşın üstünde biraz düşer. Rotasyon ikisini eşit tartar, Gelecek potansiyeli de sayar. Listeyi sıralamak için sütun başlıklarına tıkla; # gözlemcinin kendi sırasıdır.`,
+        `Bu mevkide puanı 10 ve üstü olan (senin ve diğer insan menajerlerin oyuncuları hariç), ${rule} oyuncular. Uyum (%70) ve olasılığa (%30) göre en iyi ${count} oyuncu gösterilir; Rotasyon ikisini eşit tartar, Gelecek potansiyeli de sayar. Sıralamak için bir sütun başlığına tıkla.`,
     },
     purposeRules: {
       firstTeam: "bu mevkide en iyi oyuncundan daha uygun olan",
@@ -2337,7 +2337,7 @@ export const tr: Strings = {
         `${kind} · kadronun seviyesine yakın, yeteneği ${lowest}–${highest} olan oyuncular · ${pool} oyuncuya bakıldı`,
       how: {
         label: "Bu listeler nasıl oluşuyor?",
-        note: "Gözlemci, mevcut yeteneği ilk 11'inin ortalamasına yakın olan oyunculara bakar (30 altından 45 üstüne kadar); senin kulübünün ve diğer insan menajerlerin oyuncularını dışarıda bırakır ve her oyuncuyu en iyi oynadığı mevkide (ya da seçtiğin mevkide) ölçer. Her liste kendi kuralına uyanları tutar: sözleşmesi altı ay içinde biten ya da sözleşmesi olmayanlar, serbest kalma bedeli değerinin altında olanlar, mutsuz olanlar, kasası eksiye düşmüş kulüplerin oyuncuları, kulübünün transfer ya da kiralık listesindekiler. Geleceğin yıldızları 19 yaş ve altında, potansiyeli 140 ve üstünde ve kadronun seviyesinin üstünde olanlardır. Her liste öneriler gibi sıralanır: uyum ve olasılık birlikte.",
+        note: "İlk 11'inin seviyesine yakın oyuncular (30 altından 45 üstüne; senin ve diğer insan menajerlerin oyuncuları hariç), her biri en iyi oynadığı ya da senin seçtiğin mevkide ölçülür. Her liste uyum ve olasılık birlikte tartılarak sıralanır.",
       },
       empty: "Bu filtrelerle bu listede kimse yok.",
       emptyWonderkids: "Bu filtrelerle geleceğin yıldızı yok.",
@@ -2365,7 +2365,7 @@ export const tr: Strings = {
         `${position} mevkisinde ${candidates} oyuncu oynuyor · en benzer ${shown} oyuncu`,
       how: {
         label: "Benzerlik nasıl ölçülüyor?",
-        note: "Gözlemci, mevkinin rollerinin dayandığı özellikleri karşılaştırır (en çok dayandıkları üç kat sayılır), geri kalanları da biraz. En çok sayılan şey biçimdir: oyuncunun nerede güçlü, nerede zayıf olduğu. Seviyesi daha az sayılır; bu yüzden bir oyuncunun daha ucuz ya da daha genç bir benzeri de ona çok benzeyebilir. Yalnızca bu mevkide en az yeterli olan oyuncular karşılaştırılır; senin kulübünün ve diğer insan menajerlerin oyuncuları dışarıda bırakılır.",
+        note: "Gözlemci, mevkinin rollerinin dayandığı özellikleri karşılaştırır; kilit olanlar en çok sayılır. Oyuncunun nerede güçlü, nerede zayıf olduğu seviyesinden daha çok sayılır; bu yüzden daha ucuz ya da daha genç bir oyuncu da çok benzer çıkabilir.",
       },
       empty: "Bu ayarlarla benzer oyuncu yok.",
       columns: { similarity: "Benzerlik", value: "Değer" },
@@ -2462,7 +2462,7 @@ export const tr: Strings = {
       lent: (count) => `${format(count)} oyuncu kirada`,
       how: {
         label: "Bu liste nasıl hazırlanıyor?",
-        note: "Oyun ürettiği her oyuncuyu işaretler. Bir kulübün altyapı alımı; oyunun ürettiği, kulübe 17 yaşında ya da daha genç katılan ve başka hiçbir kulüpte yetişmemiş oyunculardır: kulübün şu an elinde olanlar, kiralık gönderdikleri dahil. Başka bir kulübün altyapısından satın alınan oyuncu listeye girmez, kulübün gönderdiği oyuncu da girmez. Başka bir kulübün bıraktığı ve kariyerine burada başlayan altyapı adayı, katıldığı günün alımına girer. Aynı gün katılanlar bir alımı oluşturur.",
+        note: "Oyunun ürettiği, kulübe 17 yaşında ya da daha genç katılan ve başka hiçbir kulüpte yetişmemiş oyuncular, katıldıkları güne göre. Kiralıkta olanlar listede; satılanlar ya da gönderilenler değil.",
       },
       unmarked:
         "Editör, oyunun bu sürümünde ürettiği oyuncuları nasıl işaretlediğini bilmiyor: kulübün oyun veritabanından gelen kendi genç oyuncuları da listede.",

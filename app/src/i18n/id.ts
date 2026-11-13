@@ -2089,7 +2089,7 @@ export const id: Strings = {
     how: {
       label: "Bagaimana daftar ini dibuat?",
       note: (rule: string, count: string) =>
-        `Pemandu bakat melihat setiap pemain yang bisa bermain di posisi ini (rating 10 atau lebih di sana), kecuali pemain klubmu sendiri dan pemain manajer manusia lain. Dari mereka dia menyimpan pemain yang ${rule}. Untuk 400 pemain yang paling cocok dia menghitung seberapa besar peluang masing-masing bergabung denganmu, lalu merekomendasikan ${count} terbaik berdasarkan kecocokan dan peluang sekaligus. Urutan rekomendasi: 70% kecocokan dan 30% peluang, sedikit kurang untuk pemain di atas 30 tahun; Rotasi menimbang keduanya sama rata dan Masa depan ikut menghitung potensi. Klik judul kolom untuk mengurutkan daftar; # adalah urutan pemandu bakat sendiri.`,
+        `Pemain dengan rating 10 atau lebih di posisi ini (bukan pemain klubmu atau manajer manusia lain) yang ${rule}. ${count} terbaik ditampilkan berdasarkan kecocokan (70%) dan peluang (30%); Rotasi menimbang keduanya sama rata, Masa depan ikut menghitung potensi. Klik judul kolom untuk mengurutkan.`,
     },
     purposeRules: {
       firstTeam: "lebih cocok di posisi ini daripada pemain terbaikmu di sana",
@@ -2264,7 +2264,7 @@ export const id: Strings = {
         `${kind} · pemain berkemampuan ${lowest}–${highest}, sekitar level skuadmu · ${pool} diperiksa`,
       how: {
         label: "Bagaimana daftar ini dibuat?",
-        note: "Pemandu bakat melihat pemain yang kemampuan saat ini-nya dekat dengan XI terbaikmu (30 di bawah sampai 45 di atas), tanpa pemain klubmu sendiri dan pemain manajer manusia lain, lalu menilai tiap pemain di posisi yang paling cocok baginya (atau yang kamu pilih). Setiap daftar menyimpan pemain yang memenuhi aturannya: kontrak yang berakhir dalam enam bulan atau tanpa kontrak, klausul pelepasan di bawah nilainya, alasan untuk tidak bahagia, klub dengan saldo di bawah nol, daftar transfer atau daftar pinjaman klubnya. Wonderkid berusia 19 tahun atau lebih muda, berpotensi 140 atau lebih, dan di atas level skuadmu. Setiap daftar diurutkan seperti saran: kecocokan dan peluang sekaligus.",
+        note: "Pemain yang levelnya dekat dengan XI terbaikmu (30 di bawah sampai 45 di atas), bukan pemain klubmu atau manajer manusia lain, masing-masing di posisi terbaiknya atau yang kamu pilih. Setiap daftar diurutkan berdasarkan kecocokan dan peluang sekaligus.",
       },
       empty: "Tidak ada pemain di daftar ini dengan filter tersebut.",
       emptyWonderkids: "Tidak ada wonderkid dengan filter tersebut.",
@@ -2292,7 +2292,7 @@ export const id: Strings = {
         `${candidates} pemain bermain di posisi ${position} · ${shown} yang paling mirip`,
       how: {
         label: "Bagaimana kemiripan diukur?",
-        note: "Pemandu bakat membandingkan atribut yang menjadi andalan peran-peran di posisi itu (yang paling diandalkan dihitung tiga kali), dan sedikit sisanya. Yang paling berpengaruh adalah bentuknya: di mana pemain kuat dan di mana lemah. Levelnya berpengaruh lebih kecil, jadi versi yang lebih murah atau lebih muda dari seorang pemain tetap bisa sangat mirip. Hanya pemain yang cakap di posisi itu atau lebih baik yang dibandingkan; pemain klubmu sendiri dan pemain manajer manusia lain dikecualikan.",
+        note: "Pemandu bakat membandingkan atribut yang diandalkan peran-peran di posisi itu, yang utama paling berbobot. Di mana pemain kuat dan di mana lemah lebih berpengaruh daripada levelnya, jadi pemain yang lebih murah atau lebih muda tetap bisa sangat mirip.",
       },
       empty: "Tidak ada yang mirip dengan pengaturan ini.",
       columns: { similarity: "Mirip", value: "Nilai" },
@@ -2392,7 +2392,7 @@ export const id: Strings = {
       lent: (count) => `${format(count)} dipinjamkan`,
       how: {
         label: "Bagaimana daftar ini dibuat?",
-        note: "Game menandai setiap pemain yang dibuatnya. Lulusan akademi sebuah klub adalah pemain buatan game yang bergabung dengan klub itu pada usia 17 tahun atau lebih muda dan tidak dilatih di klub lain: yang sekarang ada di klub, termasuk yang sedang dipinjamkan. Pemain yang dibeli dari akademi klub lain tidak dihitung, begitu pula pemain yang sudah dilepas klub. Calon pemain muda yang dilepas klub lain tetapi memulai di sini masuk ke angkatan harinya. Pemain yang bergabung pada hari yang sama membentuk satu angkatan.",
+        note: "Pemain buatan game yang bergabung dengan klub ini pada usia 17 tahun atau lebih muda dan tidak dilatih di klub lain, berdasarkan hari mereka bergabung. Yang sedang dipinjamkan ikut didaftar; yang dijual atau dilepas tidak.",
       },
       unmarked:
         "Editor tidak tahu bagaimana versi game ini menandai pemain buatannya: pemain muda milik klub dari database game juga ikut didaftarkan.",

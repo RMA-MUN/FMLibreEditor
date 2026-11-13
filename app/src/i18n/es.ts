@@ -2243,7 +2243,7 @@ export const es: Strings = {
     how: {
       label: "¿Cómo se hace esta lista?",
       note: (rule, count) =>
-        `El ojeador mira a todos los jugadores que pueden jugar en esta posición (con valoración 10 o más), salvo los de tu club y los de otros mánagers humanos. De ellos se queda con los que ${rule}. Para los 400 que mejor encajan calcula la probabilidad de que fichen por ti y recomienda los ${count} mejores por adecuación y probabilidad juntas. Orden recomendado: 70 % adecuación y 30 % probabilidad, algo menos pasados los 30; Rotación pesa ambas por igual y Futuro cuenta también el potencial. Pulsa el título de una columna para ordenar la lista; # es el orden del ojeador.`,
+        `Jugadores con valoración 10 o más en esta posición (no de tu club ni de otros mánagers humanos) que ${rule}. Se muestran los ${count} mejores por adecuación (70 %) y probabilidad (30 %); Rotación pesa ambas por igual y Futuro cuenta también el potencial. Pulsa el título de una columna para ordenar.`,
     },
     purposeRules: {
       firstTeam: "encajan en la posición mejor que tu mejor jugador ahí",
@@ -2420,7 +2420,7 @@ export const es: Strings = {
         `${kind} · jugadores de habilidad ${lowest}–${highest}, en torno al nivel de tu plantilla · ${pool} revisados`,
       how: {
         label: "¿Cómo se hacen estas listas?",
-        note: "El ojeador mira a los jugadores cuya habilidad actual se acerca a la de tu mejor once (de 30 por debajo a 45 por encima), sin contar los de tu club ni los de otros mánagers humanos, y mide a cada uno en la posición en la que juega mejor (o en la que elijas). Cada lista se queda con los que cumplen su regla: un contrato que termina en menos de seis meses o ninguno, una cláusula de rescisión por debajo de su valor, motivos para estar descontento, un club con el saldo en números rojos, la lista de transferibles o de cedibles de su club. Las promesas tienen 19 años o menos, un potencial de 140 o más y están por encima del nivel de tu plantilla. Cada lista se ordena como los consejos: adecuación y probabilidad juntas.",
+        note: "Jugadores cerca del nivel de tu mejor once (de 30 por debajo a 45 por encima), no de tu club ni de otros mánagers humanos, cada uno medido en su mejor posición o en la que elijas. Cada lista se ordena por adecuación y probabilidad juntas.",
       },
       empty: "Nadie en esta lista con estos filtros.",
       emptyWonderkids: "Ninguna promesa con estos filtros.",
@@ -2448,7 +2448,7 @@ export const es: Strings = {
         `${candidates} jugadores juegan de ${position} · los ${shown} más parecidos`,
       how: {
         label: "¿Cómo se mide el parecido?",
-        note: "El ojeador compara los atributos en los que se apoyan los roles de la posición (los que más pesan cuentan triple) y un poco del resto. Lo que más cuenta es la forma: dónde es fuerte un jugador y dónde es débil. Su nivel cuenta menos, así que una versión más barata o más joven de un jugador puede parecérsele mucho. Solo se comparan jugadores competentes en la posición o mejores; los de tu club y los de otros mánagers humanos se dejan fuera.",
+        note: "El ojeador compara los atributos en los que se apoyan los roles de la posición, sobre todo los clave. Dónde es fuerte un jugador y dónde es débil cuenta más que su nivel, así que uno más barato o más joven puede parecerse mucho.",
       },
       empty: "Nadie parecido con estos ajustes.",
       columns: { similarity: "Parecido", value: "Valor" },
@@ -2549,7 +2549,7 @@ export const es: Strings = {
       lent: (count) => (count === 1 ? "1 cedido" : `${format(count)} cedidos`),
       how: {
         label: "¿Cómo se hace esta lista?",
-        note: "El juego marca a cada jugador que crea. La promoción de la cantera de un club son los jugadores que creó, que llegaron al club con 17 años o menos y no se formaron en ningún otro club: los que tiene ahora, incluidos los cedidos. Un jugador comprado a la cantera de otro club queda fuera, y también uno que el club ha dejado marchar. Un candidato juvenil que otro club dejó marchar y que empezó aquí entra en la promoción de su día. Los que llegaron un mismo día forman una promoción.",
+        note: "Jugadores creados por el juego que llegaron a este club con 17 años o menos y no se formaron en ningún otro, por el día en que llegaron. Se incluyen los cedidos; los vendidos o dejados marchar, no.",
       },
       unmarked:
         "El editor no sabe cómo marca esta versión del juego a los jugadores que crea: también aparecen los jóvenes del propio club que vienen de la base de datos del juego.",

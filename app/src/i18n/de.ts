@@ -2311,13 +2311,7 @@ export const de: Strings = {
     how: {
       label: "Wie entsteht diese Liste?",
       note: (rule, count) =>
-        "Der Scout betrachtet jeden Spieler, der diese Position spielen kann (dort mit 10 oder mehr bewertet), außer " +
-        "den Spielern Ihres eigenen Vereins und denen anderer menschlicher Trainer. Davon behält er die, die " +
-        `${rule}. Für die 400, die am besten passen, schätzt er ab, wie wahrscheinlich jeder zu Ihnen wechselt, und ` +
-        `empfiehlt dann die besten ${count} nach Eignung und Wahrscheinlichkeit zusammen. Empfohlene Reihenfolge: ` +
-        "70 % Eignung und 30 % Wahrscheinlichkeit, etwas weniger für Spieler über 30; Rotation gewichtet " +
-        "beides gleich, und Zukunft berücksichtigt auch das Potenzial. Klicken Sie auf einen Spaltentitel, um die " +
-        "Liste zu sortieren; # ist die eigene Reihenfolge des Scouts.",
+        `Spieler, die auf dieser Position mit 10 oder mehr bewertet sind (nicht aus Ihrem Verein oder von anderen menschlichen Trainern) und ${rule}. Die besten ${count} werden nach Eignung (70 %) und Wahrscheinlichkeit (30 %) gezeigt; Rotation gewichtet beides gleich, Zukunft berücksichtigt auch das Potenzial. Klicken Sie auf einen Spaltentitel, um zu sortieren.`,
     },
     purposeRules: {
       firstTeam: "besser auf die Position passen als Ihr bester Spieler dort",
@@ -2500,14 +2494,7 @@ export const de: Strings = {
         `${kind} · Spieler mit Fähigkeit ${lowest}–${highest}, rund um das Niveau Ihres Kaders · ${pool} betrachtet`,
       how: {
         label: "Wie entstehen diese Listen?",
-        note:
-          "Der Scout betrachtet die Spieler, deren derzeitige Fähigkeit nahe an der Ihrer besten Elf liegt (30 darunter " +
-          "bis 45 darüber), lässt die Spieler Ihres eigenen Vereins und anderer menschlicher Trainer weg und bewertet " +
-          "jeden auf seiner besten Position (oder der, die Sie wählen). Jede Liste behält, wen ihre Regel erfasst: " +
-          "einen Vertrag, der innerhalb von sechs Monaten endet oder fehlt, eine Ausstiegsklausel unter seinem Wert, " +
-          "Gründe für Unzufriedenheit, einen Verein mit negativem Kontostand, die Transfer- oder Leihliste seines " +
-          "Vereins. Wunderkinder sind 19 oder jünger, haben ein Potenzial von mindestens 140 und liegen über dem " +
-          "Niveau Ihres Kaders. Jede Liste ist wie die Empfehlungen geordnet: Eignung und Wahrscheinlichkeit zusammen.",
+        note: "Spieler nahe dem Niveau Ihrer besten Elf (30 darunter bis 45 darüber), nicht aus Ihrem Verein oder von anderen menschlichen Trainern, jeweils auf seiner besten Position oder der, die Sie wählen. Jede Liste ist nach Eignung und Wahrscheinlichkeit zusammen geordnet.",
       },
       empty: "Niemand auf dieser Liste mit diesen Filtern.",
       emptyWonderkids: "Keine Wunderkinder mit diesen Filtern.",
@@ -2536,12 +2523,7 @@ export const de: Strings = {
       summary: (candidates, shown, position) => `${candidates} Spieler spielen ${position} · die ${shown} ähnlichsten`,
       how: {
         label: "Wie wird die Ähnlichkeit gemessen?",
-        note:
-          "Der Scout vergleicht die Attribute, auf die sich die Rollen der Position stützen (die wichtigsten zählen " +
-          "dreifach), und ein wenig vom Rest. Am meisten zählt die Form: wo ein Spieler stark und wo er schwach ist. " +
-          "Sein Niveau zählt weniger, daher kann auch eine günstigere oder jüngere Version eines Spielers ihm sehr " +
-          "ähnlich sein. Verglichen werden nur Spieler, die auf der Position mindestens kompetent sind; die Spieler " +
-          "Ihres eigenen Vereins und anderer menschlicher Trainer bleiben außen vor.",
+        note: "Der Scout vergleicht die Attribute, auf die sich die Rollen der Position stützen, die wichtigsten am stärksten. Wo ein Spieler stark und wo er schwach ist, zählt mehr als sein Niveau, daher kann auch ein günstigerer oder jüngerer Spieler sehr ähnlich sein.",
       },
       empty: "Niemand Ähnliches mit diesen Einstellungen.",
       columns: { similarity: "Ähnlich", value: "Wert" },
@@ -2643,7 +2625,7 @@ export const de: Strings = {
       lent: (count) => (count === 1 ? "1 verliehen" : `${format(count)} verliehen`),
       how: {
         label: "Wie entsteht diese Liste?",
-        note: "Das Spiel markiert jeden Spieler, den es erzeugt. Zur Jugendaufnahme eines Vereins zählen die Spieler, die es erzeugt hat, die mit 17 oder jünger zum Verein kamen und bei keinem anderen Verein ausgebildet wurden: die, die er jetzt hat, verliehene eingeschlossen. Ein Spieler, der aus der Jugendaufnahme eines anderen Vereins gekauft wurde, fehlt, ebenso einer, den der Verein abgegeben hat. Ein Nachwuchsspieler, den ein anderer Verein abgegeben hat und der hier angefangen hat, gehört zur Jugendaufnahme seines Tages. Wer an einem Tag eingetreten ist, bildet eine Jugendaufnahme.",
+        note: "Vom Spiel erzeugte Spieler, die mit 17 oder jünger zu diesem Verein kamen und bei keinem anderen Verein ausgebildet wurden, nach dem Tag ihres Eintritts. Verliehene stehen in der Liste, verkaufte oder abgegebene nicht.",
       },
       unmarked:
         "Der Editor weiß nicht, wie diese Version des Spiels die von ihm erzeugten Spieler markiert: Die jungen Spieler des Vereins aus der Datenbank des Spiels werden deshalb ebenfalls aufgelistet.",

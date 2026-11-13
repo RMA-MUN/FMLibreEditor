@@ -5287,10 +5287,11 @@ button.danger:hover:not(:disabled) {
 }
 
 /* Its note is longer than the question it hangs under: it hangs under the toolbar from its right edge, so that it
-   stays in the column however far a long summary (in Turkish, say) pushes the question. */
+   stays in the column however far a long summary (in Turkish, say) pushes the question. On a row as wide as the window,
+   where that is far from the (i), the note moves across to begin at it (see InfoTip). */
 .scout-how .info-tip-note {
   left: auto;
-  width: min(460px, 100%);
+  width: min(380px, 100%);
 }
 
 .scout-reset-order {
