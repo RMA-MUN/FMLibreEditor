@@ -88,7 +88,8 @@ const recordNoun = (entity: string | undefined) =>
 
 /** The reasons the Rust side gives for a field that cannot be changed some way. */
 const UNSUPPORTED: Partial<Record<string, string>> = {
-  "a date can only be set": "日付は直接指定することしかできません",
+  "a date can only be set or moved by years": "日付は直接指定するか、年数を加算することしかできません",
+  "only a date can be moved by years": "年数を加算できるのは日付だけです",
   "it is changed one person at a time": "1人ずつしか変更できません",
   "the new value is not one of the game's own records of that kind": "新しい値が、ゲーム内にあるその種類の記録ではありません",
   "the in-game date is not known": "ゲーム内の日付がわかりません",
@@ -678,6 +679,10 @@ export const ja: Strings = {
     signed: "契約日",
     expires: "満了日",
     joined: "加入日",
+    extendContract: (years: number) => `${years}年延長`,
+    extendingContract: "延長中…",
+    extendContractTitle: (years: number, until: string) =>
+      `契約を${years}年延長し、${until}までにします。変更履歴から元に戻せます`,
     squadStatus: "チーム内の立場",
     squadStatusName: (status: number) => SQUAD_STATUSES[status] ?? `立場 ${status}`,
     contractType: "契約の種類",
@@ -1433,17 +1438,23 @@ export const ja: Strings = {
     row: (position: number) => `変更 ${position}`,
     field: "項目",
     operation: "操作",
-    operations: { set: "指定値にする", add: "加算", scale: "%に倍率変更" },
-    values: { set: "値", add: "量", scale: "パーセント" },
+    operations: { set: "指定値にする", add: "加算", scale: "%に倍率変更", addYears: "年数を加算" },
+    values: { set: "値", add: "量", scale: "パーセント", addYears: "年数" },
     addTitle: "表示されている各値に加算します。負の数なら減算します",
     addPointsTitle: "各値にパーセントポイントを加算します（70%に10を足すと80%）。負の数なら減算します",
     rangeHint: (min: number, max: number) => `${format(min)}–${format(max)}`,
     amountHint: (max: number) => `±${format(max)}`,
     ofCurrent: "%（現在値に対して）",
     percentTitle: "現在値に対するパーセント：100でそのまま、110で1割増し、50で半分",
+    addYearsTitle:
+      "各日付に加算する年数です。月日はそのままで、負の数なら過去に戻します。" +
+      "うるう年でない年の2月29日は2月28日になります",
+    years: "年",
     invalidAdd: (min: number, max: number) => `${format(min)}〜${format(max)}の整数を入力してください`,
     invalidPercent: (min: number, max: number) => `${min}〜${max}の整数のパーセントを入力してください`,
-    dateSetOnly: "日付は指定値にすることしかできません",
+    invalidYears: (min: number, max: number) => `${format(min)}〜${format(max)}の整数の年数を入力してください`,
+    dateSetOnly: "日付は指定値にするか、年数を加算することしかできません",
+    yearsDateOnly: "年数を加算できるのは日付だけです",
     addField: "項目を追加",
     addFieldFull: (max: number) => `1回の一括編集で変更できる項目は${max}個までです`,
     remove: "この項目を削除",

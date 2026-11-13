@@ -609,6 +609,12 @@ export const en = {
     signed: "Signed",
     expires: "Expires",
     joined: "Joined",
+    /** Under a contract's dates: the button that makes it run `years` longer, while it does, and its hover text. */
+    extendContract: (years: number) => `Extend by ${years} years`,
+    extendingContract: "Extending…",
+    /** `until` is the day the contract would end then. */
+    extendContractTitle: (years: number, until: string) =>
+      `Make the contract run ${years} years longer, to ${until}; Changes can undo it`,
     squadStatus: "Squad status",
     squadStatusName: (status: number) => SQUAD_STATUSES[status] ?? `Status ${status}`,
     contractType: "Contract type",
@@ -1587,9 +1593,15 @@ export const en = {
     row: (position: number) => `Change ${position}`,
     field: "Field",
     operation: "Operation",
-    operations: { set: "Set to", add: "Add", scale: "Scale to %" } satisfies Record<MassOperationKind["op"], string>,
+    operations: { set: "Set to", add: "Add", scale: "Scale to %", addYears: "Add years" } satisfies Record<
+      MassOperationKind["op"],
+      string
+    >,
     /** The name of the value input, by operation. */
-    values: { set: "Value", add: "Amount", scale: "Percent" } satisfies Record<MassOperationKind["op"], string>,
+    values: { set: "Value", add: "Amount", scale: "Percent", addYears: "Years" } satisfies Record<
+      MassOperationKind["op"],
+      string
+    >,
     /** Hover text of the amount of an Add. */
     addTitle: "Added to every value as shown; a negative number takes away",
     /** The same for a percentage: the amount is in percentage points, not a percent of the value (that is Scale). */
@@ -1601,11 +1613,18 @@ export const en = {
     /** After the input of a Scale: the number is a percent of the value the game has now. */
     ofCurrent: "% of current",
     percentTitle: "A percent of the current value: 100 keeps it, 110 raises it by a tenth, 50 halves it",
+    /** Hover text of the years of an Add years, and the word after its input. */
+    addYearsTitle:
+      "Years added to every date, which keeps its day and month; a negative number moves it back. " +
+      "29 February becomes 28 February in a year without one",
+    years: "years",
     /** Hover text of an amount that cannot be applied; `min` and `max` are what it takes. */
     invalidAdd: (min: number, max: number) => `Enter a whole number from ${format(min)} to ${format(max)}`,
     invalidPercent: (min: number, max: number) => `Enter a whole percent from ${min} to ${max}`,
-    /** A date cannot be added to or scaled. */
-    dateSetOnly: "A date can only be set",
+    invalidYears: (min: number, max: number) => `Enter a whole number of years from ${format(min)} to ${format(max)}`,
+    /** A date cannot be added to or scaled, only set or moved by years; and nothing else is moved by years. */
+    dateSetOnly: "A date can only be set or moved by years",
+    yearsDateOnly: "Only a date can be moved by years",
     addField: "Add a field",
     /** Hover text of Add a field when the rows are full; `max` is how many fields one mass edit changes. */
     addFieldFull: (max: number) => `A mass edit changes up to ${max} fields`,

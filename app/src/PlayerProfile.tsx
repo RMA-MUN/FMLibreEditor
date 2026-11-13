@@ -266,7 +266,7 @@ function ContractGroup({ details, contract }: { details: PlayerDetails; contract
             </Fact>
           </dl>
         </div>
-        <ContractDates contract={contract} />
+        <ContractDates entity="player" uid={uid} contract={contract} />
       </div>
       {details.loan && <LoanFacts uid={uid} name={details.name} loan={details.loan} contract={contract} />}
       <ClauseList
