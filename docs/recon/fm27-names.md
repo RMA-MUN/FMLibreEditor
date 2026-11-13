@@ -110,7 +110,38 @@ to a slot it then hands out for another name.
 When a list by id has no room left, the editor refuses a new name of that kind (`names.noRoom`): the game gives the list
 more room when it makes names itself (a youth intake, new staff), and the save loaded again has 32 more.
 
+## On the Mac
+
+The Mac build keeps its names as the Windows one does, and its layout places the tables with the same `[names]`. Read
+on Steam build 26577676 (arm64), in an Arsenal save of July 2027:
+
+- A player points at his first, last and common names from `+0x298`, `+0x2A0` and `+0x2A8`, and at his full name from
+  `+0x288`; a member of staff from `+0x118`, `+0x120`, `+0x128` and `+0x108`.
+- The game plugin keeps the pointers to the lists by id at `game_plugin+0x576EE18`, `+0x576EE20` and `+0x576EE28`,
+  0x38, 0x30 and 0x28 bytes before the players' list at `+0x576EE50`. The lists held 321,844 first, 645,330 last and
+  96,560 common names, each with room for 32 more, and every entry sat at the place its id says. Bukayo Saka's first
+  and last names have the ids they have on Game Pass, 158,996 and 249,165.
+- The entries take 24 bytes, laid out as above, in slots of the pool at `game_plugin+0x574BF18`: 107 chunks of 10,000
+  slots, 6,246 free.
+
+`fmlibre-probe rename` renamed Pedri and put him back (`--restore`), and did the same with Mikel Arteta's common and
+full names (`--staff --restore`). The new entries took the next ids (321,844, 645,330 and 96,560) at the ends of the
+lists, with weight 0 and the nation of the entries they replaced, and the probe's twelve health checks passed after.
+The app's smoke test of names passed too (25 checks on Kylian Mbappé, every change undone), and the Rename dialog fits
+in English, Turkish, German and Russian.
+
+In the game, Erling Haaland was given "Erlingo Testland" with the full name "Erlingo Test Testland", and Bukayo Saka
+the common name "Saka Mac": with the app's Rename dialog, and again with `fmlibre-probe rename` after the game was
+restarted. The game then played a day and was saved under a new name, and the copy was loaded. The tables were built
+again from the save, in other slots of the pool and with strings of the game's own, and held the new entries at their
+ids (321,844, 645,330 and 96,560) with their nations, weight 0 and bytes, Haaland and Saka pointing at them. Every
+entry sat at the place its id says, and the twelve health checks passed.
+
+The Intel half was not run. In the file, its code loads the statics 0x38, 0x30 and 0x28 bytes before its players' list
+about as often as the arm64 half's code loads its own (6, 8 and 4 times, against 5, 6 and 5), and the lists around them
+sit alike in both halves (the staff's 0x48 and the clubs' 0x1B8 after the players'). Were the pointers elsewhere, the
+lists would not check out, and the editor would refuse new first, last and common names there.
+
 ## Not known yet
 
 - What `+0x10` and the flags at `+0x12` mean.
-- The Mac build: its layout places no tables of names yet, so the app shows names there without changing them.

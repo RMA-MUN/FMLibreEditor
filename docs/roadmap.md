@@ -333,9 +333,9 @@ changes many at once, and undo.
     points at entries of the game's tables of first, last and common names, which a save keeps by their ids; the full
     name is a string of his own. A new name is made as the game makes one for a new person: a slot of its pool of
     entries, the next id at the end of the table's list by id, and weight 0, so that the game never gives it to anyone
-    else. Each list takes 32 new names after a load; the game makes more room as it names people. Checked on Game Pass
-    through a save and a load. See the [notes on names](recon/fm27-names.md), `names.rs`, and the probe's `names` and
-    `rename`.
+    else. Each list takes 32 new names after a load; the game makes more room as it names people. Checked through a
+    save and a load on Game Pass and on the Mac (Steam, Apple silicon; the Intel half in the file only). See the
+    [notes on names](recon/fm27-names.md), `names.rs`, and the probe's `names` and `rename`.
   - [ ] Place of birth: a pointer to a city record (`+0x2C8` on macOS), whose nation the game shows.
   - [ ] Appearance. FM27 keeps a person's looks as dozens of 3D face values for the match engine
     (`MATCH_PERSON_APPEARANCE_INPUT`: skin tone, hair and eye colours, face shape); set aside.
