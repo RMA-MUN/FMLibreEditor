@@ -106,8 +106,10 @@ export function reasonKey(concern: Pick<Concern, "motive" | "kind" | "wording" |
     return KEYS[motive];
   }
   // The sentences say he wants to leave for 3, more playing time for 1 and a loan for the other values; for some
-  // motives only while the kind is under 5, as the game's code has it.
-  const other = wording !== 3 && kind < 5;
+  // motives only while the kind is under 5, as the game's code has it. The game compares the kind as a signed byte
+  // (`cmp r8b, 5; setl` on Windows Steam 26577676), so 255, which many of these entries hold, is -1: under 5.
+  const signedKind = kind >= 0x80 ? kind - 0x100 : kind;
+  const other = wording !== 3 && signedKind < 5;
   switch (motive) {
     case 648:
       return other ? 629791 : 629790;
