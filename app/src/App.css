@@ -5034,10 +5034,12 @@ button.danger:hover:not(:disabled) {
   font-size: 13px;
 }
 
+/* One height for every field, so that the names above them line up in a row: macOS's web view draws a select only as
+   tall as its text (19 px) and a date taller (33 px) unless the height is set. */
 .scout-field :is(select, input) {
   width: 100%;
   min-width: 0;
-  min-height: 30px;
+  height: 30px;
   padding: 4px 8px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
@@ -5557,6 +5559,11 @@ button.danger:hover:not(:disabled) {
   table-layout: fixed;
 }
 
+/* The columns keep the widths set here: a column's name too long for it (Indonesian, Russian) takes a second line. */
+.scout-depth-table th {
+  white-space: normal;
+}
+
 /* The players take what the other columns leave, and wrap. */
 .scout-depth-col-line {
   width: 170px;
@@ -5578,8 +5585,9 @@ button.danger:hover:not(:disabled) {
   width: 80px;
 }
 
+/* As wide as the longest "Get advice" (German and French). */
 .scout-depth-col-action {
-  width: 110px;
+  width: 156px;
 }
 
 .scout-depth-table td {
@@ -5959,8 +5967,11 @@ button.danger:hover:not(:disabled) {
   gap: 10px 14px;
 }
 
+/* The editor sits in a cell of the table, which keeps its text on one line: a name longer than its field (German,
+   Turkish, Spanish) takes a second line instead of running into the next. */
 .scout-youth-fields .scout-field {
   margin-bottom: 0;
+  white-space: normal;
 }
 
 .scout-youth-date {
@@ -5991,13 +6002,39 @@ button.danger:hover:not(:disabled) {
   font-size: 13px;
 }
 
-/* The actions at the end of a row of found players: quiet until the row is pointed at or one has focus. */
+/* The actions at the end of a row of found players: quiet until the row is pointed at or one has focus. Where the
+   table is wider than its room (longer words in some languages, a narrow window), they stay at its right edge while
+   the rest scrolls under them; the zebra, hover and selected rows still paint the cell. */
 .scout-grid th.scout-col-actions,
 .scout-grid td.scout-col-actions {
+  position: sticky;
+  right: 0;
   width: 1%;
   padding-right: 4px;
   padding-left: 4px;
   white-space: nowrap;
+}
+
+.scout-grid th.scout-col-actions {
+  z-index: 2;
+}
+
+/* Opaque, so that nothing shows through from under it: a zebra row's colour may be see-through. */
+.scout-grid td.scout-col-actions {
+  z-index: 1;
+  background: var(--bg);
+}
+
+.scout-grid tbody tr:nth-child(even) td.scout-col-actions {
+  background: linear-gradient(var(--zebra), var(--zebra)), var(--bg);
+}
+
+.scout-grid tbody tr:hover td.scout-col-actions {
+  background: var(--hover);
+}
+
+.scout-grid tbody tr.selected td.scout-col-actions {
+  background: var(--accent);
 }
 
 .scout-row-actions {

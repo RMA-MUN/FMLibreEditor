@@ -19,8 +19,8 @@ for sure; the flag does.
 clubs' players added to the database late, such as Sota Nakamura of Sanfrecce Hiroshima). Other players hold a
 number of their own there (Toni Micevski 1,947). It is not used.
 
-On the Mac the identity block is laid out alike (`gender = 0x3A1` there), so the flag is placed at `0x3A0`; not yet
-read on a Mac save.
+On the Mac the identity block is laid out alike (`gender = 0x3A1` there), so the flag is at `0x3A0` (see "On the
+Mac" below).
 
 ## A club's youth intake
 
@@ -69,3 +69,16 @@ cities, which the editor offers when a city of birth is changed (by the nation t
 
 The editor writes the city of birth as a pointer field (`city_of_birth`): only a city takes the place of a city (the
 class of the old and the new object must match, so a nation is refused), and a player without a city keeps none.
+
+## On the Mac
+
+Read on the Steam build 26577676 (Apple silicon), on the Arsenal save of 13 July 2027 (40,379 players, 2,913 of them
+with the player-coach's shift):
+
+- The flag at `player +0x3A0` is set for 7,204 players, exactly those with a UID from 2,002,069,481 up (the highest
+  UID without it is 2,001,040,995); 6,211 of them were born in 2011.
+- `player +0x2C8` points at a city for every player but two: 8,007 cities, named as on Windows.
+- The intakes read as on Windows: Tottenham's seven of 17 March 2027 (born in Huddersfield, Enfield, Croydon and
+  more), Chelsea's eight of 15 March, Sevilla's 13 of 2 April. Arsenal, the save's human club, has none left.
+- A city of birth set in the youth section (Sergio Marqués, Sanlúcar de Barrameda to Sevilla) was named so in the
+  Changes view and undone from there.

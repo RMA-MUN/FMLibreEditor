@@ -273,8 +273,9 @@ async function youthIntakes(app, report) {
   const result = `[...document.querySelectorAll(".scout-youth-search li")].find((li) => li.textContent.includes(${JSON.stringify(other.club)}))`;
   await app.waitFor(result, "the club in the search");
   await app.click(result, other.club);
+  // The name alone: without a graphics pack the club's logo is a badge with its initials.
   await app.waitFor(
-    `document.querySelector(".scout-youth-club")?.textContent === ${JSON.stringify(other.club)} && ${rows}.length > 0`,
+    `document.querySelector(".scout-youth-club .name-text")?.textContent === ${JSON.stringify(other.club)} && ${rows}.length > 0`,
     "the other club's intake",
     30000,
   );
