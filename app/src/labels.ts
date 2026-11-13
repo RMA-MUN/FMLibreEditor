@@ -5,7 +5,7 @@
 // player, staff and club lists in `playerListText`, `staffListText` and `clubListText`. Editing has `editText` (and
 // `fieldLabel` for the names of the fields), the Changes view `changesText`, mass editing `massEditText`, comparing
 // players `comparisonText`, moving a player to another club (or swapping him with one) `moveText`, releasing him
-// `releaseText`, his nationalities and homegrown status `tieText`, a club's squad `squadText`, the sidebar and the connect panel `appText`, the status of the
+// `releaseText`, changing his names `renameText`, his nationalities and homegrown status `tieText`, a club's squad `squadText`, the sidebar and the connect panel `appText`, the status of the
 // graphics packs `graphicsText`, and new versions of the app `updateText`.
 // A new language only has to provide a dictionary of the same shape (and be added to i18n/index.ts, with a flag in
 // SettingsMenu.tsx).
@@ -169,6 +169,9 @@ export const moveText = strings.move;
 
 /** Releasing a player from his club: the button beside Transfer in his profile and the dialog it opens. */
 export const releaseText = strings.release;
+
+/** Changing a player's names: the button beside Release in his profile and the dialog it opens. */
+export const renameText = strings.rename;
 
 /** Recalling a player from his loan: the dialog the Recall button in his profile opens. */
 export const recallText = strings.recall;

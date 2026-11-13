@@ -257,6 +257,28 @@ export interface StadiumName {
   maxBytes: number;
 }
 
+/**
+ * Which of a person's names (`NameKind` in `names.rs`): his first, last or common name, each an entry of one of the
+ * game's tables of names, or his full name, a text of his own.
+ */
+export type NameKind = "first" | "last" | "common" | "full";
+
+/**
+ * A player's names as `player_names` reads them. A common or full name is null when he has none; first and last names
+ * are always there. `room` is how many more new first, last and common names the game's tables take before the game
+ * makes room itself (it does when it names new players and staff, and a save loaded again has some): a new name of a
+ * kind with no room is refused (`names.noRoom`). It is null where the editor cannot change names in this game. A
+ * name takes at most `longest` bytes of UTF-8.
+ */
+export interface PersonNames {
+  first: string | null;
+  last: string | null;
+  common: string | null;
+  full: string | null;
+  room: [number, number, number] | null;
+  longest: number;
+}
+
 /** A manager, coach, scout, director or other non-playing person. */
 export interface StaffSummary {
   uid: number;
@@ -751,6 +773,15 @@ export interface LoggedChange {
   stadium?: {
     from: string;
     to: string;
+  };
+  /**
+   * Set for a player given another name (`rename_player`), logged as a change of his field `name.first`, `name.last`,
+   * `name.common` or `name.full` from one length in bytes to the other (0 for none): the names, null for a common or
+   * full name he did not have, or no longer has.
+   */
+  personName?: {
+    from: string | null;
+    to: string | null;
   };
   /**
    * Set for a recall from loan (`recall_loan`, logged as a change of `loan.expires`) that took the loan's option to buy

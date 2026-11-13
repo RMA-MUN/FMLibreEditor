@@ -43,6 +43,8 @@ import type {
   PlayerOrder,
   PlayerPage,
   PlayerSummary,
+  NameKind,
+  PersonNames,
   Refrozen,
   ReloadInfo,
   StaffDetails,
@@ -799,6 +801,101 @@ function renameStadium(uid: number, name: string): LoggedChange {
   };
   changes.push(logged);
   return { ...logged };
+}
+
+// Players' names --------------------------------------------------------------------------------------------------
+
+/** The names of the fixture players the editor renamed, by UID; the others' are read from their rows. */
+const playerNameSets = new Map<number, Omit<PersonNames, "room" | "longest">>();
+
+/**
+ * How many more new first, last and common names the fixture's tables take: 32 of each after a load in the game, but
+ * only two common names here, so that the dialog's "no room" state can be seen.
+ */
+const nameRoom: [number, number, number] = [32, 32, 2];
+
+const NAME_KINDS: NameKind[] = ["first", "last", "common", "full"];
+
+/** The names of a fixture player: as renamed, or the first word of his row's name, the rest, and his full name. */
+function namesOf(player: PlayerSummary): PersonNames {
+  const [first, ...rest] = player.name.split(" ");
+  const names = playerNameSets.get(player.uid) ?? { first, last: rest.join(" ") || first, common: null, full: player.fullName };
+  return { ...names, room: [...nameRoom], longest: 80 };
+}
+
+/** Gives the fixture player `names`, and his row the name the game shows: the common name, or first and last. */
+function setNames(player: PlayerSummary, names: PersonNames) {
+  playerNameSets.set(player.uid, { first: names.first, last: names.last, common: names.common, full: names.full });
+  player.name = names.common ?? `${names.first} ${names.last}`;
+  player.fullName = names.full;
+}
+
+/** `player_names`: the names of a fixture player, and the room the tables have. */
+function playerNamesOf(uid: number): PersonNames {
+  const player = players.find((p) => p.uid === uid);
+  if (!player) {
+    throw notFound("player", uid);
+  }
+  return namesOf(player);
+}
+
+/** `rename_player`: checked as the real command; a new first, last or common name takes room in its table. */
+function renamePlayer(uid: number, kind: NameKind, name: string | null): LoggedChange {
+  const names = playerNamesOf(uid);
+  const player = players.find((p) => p.uid === uid)!;
+  const optional = kind === "common" || kind === "full";
+  const bad =
+    name === null
+      ? !optional
+      : // eslint-disable-next-line no-control-regex
+        name === "" || name.trim() !== name || /[\u0000-\u001f\u007f]/.test(name) || utf8Bytes(name) > names.longest;
+  if (bad) {
+    throw failure(
+      "names.bad",
+      "a first or last name cannot be empty, and no name can start or end with a space, hold control characters or take more than 80 bytes",
+      { max: names.longest },
+    );
+  }
+  const from = names[kind];
+  if (from === name) {
+    throw failure("names.same", "that is the name already");
+  }
+  const table = NAME_KINDS.indexOf(kind);
+  if (name !== null && table < 3) {
+    if (nameRoom[table] === 0) {
+      throw failure(
+        "names.noRoom",
+        `the game has no room for another new ${kind} name until it makes room itself, as it does when new players and staff come in: save the game, load the save again, and try again`,
+        { table: kind },
+      );
+    }
+    nameRoom[table] -= 1;
+  }
+  setNames(player, { ...names, [kind]: name });
+  const logged: LoggedChange = {
+    id: changes.length + 1,
+    at: Date.now(),
+    name: player.name,
+    entity: "player",
+    uid,
+    field: `name.${kind}`,
+    old: from === null ? 0 : utf8Bytes(from),
+    new: name === null ? 0 : utf8Bytes(name),
+    undoneAt: null,
+    batch: null,
+    personName: { from, to: name },
+  };
+  changes.push(logged);
+  return { ...logged };
+}
+
+/** Undoes a change of a fixture player's name: he has the old one again (the new entry keeps its room, as in the game). */
+function undoPlayerName(entry: LoggedChange) {
+  const player = players.find((p) => p.uid === entry.uid);
+  if (player && entry.personName) {
+    const kind = entry.field.slice("name.".length) as NameKind;
+    setNames(player, { ...namesOf(player), [kind]: entry.personName.from });
+  }
 }
 
 /** `change_clause`: a new amount or condition for one of a fixture contract's clauses. */
@@ -1624,6 +1721,11 @@ function undoChange(id: number): LoggedChange {
   }
   if (entry.stadium) {
     stadiumNames.set(entry.uid, entry.stadium.from);
+    entry.undoneAt = Date.now();
+    return { ...entry };
+  }
+  if (entry.personName) {
+    undoPlayerName(entry);
     entry.undoneAt = Date.now();
     return { ...entry };
   }
@@ -3222,6 +3324,14 @@ export async function mockInvoke<T>(command: string, args?: Record<string, unkno
       return stadiumNameRoom(Number(args?.club)) as T;
     case "rename_stadium":
       return renameStadium(Number(args?.club), String(args?.name ?? "")) as T;
+    case "player_names":
+      return playerNamesOf(Number(args?.uid)) as T;
+    case "rename_player":
+      return renamePlayer(
+        Number(args?.uid),
+        args?.kind as NameKind,
+        args?.name === null || args?.name === undefined ? null : String(args.name),
+      ) as T;
     case "change_clause":
       return changeClause(
         Number(args?.uid),

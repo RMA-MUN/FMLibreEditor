@@ -179,6 +179,14 @@ const errors: ErrorTexts = {
   "staff.notListed": () => "Kulübün personel listeleri onu olması gereken yerde tutmuyor.",
   "staff.noRoom": (p) =>
     `Kulübün ${STAFF_DEPARTMENTS[p.department] ?? p.department} listesinde bir kişiye daha yer yok (şu an ${p.staff}) ve düzenleyici bu sistemde listeyi büyütemez.`,
+  "names.unknown": () =>
+    "Editör, oyunun bu sürümünde kişilerin adlarını nerede tuttuğunu bulamıyor; bu yüzden onları değiştiremiyor.",
+  "names.noRoom": (p) =>
+    `Oyunda şu an yeni bir ${({ first: "ad", last: "soyad", common: "bilinen ad" } as Record<string, string>)[p.table] ?? "ad"} için yer yok. ` +
+    "Yeni oyuncular ve personel geldikçe oyun kendisi yer açar; ya da oyunu kaydedin, kaydı yeniden yükleyin ve tekrar deneyin.",
+  "names.same": () => "Ad zaten bu.",
+  "names.bad": (p) =>
+    `Ad ya da soyad boş olamaz; hiçbir ad boşlukla başlayıp bitemez, denetim karakteri içeremez ve ${p.max} bayttan uzun olamaz.`,
   "stadium.none": () => "Kulübün A takımının oynadığı stadyum okunamıyor.",
   "stadium.shared": (p) => `Bu adı oyunda ${p.holders} şey paylaşıyor; yalnızca bu stadyum için değiştirilemez.`,
   "stadium.nameLength": (p) =>
@@ -606,6 +614,10 @@ export const tr: Strings = {
     "finance.total_wage_budget": "Toplam maaş bütçesi",
     "stadium.capacity": "Stadyum kapasitesi",
     "stadium.name": "Stadyum adı",
+    "name.first": "Ad",
+    "name.last": "Soyad",
+    "name.common": "Bilinen ad",
+    "name.full": "Tam isim",
     "stadium.seating": "Oturma kapasitesi",
     "stadium.used": "Kullanılan kapasite",
     "stadium.expansion": "Genişleme kapasitesi",
@@ -1795,6 +1807,41 @@ export const tr: Strings = {
     hint: "Siz serbest bırakmadan oyunda hiçbir şey değişmez.",
     release: "Serbest bırak",
     releasing: "Serbest bırakılıyor…",
+    cancel: "İptal",
+  },
+
+  rename: {
+    button: "Yeniden adlandır",
+    buttonTitle: "Bu oyuncunun adlarını oyunda değiştir",
+
+    // The dialog
+    title: "Yeniden adlandır",
+    loading: "Adlar okunuyor…",
+    first: "Ad",
+    last: "Soyad",
+    common: "Bilinen ad",
+    commonHint:
+      "Oyunun ad ve soyad yerine gösterdiği isim (Pedri ya da Vinícius Júnior gibi). Yoksa boş bırakın",
+    full: "Tam isim",
+    fullHint: "Profilde yazan tam isim. Yoksa boş bırakın",
+    none: "Yok",
+    required: "Boş bırakılamaz",
+    tooLong: (max: number) => `Çok uzun: en fazla ${max} bayt`,
+    noRoom:
+      "Oyunda şu an bu türden yeni bir ad için yer yok: oyunu kaydedin, kaydı yeniden yükleyin ve tekrar deneyin",
+    unavailable: "Editör oyunun bu sürümünde adları değiştiremiyor",
+    doesHeading: "Yeniden adlandırma ne yapar",
+    does: [
+      "Oyun yeni adı, oyunda Devam'a bastığınızda gösterir",
+      "Oyunu kaydettiğinizde yeni ad kayıtta kalır",
+      "Yeni bir ad, soyad ya da bilinen ad oyunun ad tablolarına girer; oyun onu yalnızca bu oyuncu için kullanır",
+      "Değişiklikler bölümünde her ad ayrı bir satırda listelenir; Geri al eski adı geri getirir",
+    ],
+
+    // The foot
+    hint: "Siz Yeniden adlandır'a basmadan oyunda hiçbir şey değişmez.",
+    rename: "Yeniden adlandır",
+    renaming: "Yeniden adlandırılıyor…",
     cancel: "İptal",
   },
 

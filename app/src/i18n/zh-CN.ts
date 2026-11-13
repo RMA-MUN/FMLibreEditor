@@ -241,6 +241,13 @@ const errors: ErrorTexts = {
 
   // Clubs, squads and staff
   "squad.noTeam": () => `该俱乐部没有这支球队，或其未通过检查；${reload}。`,
+  "names.unknown": () => "编辑器无法在此版本的游戏中找到人名的存放位置，因此无法修改。",
+  "names.noRoom": (p) =>
+    `游戏目前没有空位再容纳新的${({ first: "名", last: "姓", common: "常用名" } as Record<string, string>)[p.table] ?? "名字"}。` +
+    "随着新球员和员工加入，游戏会自行腾出空位；也可以保存游戏，重新载入存档后再试。",
+  "names.same": () => "这已经是当前的名字。",
+  "names.bad": (p) =>
+    `名和姓不能为空，任何名字都不能以空格开头或结尾、不能包含控制字符，也不能超过 ${p.max} 字节。`,
   "stadium.none": () => "无法读取该俱乐部一线队的主场。",
   "stadium.badName": () => "球场名称不能为空，不能以空格开头或结尾，也不能包含控制字符。",
   "stadium.nameLength": (p) =>
@@ -637,6 +644,10 @@ export const zhCN: Strings = {
     "finance.total_wage_budget": "总工资预算",
     "stadium.capacity": "球场容量",
     "stadium.name": "球场名称",
+    "name.first": "名",
+    "name.last": "姓",
+    "name.common": "常用名",
+    "name.full": "全名",
     "stadium.seating": "座位容量",
     "stadium.used": "已使用容量",
     "stadium.expansion": "扩建容量",
@@ -2086,6 +2097,40 @@ export const zhCN: Strings = {
     hint: "点击“解约”后才会修改游戏。",
     release: "解约",
     releasing: "正在解约…",
+    cancel: "取消",
+  },
+
+  /** Changing a player's names: the button beside Release and its dialog. */
+  rename: {
+    button: "重命名",
+    buttonTitle: "修改这名球员在游戏中的姓名",
+
+    // The dialog
+    title: "重命名",
+    loading: "正在读取姓名…",
+    first: "名",
+    last: "姓",
+    common: "常用名",
+    commonHint: "游戏用来代替名和姓显示的名字，例如 Pedri 或 Vinícius Júnior。留空表示没有",
+    full: "全名",
+    fullHint: "完整的姓名，与资料页所示一致。留空表示没有",
+    none: "无",
+    required: "不能为空",
+    tooLong: (max: number) => `太长：最多 ${max} 字节`,
+    noRoom: "游戏目前没有空位再容纳这类新名字：请保存游戏，重新载入存档后再试",
+    unavailable: "此版本的游戏中，编辑器无法修改姓名",
+    doesHeading: "修改内容",
+    does: [
+      "在游戏中点击“继续”后，游戏会显示新名字",
+      "保存游戏后名字依然保留",
+      "新的名、姓或常用名会进入游戏的名字表，游戏只为这名球员使用它",
+      "会列在“改动记录”中，每个名字一行，撤销后恢复旧名字",
+    ],
+
+    // The foot
+    hint: "点击“重命名”后才会修改游戏。",
+    rename: "重命名",
+    renaming: "正在重命名…",
     cancel: "取消",
   },
 

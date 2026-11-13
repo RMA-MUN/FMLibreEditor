@@ -173,6 +173,14 @@ const errors: ErrorTexts = {
   "staff.noRoom": (p) =>
     `クラブの${STAFF_DEPARTMENTS[p.department] ?? p.department}のリストに空きがなく（現在 ${p.staff}人）、ここでは` +
     "エディターがリストを広げられません。",
+  "names.unknown": () =>
+    "エディターはこのバージョンのゲームで人物の名前が保存されている場所を見つけられないため、変更できません。",
+  "names.noRoom": (p) =>
+    `現在ゲームには新しい${({ first: "名", last: "姓", common: "通称" } as Record<string, string>)[p.table] ?? "名前"}を追加する空きがありません。` +
+    "新しい選手やスタッフが加わると、ゲームが自動で空きを作ります。または、ゲームをセーブし、セーブデータを読み込み直してから、もう一度お試しください。",
+  "names.same": () => "すでにその名前です。",
+  "names.bad": (p) =>
+    `名と姓は空にできず、名前は空白で始めたり終えたりできず、制御文字も使えず、${p.max}バイトを超えることもできません。`,
   "stadium.none": () => "クラブのトップチームが使うスタジアムを読み取れません。",
   "stadium.shared": (p) =>
     `ゲーム内の ${p.holders} 件がこの名前を共有しているため、スタジアムの名前だけを変えることはできません。`,
@@ -612,6 +620,10 @@ export const ja: Strings = {
     "finance.total_wage_budget": "給与予算の総額",
     "stadium.capacity": "スタジアム収容人数",
     "stadium.name": "スタジアム名",
+    "name.first": "名",
+    "name.last": "姓",
+    "name.common": "通称",
+    "name.full": "フルネーム",
     "stadium.seating": "座席数",
     "stadium.used": "使用中の収容人数",
     "stadium.expansion": "拡張後の収容人数",
@@ -1765,6 +1777,41 @@ export const ja: Strings = {
     hint: "「契約解除」を押すまで、ゲーム内では何も変わりません。",
     release: "契約解除",
     releasing: "契約解除中…",
+    cancel: "キャンセル",
+  },
+
+  rename: {
+    button: "名前を変更",
+    buttonTitle: "ゲーム内でこの選手の名前を変更します",
+
+    // The dialog
+    title: "名前を変更",
+    loading: "名前を読み込み中…",
+    first: "名",
+    last: "姓",
+    common: "通称",
+    commonHint:
+      "名と姓の代わりにゲームが表示する名前です（Pedri や Vinícius Júnior など）。空にすると設定なしになります",
+    full: "フルネーム",
+    fullHint: "プロフィールに表示される完全な名前です。空にすると設定なしになります",
+    none: "なし",
+    required: "空にできません",
+    tooLong: (max: number) => `長すぎます：最大${max}バイトまで`,
+    noRoom:
+      "現在ゲームにはこの種類の新しい名前を追加する空きがありません：ゲームをセーブし、セーブデータを読み込み直してから、もう一度お試しください",
+    unavailable: "このバージョンのゲームでは、エディターは名前を変更できません",
+    doesHeading: "行われること",
+    does: [
+      "ゲームで「続ける」を押すと新しい名前が表示されます",
+      "ゲームをセーブしても名前は残ります",
+      "新しい名・姓・通称はゲームの名前テーブルに追加され、ゲームはこの選手にのみ使います",
+      "「変更履歴」に名前ごとに1行で記録され、「元に戻す」で元の名前に戻ります",
+    ],
+
+    // The foot
+    hint: "「名前を変更」を押すまで、ゲーム内では何も変わりません。",
+    rename: "名前を変更",
+    renaming: "名前を変更中…",
     cancel: "キャンセル",
   },
 
