@@ -37,6 +37,12 @@ person_block_shifts = [0x0, 0xF8]
 # for all 6,964 players of women's clubs, for none of the 26,476 of men's clubs, and for 1,325 of
 # the 4,528 free agents (Sophia Wilson, Emma Sears, Cristiane).
 gender = 0x3A1
+# u8 of flags, the byte before the gender's: 0x08 is set for a player the game made (see layout.toml). On the Arsenal
+# save (13 July 2027, 40,379 players) it was set for 7,204, exactly those with a UID from 2,002,069,481 up.
+made_by_game = 0x3A0
+# Pointer to the city he was born in (see [city]): Regensburg, Germany, for Yıldız. On the Arsenal save every player
+# but two has one, 8,007 cities in all.
+city_of_birth = 0x2C8
 
 height = 0x226            # u16, centimetres
 match_sharpness = 0x250   # u16, 0..10000
@@ -481,6 +487,12 @@ corporate = 0x8A9
 [nation]
 uid = 0x0C                # Argentina: 1649
 name = 0x18
+
+# A city, as on Windows: the nation it is in was read on the Mac (Regensburg, Germany).
+[city]
+uid = 0x0C
+name = 0x18
+nation = 0x20
 
 # As on Windows (#123). Reckbeg read the competition's names and the prize money on the Mac Steam build, with the
 # same offsets, against the game's Competition Stages screens. The UID and the future stage's pointer to its settings,

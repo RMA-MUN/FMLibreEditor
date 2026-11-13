@@ -13,7 +13,7 @@
 import { formatNumber } from "./format";
 import { intlLocale, strings } from "./i18n";
 import type { Strings } from "./i18n/en";
-import type { CaptainRole, Entity, Nation } from "./types";
+import type { CaptainRole, City, Entity, Nation } from "./types";
 
 export const ATTRIBUTE_LABELS = strings.attributes;
 
@@ -77,10 +77,24 @@ export function nameNations(nations: readonly Nation[]): void {
   }
 }
 
-/** How the codes of a field that holds codes from a list (see `EditField.choices`) are named, by the field's key. */
+/** The names of the cities a city of birth was set to or from, by address, once they have been read (see `nameCities`). */
+const CITY_NAMES = new Map<number, string>();
+
+/** Keeps the names of `cities`, for the change log of the city of birth. */
+export function nameCities(cities: readonly City[]): void {
+  for (const city of cities) {
+    CITY_NAMES.set(city.address, city.name);
+  }
+}
+
+/**
+ * How the codes of a field that holds codes from a list (see `EditField.choices`), or points at one of the game's
+ * objects, are named, by the field's key.
+ */
 const CHOICE_NAMES = new Map<string, (code: number) => string>([
   ["contract.squad_status", profileText.squadStatusName],
   ["nation", (address) => NATION_NAMES.get(address) ?? editText.unknownNation],
+  ["city_of_birth", (address) => CITY_NAMES.get(address) ?? editText.unknownCity],
 ]);
 
 /**

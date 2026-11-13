@@ -3,7 +3,7 @@
 
 import { dateFromNumber, numberFromDate } from "../editing";
 import { fold } from "../format";
-import { scoutingOverview, scoutingSuggest } from "./mockScouting";
+import { scoutingOpportunities, scoutingOverview, scoutingSimilar, scoutingSuggest, youthIntakes } from "./mockScouting";
 import type {
   ApplyReport,
   ArrayRef,
@@ -13,8 +13,10 @@ import type {
   Nation,
   BridgeInfo,
   CaptainRole,
+  City,
   ClubTeam,
   ScoutRequest,
+  SimilarRequest,
   SquadPlayer,
   TeamAction,
   TeamFreeze,
@@ -64,6 +66,7 @@ import type {
   MassReport,
   ClubName,
   MovePreview,
+  OpportunityRequest,
   MoveTerms,
   PlannedChange,
   RoomMaker,
@@ -101,6 +104,42 @@ const nationAddress = (nation: string) => 0x7f00_0000 + ALL_NATIONS.indexOf(nati
 
 /** The fixture nation a nation field's value stands for. */
 const nationAt = (address: number) => ALL_NATIONS.find((nation) => nationAddress(nation) === address);
+
+/** A few cities of each fixture nation, which fixture people were born in. */
+const CITIES: Record<string, string[]> = {
+  Türkiye: ["İstanbul", "Ankara", "İzmir", "Bursa", "Trabzon", "Antalya", "Kayseri"],
+  Spain: ["Madrid", "Barcelona", "Sevilla", "Valencia", "Bilbao"],
+  Germany: ["Berlin", "Hamburg", "München", "Köln", "Dortmund"],
+  Brazil: ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Porto Alegre"],
+  Denmark: ["København", "Aarhus", "Odense"],
+  France: ["Paris", "Marseille", "Lyon", "Lille", "Bordeaux"],
+  Poland: ["Warszawa", "Kraków", "Gdańsk"],
+  Portugal: ["Lisboa", "Porto", "Braga"],
+  Czechia: ["Praha", "Brno", "Ostrava"],
+  England: ["London", "Manchester", "Liverpool", "Birmingham"],
+  Scotland: ["Glasgow", "Edinburgh", "Aberdeen"],
+};
+
+/** Every fixture city, as `birth_cities` lists them: by name. */
+const BIRTH_CITIES: City[] = ALL_NATIONS.flatMap((nation, n) =>
+  (CITIES[nation] ?? []).map((name, i) => ({
+    address: 0x6e00_0000 + n * 0x1000 + i * 0x58,
+    uid: 500_000 + n * 100 + i,
+    name,
+    nationUid: 1000 + n,
+  })),
+).sort((a, b) => a.name.localeCompare(b.name));
+
+/** The city a fixture player was born in: one of his nation's, steady for his UID, or one he was set to. */
+function cityOf(player: { uid: number; nation: string | null }): City | null {
+  const written = writtenCity(player.uid);
+  if (written !== undefined) {
+    return BIRTH_CITIES.find((city) => city.address === written) ?? null;
+  }
+  const n = player.nation === null ? -1 : ALL_NATIONS.indexOf(player.nation);
+  const own = BIRTH_CITIES.filter((city) => city.nationUid === 1000 + n);
+  return own.length > 0 ? own[player.uid % own.length] : null;
+}
 
 /**
  * A fixture person's nation and club with their UIDs, as the real rows have them: the men's club of that name (see
@@ -225,7 +264,34 @@ const { players, ratings, women } = (() => {
     };
   });
   const women = new Set(womenPlayers.map((p) => p.uid));
-  return { players: [...players, ...womenPlayers], ratings, women };
+  // Youngsters of the first men's club, 15 to 17, as the game would have made them at its youth intakes; drawn from a
+  // generator of their own, so the others come out as before.
+  const nextYouth = random(2011);
+  const pickYouth = <T,>(items: T[]) => items[Math.floor(nextYouth() * items.length)];
+  const academy = Array.from({ length: 14 }, (_, i): PlayerSummary => {
+    const uid = 2_002_068_000 + i * 3;
+    const ca = Math.round(35 + nextYouth() * 60);
+    const born: FmDate = {
+      year: 2009 + Math.floor(nextYouth() * 3),
+      month: 1 + Math.floor(nextYouth() * 12),
+      day: 1 + Math.floor(nextYouth() * 28),
+    };
+    const own = random(uid ^ 0x5a5a5a);
+    ratings[uid] = positionRatings(own, isKeeper(uid));
+    return {
+      uid,
+      name: `${pickYouth(FIRST)} ${pickYouth(LAST)}`,
+      fullName: null,
+      dateOfBirth: born,
+      age: ageOn(born, GAME_DATE),
+      ...withUids(nextYouth() < 0.8 ? NATIONS[0] : pickYouth(NATIONS), CLUBS[0]),
+      positions: playablePositions(ratings[uid]),
+      contractExpires: { year: 2029, month: 6, day: 30 },
+      currentAbility: ca,
+      potentialAbility: Math.min(200, ca + 25 + Math.round(nextYouth() * 85)),
+    };
+  });
+  return { players: [...players, ...womenPlayers, ...academy], ratings, women };
 })();
 
 const ATTRIBUTES = [
@@ -1045,6 +1111,7 @@ function fieldTable(entity: Entity): EditField[] {
       field("height", "u16", 140, 220),
       { ...field("nation", "pointer", 0x1_0000, 0x7fff_ffff_ffff), mass: false },
       field("date_of_birth", "date", 19400101, 20201231),
+      { ...field("city_of_birth", "pointer", 0x1_0000, 0x7fff_ffff_ffff), mass: false },
       { ...field("asking_price", "i32", 0, 2_000_000_000), blank: -1 },
       ...reputation,
       field("international.caps", "u16", 0, 1000),
@@ -1097,6 +1164,9 @@ const FINANCE = {
  * Ability and position ratings go straight into the list rows instead, which the profiles are built from.
  */
 const written = new Map<string, FieldValues>();
+
+/** The city of birth a fixture player was set to, if he was. */
+const writtenCity = (uid: number): number | undefined => written.get(`player:${uid}`)?.city_of_birth;
 
 /** Every change written in this browser session, oldest first. */
 const changes: LoggedChange[] = [];
@@ -1255,6 +1325,8 @@ function currentValues(entity: Entity, uid: number): FieldValues {
         return person.dateOfBirth && numberFromDate(person.dateOfBirth);
       case "nation":
         return person.nation === null ? undefined : nationAddress(person.nation);
+      case "city_of_birth":
+        return cityOf({ uid, nation: person.nation })?.address;
       case "asking_price":
         return (person as PlayerDetails).askingPrice ?? -1;
       case "condition":
@@ -3291,6 +3363,29 @@ export async function mockInvoke<T>(command: string, args?: Record<string, unkno
       return scoutingOverview({ players, clubs, ratings, women }) as T;
     case "scouting_suggest":
       return scoutingSuggest({ players, clubs, ratings, women }, (args?.request ?? {}) as ScoutRequest) as T;
+    case "scouting_opportunities":
+      return scoutingOpportunities({ players, clubs, ratings, women }, (args?.request ?? {}) as OpportunityRequest) as T;
+    case "scouting_similar":
+      return scoutingSimilar({ players, clubs, ratings, women }, (args?.request ?? {}) as SimilarRequest) as T;
+    case "youth_intakes":
+      return youthIntakes({ players, clubs, ratings, women }, (args?.club as number | null) ?? null, cityOf) as T;
+    case "birth_cities":
+      return BIRTH_CITIES as T;
+    case "save_scout_report": {
+      // Nothing is written in a browser: the report names the file a real save would have.
+      const player = players.find((p) => p.uid === Number(args?.uid));
+      const name = (player?.name ?? "player")
+        .toLowerCase()
+        .split(/[^\p{L}\p{N}]+/u)
+        .filter(Boolean)
+        .join("-");
+      const folder = "C:\\Users\\you\\Documents\\FMLibreEditor\\Exports";
+      const two = (n: number) => String(n).padStart(2, "0");
+      const date = gameDate ? `-${gameDate.year}-${two(gameDate.month)}-${two(gameDate.day)}` : "";
+      const file = `scout-report-${name}${date}.${args?.format === "pdf" ? "pdf" : "png"}`;
+      const report: ExportReport = { path: `${folder}\\${file}`, file, folder, count: 1, skipped: 0 };
+      return report as T;
+    }
     case "club_squads":
       return clubSquads(Number(args?.uid)) as T;
     case "set_captain":

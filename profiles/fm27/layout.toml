@@ -30,6 +30,14 @@ person_block_shifts = [0x0, 0xF8]
 # no women's football: the flag was set for none of its 59,284 players, while the byte's other flags
 # read as on the Mac (0x02 for about half the players, 0x40 and 0x80 for a few hundred).
 gender = 0x2A1
+# u8 of flags, the byte before the gender's: 0x08 is set for a player the game made, as at a youth intake (see
+# crates/fmlibre-core/src/youth_intake.rs). On the Game Pass save of 16 January 2028 it was set for 1,783 players, 16.2
+# years old on average, and they were exactly the players with a UID from 2,002,068,314 up, the ones the game numbered
+# itself: every club's intake (Fenerbahçe's eleven of 11 March 2027) and the youth candidates it let go.
+made_by_game = 0x2A0
+# Pointer to the city he was born in (db::CITY, see [city]): Istanbul for Osman Sütlü. 1,948 of the save's 10,837
+# players have none, all of them from the game's database; every player the game made has one.
+city_of_birth = 0x308
 
 height = 0x22E            # u16, centimetres
 # Live values, 0..10000 (100.00%). Checked against the game's own words on the test save:
@@ -538,6 +546,13 @@ corporate = 0x8A9         # u8 1..20, corporate facilities
 [nation]
 uid = 0x0C                # u32 (Argentina: 1649, as graphics packs map its flag)
 name = 0x18               # FM string pointer
+
+# A city (db::CITY): 0x58 bytes, laid out like a nation up to the name, then the nation it is in. The Game Pass save
+# holds 58,475 of them; Istanbul is 1,301,222, in Türkiye.
+[city]
+uid = 0x0C                # u32
+name = 0x18               # FM string pointer
+nation = 0x20             # nation pointer
 
 # A competition (db::COMP). Its UID sits where clubs and nations keep theirs, and the next u32 holds it again. The
 # names are in the game's language (a German game calls the CAF Champions League "Afrikas Champions League"), so a

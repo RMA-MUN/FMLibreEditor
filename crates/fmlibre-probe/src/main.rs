@@ -587,6 +587,11 @@ enum Command {
         /// The club's UID.
         club: u32,
     },
+    /// Show a club's youth intakes: the players the game made who began their careers there, by the day they joined.
+    Youth {
+        /// The club's UID.
+        club: u32,
+    },
     /// How full a club's senior squad list is, and the players a move to the club can release to make room (move
     /// --release), the one the app suggests first. Without a club, the clubs whose lists are full, best known first.
     Room {
@@ -1400,6 +1405,7 @@ fn run(cli: Cli) -> Result<()> {
             scout(&session, club, request, squad, tactics)
         }
         Command::Teams { club } => teams(&connect(process, ArraySource::ProfileFirst)?, club),
+        Command::Youth { club } => youth(&connect(process, ArraySource::ProfileFirst)?, club),
         Command::Room { club, max } => room(&connect(process, ArraySource::ProfileFirst)?, club, max),
         Command::Captain { club, uid, vice, team, restore, hold } => {
             let role = if vice { CaptainRole::ViceCaptain } else { CaptainRole::Captain };
@@ -6152,6 +6158,43 @@ fn teams(session: &Session, uid: u32) -> Result<()> {
             );
         }
     }
+    Ok(())
+}
+
+fn youth(session: &Session, uid: u32) -> Result<()> {
+    let players = PlayerIndex::new(session.players()?);
+    let clubs = ClubIndex::new(session.clubs()?);
+    let club = clubs.get(uid).with_context(|| format!("no club with UID {uid}"))?;
+    let intakes = session.youth_intakes(club, &players)?;
+    println!(
+        "{}: {} intakes, the game's mark {}",
+        intakes.club,
+        intakes.intakes.len(),
+        if intakes.marked { "known" } else { "not known" }
+    );
+    for intake in &intakes.intakes {
+        let day = iso_date(intake.joined);
+        println!("  joined {day}: {} players", intake.players.len());
+        for p in &intake.players {
+            let city = p.city.as_ref().map_or("-", |c| c.name.as_str());
+            let lent = p.on_loan_at.as_deref().map(|club| format!("  on loan at {club}")).unwrap_or_default();
+            println!(
+                "    {:>10}  {:<26}  {:>3}/{:<3}  born {}  at {:?}  {:<18}  {:<14}  contract {:?}  team {:?}{lent}",
+                p.player.uid,
+                clip(&p.player.name, 26),
+                p.player.current_ability,
+                p.player.potential_ability,
+                iso_date(p.player.date_of_birth),
+                p.joined_age,
+                clip(p.player.nation.as_deref().unwrap_or("-"), 18),
+                clip(city, 14),
+                p.contract_type,
+                p.team.map(|t| (t.index, t.kind, t.age_limit)),
+            );
+        }
+    }
+    let cities = session.birth_cities(players.iter());
+    println!("{} birth cities among the players", cities.len());
     Ok(())
 }
 
